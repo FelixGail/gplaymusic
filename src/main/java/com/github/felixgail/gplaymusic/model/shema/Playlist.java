@@ -1,7 +1,7 @@
-package com.github.felixgail.gplaymusic.model.search.results;
+package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
 
-    public enum PlaylistType implements Serializable{
+    public enum PlaylistType implements Serializable {
         @SerializedName("SHARED")
         SHARED,
         @SerializedName("MAGIC")

@@ -12,8 +12,7 @@ public class SearchTypes {
         this.types = types;
     }
 
-    public SearchTypes(ResultType... types)
-    {
+    public SearchTypes(ResultType... types) {
         this.types = Arrays.asList(types);
     }
 

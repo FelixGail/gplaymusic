@@ -1,7 +1,7 @@
-package com.github.felixgail.gplaymusic.model.search.results;
+package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -222,7 +222,7 @@ public class Track implements Result, Serializable {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         return (o instanceof Track) && ((Track) o).getStoreId().equals(this.getStoreId());
     }
 }

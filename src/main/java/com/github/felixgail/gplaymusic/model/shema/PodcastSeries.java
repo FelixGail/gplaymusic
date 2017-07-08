@@ -1,9 +1,9 @@
-package com.github.felixgail.gplaymusic.model.search.results;
+package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
+import com.github.felixgail.gplaymusic.model.shema.snippets.PodcastEpisode;
+import com.github.felixgail.gplaymusic.model.shema.snippets.UserPreference;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.ArtRef;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.PodcastEpisode;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.UserPreference;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;

@@ -1,10 +1,10 @@
-package com.github.felixgail.gplaymusic.model.search.results.snippets;
+package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-public class UserPreference implements Serializable{
+public class UserPreference implements Serializable {
 
     @Expose
     private boolean autoDownload;

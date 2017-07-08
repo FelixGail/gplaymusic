@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.util;
 
+import com.github.felixgail.gplaymusic.model.shema.Result;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
-import com.github.felixgail.gplaymusic.model.search.results.Result;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;

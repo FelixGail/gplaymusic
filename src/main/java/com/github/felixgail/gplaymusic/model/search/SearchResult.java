@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.model.search;
 
-import com.github.felixgail.gplaymusic.model.search.results.*;
+import com.github.felixgail.gplaymusic.model.shema.*;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SearchResult implements Serializable{
+public class SearchResult implements Serializable {
 
     @Expose
     private List<Result> entries;
 
-    public SearchResult(){
+    public SearchResult() {
         entries = new LinkedList<>();
     }
 

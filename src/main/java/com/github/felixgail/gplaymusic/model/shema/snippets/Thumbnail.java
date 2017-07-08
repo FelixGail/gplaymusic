@@ -1,10 +1,10 @@
-package com.github.felixgail.gplaymusic.model.search.results.snippets;
+package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-public class Thumbnail implements Serializable{
+public class Thumbnail implements Serializable {
 
     @Expose
     private String url;

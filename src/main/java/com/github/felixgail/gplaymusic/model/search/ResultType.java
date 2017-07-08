@@ -1,22 +1,22 @@
 package com.github.felixgail.gplaymusic.model.search;
 
-import com.github.felixgail.gplaymusic.model.search.results.*;
+import com.github.felixgail.gplaymusic.model.shema.*;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 
-public enum ResultType implements Serializable{
+public enum ResultType implements Serializable {
     @SerializedName("1")
-    SONG(1,"track", Track.class),
+    SONG(1, "track", Track.class),
     @SerializedName("2")
-    ARTIST(2,"artist", Artist.class),
+    ARTIST(2, "artist", Artist.class),
     @SerializedName("3")
-    ALBUM(3,"album", Album.class),
+    ALBUM(3, "album", Album.class),
     @SerializedName("4")
-    PLAYLIST(4,"playlist", Playlist.class),
+    PLAYLIST(4, "playlist", Playlist.class),
     @SerializedName("6")
-    STATION(6,"station", Station.class),
+    STATION(6, "station", Station.class),
     @SerializedName("7")
     SITUATION(7, "situation", Situation.class),
     @SerializedName("8")
@@ -42,5 +42,7 @@ public enum ResultType implements Serializable{
         return type;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 }

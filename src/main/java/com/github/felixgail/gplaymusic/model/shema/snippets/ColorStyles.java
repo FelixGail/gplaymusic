@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.model.search.results.snippets;
+package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.google.gson.annotations.Expose;
 

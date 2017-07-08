@@ -1,8 +1,8 @@
-package com.github.felixgail.gplaymusic.model.search.results;
+package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
+import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.ArtRef;
-import com.github.felixgail.gplaymusic.model.search.results.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

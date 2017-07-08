@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.model.search.results.Result;
+import com.github.felixgail.gplaymusic.model.shema.Result;
 import com.github.felixgail.gplaymusic.util.ResultDeserializer;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
@@ -16,8 +16,7 @@ import java.util.Collections;
 public class Api {
 
     public static GPlayService CreateService(final String user, final String password, final String androidID)
-            throws IOException, Gpsoauth.TokenRequestFailed
-    {
+            throws IOException, Gpsoauth.TokenRequestFailed {
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                 .tlsVersions(TlsVersion.TLS_1_2)
                 .cipherSuites(
@@ -31,7 +30,7 @@ public class Api {
         Interceptor headerInterceptor = new Interceptor() {
             public Response intercept(Chain chain) throws IOException {
                 final Request request = chain.request().newBuilder()
-                        .addHeader("Authorization", "GoogleLogin auth="+token.getToken())
+                        .addHeader("Authorization", "GoogleLogin auth=" + token.getToken())
                         .addHeader("Content-Type", "application/json")
                         .build();
 
