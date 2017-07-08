@@ -69,4 +69,9 @@ public class Situation implements Result, Serializable {
     public void setStations(List<Station> stations) {
         this.stations = stations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Situation) && ((Situation) o).getId().equals(this.id);
+    }
 }

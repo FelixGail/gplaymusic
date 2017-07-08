@@ -96,4 +96,9 @@ public class Artist implements Result, Serializable {
     public void setArtistBioAttribution(Attribution artistBioAttribution) {
         this.artistBioAttribution = artistBioAttribution;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
+    }
 }

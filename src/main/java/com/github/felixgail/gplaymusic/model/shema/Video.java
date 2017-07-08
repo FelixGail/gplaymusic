@@ -40,4 +40,9 @@ public class Video implements Result, Serializable {
     public void setThumbnails(List<Thumbnail> thumbnails) {
         this.thumbnails = thumbnails;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Video) && ((Video) o).getId().equals(this.id);
+    }
 }

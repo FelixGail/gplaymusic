@@ -103,4 +103,9 @@ public class Album implements Result, Serializable {
     public void setDescriptionAttribution(Attribution descriptionAttribution) {
         this.descriptionAttribution = descriptionAttribution;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Album) && ((Album) o).getAlbumId().equals(this.albumId);
+    }
 }

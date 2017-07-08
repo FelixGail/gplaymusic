@@ -132,4 +132,9 @@ public class PodcastSeries implements Result, Serializable {
     public void setUserPreferences(UserPreference userPreferences) {
         this.userPreferences = userPreferences;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof PodcastSeries) && ((PodcastSeries) o).getSeriesId().equals(this.seriesId);
+    }
 }

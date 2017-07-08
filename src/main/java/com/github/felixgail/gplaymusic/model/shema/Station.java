@@ -41,6 +41,8 @@ public class Station implements Result, Serializable {
     private List<ArtRef> compositeArtRefs;
     @Expose
     private List<String> contentTypes;
+    @Expose
+    private String byline;
 
     public String getName() {
         return name;
@@ -161,8 +163,4 @@ public class Station implements Result, Serializable {
     public void setByline(String byline) {
         this.byline = byline;
     }
-
-    @Expose
-
-    private String byline;
 }

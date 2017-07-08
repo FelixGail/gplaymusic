@@ -178,4 +178,14 @@ public class Playlist implements Result, Serializable {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof Playlist) &&
+                ((this.shareToken != null &&
+                        ((Playlist) o).shareToken != null &&
+                        this.shareToken.equals(((Playlist) o).getShareToken())) ||
+                        (this.id != null && ((Playlist)o).getId() != null &&
+                                this.getId().equals(((Playlist) o).getId())));
+    }
 }
