@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.api;
+package com.github.felixgail.gplaymusic.api.exceptions;
 
 import okhttp3.Request;
 

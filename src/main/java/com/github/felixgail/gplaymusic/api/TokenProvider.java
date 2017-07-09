@@ -6,9 +6,9 @@ import svarzee.gps.gpsoauth.Gpsoauth;
 
 import java.io.IOException;
 
-class TokenProvider {
+public class TokenProvider {
 
-    static AuthToken provideToken(final String user, final String password, final String androidID)
+    public static AuthToken provideToken(final String user, final String password, final String androidID)
             throws IOException, Gpsoauth.TokenRequestFailed {
         OkHttpClient client = new OkHttpClient();
         Gpsoauth auth = new Gpsoauth(client);

@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic.api;
 
 
-import com.github.felixgail.gplaymusic.model.SubscriptionTypes;
-import com.github.felixgail.gplaymusic.model.config.ConfigResponse;
+import com.github.felixgail.gplaymusic.model.SubscriptionType;
+import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import retrofit2.Call;
@@ -16,22 +16,22 @@ public interface GPlayService {
     @GET("query?dv=0")
     Call<SearchResponse> search(@Query("q") String query,
                                 @Query("max-results") int maxResults,
-                                @Query("tier") SubscriptionTypes tier,
+                                @Query("tier") SubscriptionType tier,
                                 @Query("ct") SearchTypes searchTypes,
                                 @Query("hl") Locale locale);
 
-    default Call<SearchResponse> search(String query, SearchTypes searchTypes, int maxResults) {
-        return search(query, maxResults, SubscriptionTypes.SUBSCRIBED, searchTypes, Locale.US);
+    default Call<SearchResponse> search(String query, SearchTypes searchTypes, int maxResults, Config config) {
+        return search(query, maxResults, config.getSubscription(), searchTypes, config.getLocale());
     }
 
-    default Call<SearchResponse> search(String query, SearchTypes searchTypes) {
-        return search(query, 50, SubscriptionTypes.SUBSCRIBED, searchTypes, Locale.US);
+    default Call<SearchResponse> search(String query, SearchTypes searchTypes, Config config) {
+        return search(query, 50, config.getSubscription(), searchTypes, config.getLocale());
     }
 
     @GET("config?dv=0&tier=ff")
-    Call<ConfigResponse> config(@Query("hl") Locale locale);
+    Call<Config> config(@Query("hl") Locale locale);
 
-    default Call<ConfigResponse> config() {
-        return config(Locale.US);
+    default Call<Config> config(Config c) {
+        return config(c.getLocale());
     }
 }

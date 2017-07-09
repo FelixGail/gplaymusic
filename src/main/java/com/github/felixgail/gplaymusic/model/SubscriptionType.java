@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.model;
 
-public enum SubscriptionTypes {
+public enum SubscriptionType {
     SUBSCRIBED("aa"),
     FREE("fr");
 
@@ -9,7 +9,7 @@ public enum SubscriptionTypes {
     /**
      * @param text
      */
-    SubscriptionTypes(final String text) {
+    SubscriptionType(final String text) {
         this.text = text;
     }
 
