@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.util;
+package com.github.felixgail.gplaymusic.util.Deserializer;
 
 import com.github.felixgail.gplaymusic.model.shema.Result;
 import com.github.felixgail.gplaymusic.model.search.ResultType;

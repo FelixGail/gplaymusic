@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic;
+package com.github.felixgail.gplaymusic.api;
 
 import okhttp3.OkHttpClient;
 import svarzee.gps.gpsoauth.AuthToken;

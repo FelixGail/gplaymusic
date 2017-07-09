@@ -8,12 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SearchResult implements Serializable {
+public class SearchResponse implements Serializable {
 
     @Expose
     private List<Result> entries;
 
-    public SearchResult() {
+    public SearchResponse() {
         entries = new LinkedList<>();
     }
 
