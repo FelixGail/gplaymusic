@@ -1,17 +1,25 @@
 package com.github.felixgail.gplaymusic.util.interceptor;
 
 import com.github.felixgail.gplaymusic.api.exceptions.ResponseException;
-import com.github.felixgail.gplaymusic.model.shema.Error;
+import com.github.felixgail.gplaymusic.model.shema.NetworkError;
 import com.google.gson.Gson;
 import okhttp3.Interceptor;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class ErrorInterceptor implements Interceptor{
+    private static final Logger logger = Logger.getLogger(ErrorInterceptor.class.getName());
     private Gson gson;
+    private InterceptorBehaviour behaviour;
 
-    public ErrorInterceptor() {
+    public enum InterceptorBehaviour {
+        LOG, THROW_EXCEPTION
+    }
+
+    public ErrorInterceptor(InterceptorBehaviour b) {
+        this.behaviour = b;
         gson = new Gson();
     }
 
@@ -19,8 +27,12 @@ public class ErrorInterceptor implements Interceptor{
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
         if (!response.isSuccessful() && response.body() !=null) {
-            Error error = gson.fromJson(response.body().charStream(), Error.class);
-            throw new ResponseException(response,error, "");
+            NetworkError networkError = NetworkError.parse(response.body().charStream());
+            if (behaviour == InterceptorBehaviour.THROW_EXCEPTION) {
+                throw new ResponseException(response, networkError, "Network Error while receiving response: ");
+            } else {
+                logger.warning(networkError.toString());
+            }
         }
         return response;
     }

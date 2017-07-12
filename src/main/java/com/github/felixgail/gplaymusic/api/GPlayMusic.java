@@ -3,12 +3,11 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.ResponseException;
 import com.github.felixgail.gplaymusic.model.config.Config;
-import com.github.felixgail.gplaymusic.model.shema.Error;
+import com.github.felixgail.gplaymusic.model.shema.NetworkError;
 import com.github.felixgail.gplaymusic.model.shema.Result;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import retrofit2.*;
@@ -52,7 +51,7 @@ public final class GPlayMusic {
         private AuthToken authToken;
         private Locale locale = Locale.US;
 
-        public Builder() {}
+        private ErrorInterceptor.InterceptorBehaviour interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.LOG;
 
         public Builder setHttpClientBuilder(OkHttpClient.Builder builder) {
             this.httpClientBuilder = builder;
@@ -67,6 +66,10 @@ public final class GPlayMusic {
         public Builder setLocale(Locale locale) {
             this.locale = locale;
             return this;
+        }
+
+        public void setInterceptorBehaviour(ErrorInterceptor.InterceptorBehaviour interceptorBehaviour) {
+            this.interceptorBehaviour = interceptorBehaviour;
         }
 
         public static OkHttpClient.Builder getDefaultHttpBuilder() {
@@ -107,7 +110,7 @@ public final class GPlayMusic {
 
             OkHttpClient httpClient = this.httpClientBuilder
                     .addInterceptor(getHeaderInterceptor())
-                    .addInterceptor(new ErrorInterceptor())
+                    .addInterceptor(new ErrorInterceptor(this.interceptorBehaviour))
                     .build();
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -120,10 +123,10 @@ public final class GPlayMusic {
             retrofit2.Response<Config> configResponse = null;
             try {
                 configResponse = gPlay.getService().config(this.locale).execute();
-            } catch (IOException e) {
-                if (e instanceof ResponseException) {
-                    throw new InitializationException("Service Returned an error during initialization", ((ResponseException) e).getError());
+                if (!configResponse.isSuccessful()) {
+                    throw new InitializationException("Network returned an error:", NetworkError.parse(configResponse.errorBody().charStream()));
                 }
+            } catch (IOException e) {
                 throw new InitializationException("Service Returned an error during initialization: "+ e.getMessage());
             }
             Config config = configResponse.body();
