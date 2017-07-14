@@ -1,10 +1,8 @@
 package com.github.felixgail.gplaymusic.api.exceptions;
 
-import com.github.felixgail.gplaymusic.model.shema.NetworkError;
-
 public class InitializationException extends RuntimeException{
 
-    public InitializationException(String msg, NetworkError e) {
+    public InitializationException(String msg, NetworkException e) {
         super(String.format("%s:\n%s", msg, e));
     }
 

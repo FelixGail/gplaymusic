@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.util.interceptor;
 
-import com.github.felixgail.gplaymusic.api.exceptions.ResponseException;
-import com.github.felixgail.gplaymusic.model.shema.NetworkError;
+import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.google.gson.Gson;
 import okhttp3.Interceptor;
 import okhttp3.Response;
@@ -27,11 +26,11 @@ public class ErrorInterceptor implements Interceptor{
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
         if (!response.isSuccessful() && response.body() !=null) {
-            NetworkError networkError = NetworkError.parse(response.body().charStream());
+            NetworkException networkException = NetworkException.parse(response.body().charStream());
             if (behaviour == InterceptorBehaviour.THROW_EXCEPTION) {
-                throw new ResponseException(response, networkError, "Network Error while receiving response: ");
+                throw networkException;
             } else {
-                logger.warning(networkError.toString());
+                logger.warning(networkException.toString());
             }
         }
         return response;

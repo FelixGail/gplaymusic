@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 
 public enum ResultType implements Serializable {
     @SerializedName("1")
-    SONG(1, "track", Track.class),
+    TRACK(1, "track", Track.class),
     @SerializedName("2")
     ARTIST(2, "artist", Artist.class),
     @SerializedName("3")

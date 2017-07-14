@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class SearchResponse implements Serializable {
 
     @Expose
-    private List<Result> entries;
+    private List<Result> entries = new LinkedList<>();
 
     public SearchResponse() {
         entries = new LinkedList<>();

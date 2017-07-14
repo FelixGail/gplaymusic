@@ -9,3 +9,4 @@ buildNumber.properties
 
 .idea/
 gplaymusic.iml
+src/test/resources/gplaymusic.properties

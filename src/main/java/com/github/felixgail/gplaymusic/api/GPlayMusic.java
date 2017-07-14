@@ -1,9 +1,8 @@
 package com.github.felixgail.gplaymusic.api;
 
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
-import com.github.felixgail.gplaymusic.api.exceptions.ResponseException;
 import com.github.felixgail.gplaymusic.model.config.Config;
-import com.github.felixgail.gplaymusic.model.shema.NetworkError;
+import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.shema.Result;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
@@ -51,7 +50,7 @@ public final class GPlayMusic {
         private AuthToken authToken;
         private Locale locale = Locale.US;
 
-        private ErrorInterceptor.InterceptorBehaviour interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.LOG;
+        private ErrorInterceptor.InterceptorBehaviour interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.THROW_EXCEPTION;
 
         public Builder setHttpClientBuilder(OkHttpClient.Builder builder) {
             this.httpClientBuilder = builder;
@@ -124,7 +123,7 @@ public final class GPlayMusic {
             try {
                 configResponse = gPlay.getService().config(this.locale).execute();
                 if (!configResponse.isSuccessful()) {
-                    throw new InitializationException("Network returned an error:", NetworkError.parse(configResponse.errorBody().charStream()));
+                    throw new InitializationException("Network returned an error:", NetworkException.parse(configResponse.errorBody().charStream()));
                 }
             } catch (IOException e) {
                 throw new InitializationException("Service Returned an error during initialization: "+ e.getMessage());
