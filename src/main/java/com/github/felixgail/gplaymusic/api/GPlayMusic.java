@@ -26,6 +26,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * The main API, wrapping calls to the service.
+ * Use the GPlayMusic.Builder to create a new instance.
+ */
 public final class GPlayMusic {
 
     private GPlayService service;
@@ -52,24 +56,50 @@ public final class GPlayMusic {
         return this.service;
     }
 
+    /**
+     * Queries Google Play Music for content.
+     * Content can be every combination of {@link SearchTypes} enum.
+     *
+     * @param query Query String
+     * @param maxResults Limits the results. Keep in mind that higher numbers increase loading time.
+     * @param types Content types that should be queried for
+     * @return A SearchResponse instance holding all content returned
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     * or a {@link NetworkException} on request failures.
+     */
     public SearchResponse search(String query, int maxResults, SearchTypes types)
     throws IOException
     {
         return getService().search(query, maxResults, types).execute().body();
     }
 
+    /**
+     * Provides convenience by wrapping the {@link #search(String, int, SearchTypes)} method and setting the maxResults
+     * parameter to 50.
+     */
     public SearchResponse search(String query, SearchTypes types)
     throws IOException
     {
         return search(query, 50, types);
     }
 
+    /**
+     * Provides convenience by wrapping the {@link #search(String, int, SearchTypes)} method and limiting
+     * the content types to Tracks only.
+     * @return Returns a list of tracks returned by the google play service.
+     */
     public List<Track> searchTracks(String query, int maxResults)
         throws IOException
     {
         return search(query, maxResults, new SearchTypes(ResultType.TRACK)).getTracks();
     }
 
+    /**
+     * Fetches a list of all devices connected with the current google play account.
+     * @return A DeviceList instance containing all devices connected to the current Google Play account.
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     * or a {@link NetworkException} on request failures.
+     */
     public DeviceList getRegisteredDevices()
     throws IOException
     {
@@ -85,7 +115,7 @@ public final class GPlayMusic {
      * @param quality quality of the stream
      * @return temporary url to the title
      * @throws IOException Throws an IOException on severe failures (no internet connection...)
-     * or a NetworkException on request failures.
+     * or a {@link NetworkException} on request failures.
      */
     public String getTrackURL(Track title, SongQuality quality)
         throws IOException
@@ -96,6 +126,9 @@ public final class GPlayMusic {
                 ).execute().headers().get("Location");
     }
 
+    /**
+     * Use this class to create a {@link GPlayMusic} instance.
+     */
     public final static class Builder {
 
         private OkHttpClient.Builder httpClientBuilder;
@@ -105,31 +138,69 @@ public final class GPlayMusic {
         private ErrorInterceptor.InterceptorBehaviour
                 interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.THROW_EXCEPTION;
 
+        /**
+         * Set a custom {@link OkHttpClient.Builder} to build the {@link GPlayMusic} instance with.
+         * If left untouched the Builder will use the default instance accessible
+         * through {@link #getDefaultHttpBuilder()}.
+         * @return This {@link Builder} instance.
+         */
         public Builder setHttpClientBuilder(OkHttpClient.Builder builder) {
             this.httpClientBuilder = builder;
             return this;
         }
 
+        /**
+         * Set an {@link AuthToken} to access the Google Play Service.
+         * This method has to be called before building the {@link GPlayMusic} instance.
+         * @param token An {@link AuthToken} either saved from a prior session or created
+         *              through the {@link TokenProvider#provideToken(String, String, String)} method.
+         * @return This {@link Builder} instance.
+         */
         public Builder setAuthToken(AuthToken token) {
             this.authToken = token;
             return this;
         }
 
+        /**
+         * Set a local to use during calls to the Google Play Service.
+         * Defaults to {@link Locale#US}.
+         * @return This {@link Builder} instance.
+         */
         public Builder setLocale(Locale locale) {
             this.locale = locale;
             return this;
         }
 
+        /**
+         * Set a Behaviour for the {@link ErrorInterceptor} appended to the {@link OkHttpClient.Builder}.
+         * Throws Exceptions on default. May cause instability when set to {@link com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor.InterceptorBehaviour#LOG}.
+         * @return This {@link Builder} instance.
+         */
         public Builder setInterceptorBehaviour(ErrorInterceptor.InterceptorBehaviour interceptorBehaviour) {
             this.interceptorBehaviour = interceptorBehaviour;
             return this;
         }
 
+        /**
+         * Set an AndroidID used for stream calls to the Google Play Service.
+         * In general the IMEI used for logging in should be sufficient.
+         * If logged in with a MAC use {@link GPlayMusic#getRegisteredDevices()} for a list of
+         * connected devices or leave empty.
+         * On empty the {@link #build()}-method will use {@link DeviceList#getFirstAndroid()}
+         * and use the returned ID.
+         * @return This {@link Builder} instance.
+         */
         public Builder setAndroidID(String androidID) {
             this.androidID = androidID;
             return this;
         }
 
+        /**
+         * Used while building the {@link GPlayMusic} instance. If no {@link OkHttpClient.Builder} is
+         * provided via {@link #setHttpClientBuilder(OkHttpClient.Builder)} the instance returned by this method will
+         * be used for building.
+         * @return Returns the default {@link OkHttpClient.Builder} instance
+         */
         public static OkHttpClient.Builder getDefaultHttpBuilder() {
             ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                     .tlsVersions(TlsVersion.TLS_1_2)
@@ -142,6 +213,10 @@ public final class GPlayMusic {
                     .connectionSpecs(Collections.singletonList(spec));
         }
 
+        /**
+         * @return Returns an Interceptor adding headers needed for communication with the
+         * Google Play Service
+         */
         private Interceptor getHeaderInterceptor(){
             return chain -> {
                 final Request request = chain.request().newBuilder()
@@ -153,6 +228,11 @@ public final class GPlayMusic {
             };
         }
 
+        /**
+         * Builds a new {@link GPlayMusic} instance with the customizations set to this builder.
+         * Make sure to call {@link #setAuthToken(AuthToken)} before building with this method.
+         * @return Returns a new {@link GPlayMusic} instance
+         */
         public GPlayMusic build() {
             try {
                 if (this.authToken == null) {

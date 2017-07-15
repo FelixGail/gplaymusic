@@ -5,11 +5,9 @@ import com.github.felixgail.gplaymusic.api.TokenProvider;
 import com.github.felixgail.gplaymusic.model.SongQuality;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.DeviceList;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
-import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.AuthToken;
 import svarzee.gps.gpsoauth.Gpsoauth;
@@ -23,9 +21,6 @@ public class TestResponse{
     @Test
     public void createClass()
     {
-            /*HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);*/
-
         try {
             AuthToken token;
             if (!TestUtil.PROPS.getProperty("auth.token").isEmpty()) {
@@ -42,13 +37,12 @@ public class TestResponse{
             }
             GPlayMusic api = new GPlayMusic.Builder()
                     .setAuthToken(token)
-                    //.setHttpClientBuilder(GPlayMusic.Builder.getDefaultHttpBuilder().addInterceptor(loggingInterceptor))
                     .setLocale(Locale.US)
                     .setAndroidID(TestUtil.PROPS.getProperty("auth.android_id"))
                     .setInterceptorBehaviour(ErrorInterceptor.InterceptorBehaviour.LOG)
                     .build();
             List<Track> songs = api.getService()
-                    .search("Imagine Dragons", new SearchTypes(ResultType.TRACK))
+                    .search("Tie a yellow ribbon",50, new SearchTypes(ResultType.TRACK))
                     .execute().body().getTracks();
             Track song = songs.get(0);
             Track.Signature sig = song.createSignature();

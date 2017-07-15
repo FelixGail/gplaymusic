@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Serializable;
 
+/**
+ * Will be thrown when the network responds with an error.
+ * It will contain the error code and (if available) a message.
+ */
 public class NetworkException extends IOException implements Serializable{
 
     private class ErrorHelper implements Serializable{

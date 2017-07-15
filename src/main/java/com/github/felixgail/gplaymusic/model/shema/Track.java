@@ -184,6 +184,9 @@ public class Track implements Result, Serializable {
     }
 
     public String getStoreId() {
+        if (storeId == null) {
+            return getNid();
+        }
         return storeId;
     }
 
