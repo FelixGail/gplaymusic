@@ -12,8 +12,8 @@ public class Config implements Serializable {
 
     @Expose
     private Map<String, String> map = new HashMap<>();
-
     private Locale locale = Locale.US;
+    private String androidID;
 
     public Locale getLocale() {
         return locale;
@@ -49,5 +49,13 @@ public class Config implements Serializable {
 
     public SubscriptionType getSubscription() {
         return getBool("isNautilusUser")? SubscriptionType.SUBSCRIBED : SubscriptionType.FREE;
+    }
+
+    public String getAndroidID() {
+        return androidID;
+    }
+
+    public void setAndroidID(String androidID) {
+        this.androidID = androidID;
     }
 }

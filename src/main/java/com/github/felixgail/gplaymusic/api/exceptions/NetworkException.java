@@ -1,9 +1,11 @@
 package com.github.felixgail.gplaymusic.api.exceptions;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import okhttp3.Call;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -24,6 +26,14 @@ public class NetworkException extends IOException implements Serializable{
         public String getMessage() {
             return message;
         }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
     @Expose
@@ -31,6 +41,12 @@ public class NetworkException extends IOException implements Serializable{
     private ErrorHelper helper = new ErrorHelper();
 
     private Call call;
+
+    public NetworkException(int code, String message){
+        helper = new ErrorHelper();
+        helper.setCode(code);
+        helper.setMessage(message);
+    }
 
 
     public int getCode() {
@@ -55,7 +71,11 @@ public class NetworkException extends IOException implements Serializable{
     }
 
     private final static Gson gson = new Gson();
-    public static NetworkException parse(Reader stream) {
-        return gson.fromJson(stream, NetworkException.class);
+    public static NetworkException parse(Response response) {
+        try {
+            return gson.fromJson(response.body().charStream(), NetworkException.class);
+        } catch (JsonSyntaxException e) {
+            return new NetworkException(response.code(), response.message());
+        }
     }
 }

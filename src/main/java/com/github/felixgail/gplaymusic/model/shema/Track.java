@@ -72,7 +72,6 @@ public class Track implements Result, Serializable {
         IntStream.range(0, length).forEach(i -> zipped[i] = (char) (s1[i] ^ s2[i]));
         String helperString = new String(zipped);
         try {
-            System.out.printf("KeyAsString: %s", helperString);
             key = helperString.getBytes("US-ASCII");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);

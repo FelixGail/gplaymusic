@@ -25,8 +25,8 @@ public class ErrorInterceptor implements Interceptor{
     @Override
     public Response intercept(Chain chain) throws IOException {
         Response response = chain.proceed(chain.request());
-        if (!response.isSuccessful() && response.body() !=null) {
-            NetworkException networkException = NetworkException.parse(response.body().charStream());
+        if (response.code() >= 400) {
+            NetworkException networkException = NetworkException.parse(response);
             if (behaviour == InterceptorBehaviour.THROW_EXCEPTION) {
                 throw networkException;
             } else {

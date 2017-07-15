@@ -9,4 +9,9 @@ public class InitializationException extends RuntimeException{
     public InitializationException(String msg) {
         super(msg);
     }
+
+    public InitializationException(Exception e)
+    {
+        super(e);
+    }
 }

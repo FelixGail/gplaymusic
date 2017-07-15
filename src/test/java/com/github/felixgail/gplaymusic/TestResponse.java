@@ -2,10 +2,13 @@ package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.TokenProvider;
+import com.github.felixgail.gplaymusic.model.SongQuality;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
+import com.github.felixgail.gplaymusic.model.shema.DeviceList;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.AuthToken;
@@ -20,8 +23,8 @@ public class TestResponse{
     @Test
     public void createClass()
     {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            /*HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);*/
 
         try {
             AuthToken token;
@@ -39,15 +42,21 @@ public class TestResponse{
             }
             GPlayMusic api = new GPlayMusic.Builder()
                     .setAuthToken(token)
-                    .setHttpClientBuilder(GPlayMusic.Builder.getDefaultHttpBuilder().addInterceptor(loggingInterceptor))
+                    //.setHttpClientBuilder(GPlayMusic.Builder.getDefaultHttpBuilder().addInterceptor(loggingInterceptor))
                     .setLocale(Locale.US)
+                    .setAndroidID(TestUtil.PROPS.getProperty("auth.android_id"))
+                    .setInterceptorBehaviour(ErrorInterceptor.InterceptorBehaviour.LOG)
                     .build();
             List<Track> songs = api.getService()
-                    .search("Imagine", new SearchTypes(ResultType.TRACK),
-                            api.getConfig()).execute().body().getTracks();
-            Track.Signature sig = songs.get(0).createSignature();
-            System.out.printf("Track: %s\nSig: %s\nSalt: %s\n", songs.get(0).getStoreId(),
-                    sig.getSignature(), sig.getSalt());
+                    .search("Imagine Dragons", new SearchTypes(ResultType.TRACK))
+                    .execute().body().getTracks();
+            Track song = songs.get(0);
+            Track.Signature sig = song.createSignature();
+            System.out.printf("Track: %s\nSig: %s\nSalt: %s\nTitle: %s\nArtist: %s\n",
+                    song.getStoreId(), sig.getSignature(), sig.getSalt(),
+                    song.getTitle(), song.getArtist());
+            String url = api.getTrackURL(song, SongQuality.HIGH);
+            System.out.println(url);
         } catch (IOException | Gpsoauth.TokenRequestFailed e) {
             e.printStackTrace();
         }
