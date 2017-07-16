@@ -28,7 +28,7 @@ import java.util.Locale;
 
 /**
  * The main API, wrapping calls to the service.
- * Use the GPlayMusic.Builder to create a new instance.
+ * Use the {@link GPlayMusic.Builder} to create a new instance.
  */
 public final class GPlayMusic {
 
@@ -50,7 +50,7 @@ public final class GPlayMusic {
     /**
      * This method will return the service used to make calls to google play, and therefore allows for
      * low level and asynchronous calls. Be sure to check the response for error codes.
-     * @return GPlayService object
+     * @return {@link GPlayService} instance used by the current API.
      */
     public GPlayService getService() {
         return this.service;
