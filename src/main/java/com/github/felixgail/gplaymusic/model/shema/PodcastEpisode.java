@@ -1,11 +1,13 @@
-package com.github.felixgail.gplaymusic.model.shema.snippets;
+package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.abstracts.Signable;
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class PodcastEpisode implements Serializable {
+public class PodcastEpisode extends Signable implements Serializable {
 
     @Expose
     private List<ArtRef> art;
@@ -74,7 +76,7 @@ public class PodcastEpisode implements Serializable {
         this.durationMillis = durationMillis;
     }
 
-    public String getEpisodeId() {
+    public String getID() {
         return episodeId;
     }
 
@@ -136,5 +138,9 @@ public class PodcastEpisode implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Signature getSignature() {
+        return super.createSignature(this.getID());
     }
 }
