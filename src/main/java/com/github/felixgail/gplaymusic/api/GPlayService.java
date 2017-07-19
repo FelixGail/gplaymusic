@@ -1,18 +1,17 @@
 package com.github.felixgail.gplaymusic.api;
 
 
+import com.github.felixgail.gplaymusic.model.Provider;
 import com.github.felixgail.gplaymusic.model.SongQuality;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.DeviceList;
-import okhttp3.ResponseBody;
+import com.github.felixgail.gplaymusic.model.shema.*;
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
 import java.util.Locale;
+import java.util.Map;
 
 public interface GPlayService {
 
@@ -24,13 +23,42 @@ public interface GPlayService {
     @GET("sj/v2.5/config?dv=0&tier=ff")
     Call<Config> config(@Query("hl") Locale locale);
 
-    @GET("music/mplay?net=mob&pt=e")
-    Call<Void> getTrackLocation(@Header("X-Device-ID") String androidID,
-                                        @Query("opt") SongQuality quality,
-                                        @Query("slt") String salt,
-                                        @Query("sig") String signature,
-                                        @Query("mjck") String trackID);
+    @GET("music/{provider}?net=mob&pt=e")
+    Call<Void> getTrackLocationMJCK(@Header("X-Device-ID") String androidID,
+                                    @Path("provider") Provider provider,
+                                    @Query("opt") SongQuality quality,
+                                    @Query("slt") String salt,
+                                    @Query("sig") String signature,
+                                    @Query("mjck") String trackID,
+                                    @QueryMap Map<String, String> kwargs);
+
+    @GET("music/{provider}?net=mob&pt=e")
+    Call<Void> getTrackLocationSongId(@Header("X-Device-ID") String androidID,
+                                      @Path("provider") Provider provider,
+                                      @Query("opt") SongQuality quality,
+                                      @Query("slt") String salt,
+                                      @Query("sig") String signature,
+                                      @Query("songid") String trackID,
+                                      @QueryMap Map<String, String> kwargs);
 
     @GET("sj/v2.5/devicemanagementinfo")
-    Call<DeviceList> getDevices();
+    Call<ListResult<DeviceInfo>> getDevices();
+
+    @POST("sj/v2.5/ephemeral/top")
+    Call<ListResult<Track>> getPromotedTracks();
+
+    @POST("sj/v2.5/radio/stations")
+    Call<ListResult<Station>> listStations();
+
+    @POST("sj/v2.5/playlistfeed")
+    Call<ListResult<Playlist>> listPlaylists();
+
+    /**
+     * As far as my understanding goes, this simply returns a list of {@link PlaylistEntry}
+     * randomly selected from the users playlists
+     *
+     * @return the {@link Call} to request a list of {@link PlaylistEntry}
+     */
+    @POST("sj/v2.5/plentryfeed")
+    Call<ListResult<PlaylistEntry>> listPlaylistEntries();
 }
