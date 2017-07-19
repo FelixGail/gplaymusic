@@ -24,20 +24,20 @@ public class ArtRef {
         return url;
     }
 
-    public String getAspectRatio() {
-        return aspectRatio;
-    }
-
-    public boolean isAutogen() {
-        return autogen;
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
 
+    public String getAspectRatio() {
+        return aspectRatio;
+    }
+
     public void setAspectRatio(String aspectRatio) {
         this.aspectRatio = aspectRatio;
+    }
+
+    public boolean isAutogen() {
+        return autogen;
     }
 
     public void setAutogen(boolean autogen) {

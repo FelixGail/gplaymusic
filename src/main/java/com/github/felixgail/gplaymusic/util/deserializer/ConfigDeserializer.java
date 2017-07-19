@@ -5,7 +5,7 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class ConfigDeserializer  implements JsonDeserializer<Config> {
+public class ConfigDeserializer implements JsonDeserializer<Config> {
 
     @Override
     public Config deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)

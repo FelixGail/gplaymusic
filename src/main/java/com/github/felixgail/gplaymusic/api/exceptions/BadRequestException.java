@@ -2,7 +2,7 @@ package com.github.felixgail.gplaymusic.api.exceptions;
 
 import okhttp3.Request;
 
-public class BadRequestException extends IllegalArgumentException{
+public class BadRequestException extends IllegalArgumentException {
 
     private Request request;
 
@@ -11,7 +11,7 @@ public class BadRequestException extends IllegalArgumentException{
         request = r;
     }
 
-    public BadRequestException(String msg, Request r){
+    public BadRequestException(String msg, Request r) {
         super(msg);
         request = r;
     }

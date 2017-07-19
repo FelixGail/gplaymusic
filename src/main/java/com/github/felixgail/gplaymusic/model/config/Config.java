@@ -48,7 +48,7 @@ public class Config implements Serializable {
     }
 
     public SubscriptionType getSubscription() {
-        return getBool("isNautilusUser")? SubscriptionType.SUBSCRIBED : SubscriptionType.FREE;
+        return getBool("isNautilusUser") ? SubscriptionType.SUBSCRIBED : SubscriptionType.FREE;
     }
 
     public String getAndroidID() {

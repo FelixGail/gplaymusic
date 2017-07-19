@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
-import com.github.felixgail.gplaymusic.model.shema.snippets.Thumbnail;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.shema.snippets.Thumbnail;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;

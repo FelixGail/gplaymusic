@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
-import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +24,8 @@ public class Station implements Result, Serializable {
     private String recentTimestamp;
     @Expose
     private String clientId;
+    @Expose
+    private String sessionToken;
     @Expose
     private StationSeed seed;
     @Expose
@@ -162,5 +164,13 @@ public class Station implements Result, Serializable {
 
     public void setByline(String byline) {
         this.byline = byline;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 }

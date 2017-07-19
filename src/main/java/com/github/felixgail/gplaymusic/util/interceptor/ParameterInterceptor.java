@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParameterInterceptor implements Interceptor{
+public class ParameterInterceptor implements Interceptor {
 
     private Map<String, String> parameters;
 

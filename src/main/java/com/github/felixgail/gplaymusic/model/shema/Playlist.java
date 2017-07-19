@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
-import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,23 +10,6 @@ import java.util.List;
 
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
-
-    public enum PlaylistType implements Serializable {
-        @SerializedName("SHARED")
-        SHARED,
-        @SerializedName("MAGIC")
-        MAGIC,
-        @SerializedName("USER_GENERATED")
-        USER_GENERATED;
-    }
-
-    public enum PlaylistShareState implements Serializable {
-        @SerializedName("PRIVATE")
-        PRIVATE,
-        @SerializedName("PUBLIC")
-        PUBLIC;
-    }
-
     @Expose
     private String name;
     @Expose
@@ -185,7 +168,23 @@ public class Playlist implements Result, Serializable {
                 ((this.shareToken != null &&
                         ((Playlist) o).shareToken != null &&
                         this.shareToken.equals(((Playlist) o).getShareToken())) ||
-                        (this.id != null && ((Playlist)o).getId() != null &&
+                        (this.id != null && ((Playlist) o).getId() != null &&
                                 this.getId().equals(((Playlist) o).getId())));
+    }
+
+    public enum PlaylistType implements Serializable {
+        @SerializedName("SHARED")
+        SHARED,
+        @SerializedName("MAGIC")
+        MAGIC,
+        @SerializedName("USER_GENERATED")
+        USER_GENERATED;
+    }
+
+    public enum PlaylistShareState implements Serializable {
+        @SerializedName("PRIVATE")
+        PRIVATE,
+        @SerializedName("PUBLIC")
+        PUBLIC;
     }
 }
