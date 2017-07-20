@@ -53,6 +53,9 @@ public interface GPlayService {
     @POST("sj/v2.5/playlistfeed")
     Call<ListResult<Playlist>> listPlaylists();
 
+    @GET("sj/v2.5/podcast/browse")
+    Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
+
     /**
      * As far as my understanding goes, this simply returns a list of {@link PlaylistEntry}
      * randomly selected from the users playlists

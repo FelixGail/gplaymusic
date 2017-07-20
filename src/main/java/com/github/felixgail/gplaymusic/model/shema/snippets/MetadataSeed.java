@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.github.felixgail.gplaymusic.model.shema.Artist;
+import com.github.felixgail.gplaymusic.model.shema.Genre;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
