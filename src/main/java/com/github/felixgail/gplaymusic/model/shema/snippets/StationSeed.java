@@ -23,6 +23,8 @@ public class StationSeed implements Serializable {
     @Expose
     private MetadataSeed metadataSeed;
 
+    //TODO: Optimize! Only one type of id will be present.
+
     public String getSeedType() {
         return seedType;
     }

@@ -13,6 +13,7 @@ public class MetadataSeed implements Serializable {
     @Expose
     private Genre genre;
 
+    //TODO: Optimize! Only one type (artist/genre) will be present.
     public Artist getArtist() {
         return artist;
     }
