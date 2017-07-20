@@ -3,7 +3,7 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.SongQuality;
+import com.github.felixgail.gplaymusic.model.StreamQuality;
 import com.github.felixgail.gplaymusic.model.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.config.Config;
@@ -123,7 +123,7 @@ public final class GPlayMusic {
      * @throws IOException Throws an IOException on severe failures (no internet connection...)
      *                     or a {@link NetworkException} on request failures.
      */
-    public String getTrackURL(Track title, SongQuality quality)
+    public String getTrackURL(Track title, StreamQuality quality)
             throws IOException {
         if (getConfig().getSubscription() == SubscriptionType.FREE) {
             throw new IOException("Function not allowed for Free users");
@@ -135,7 +135,7 @@ public final class GPlayMusic {
      * Fetch the URL from a free Station.
      * Make sure the provided {@link Station} does not return Null on {@link Station#getSessionToken()}.
      * <br>
-     * <b>Subscribers should use the {@link #getTrackURL(Track, SongQuality)}</b> method, which is easier to handle.
+     * <b>Subscribers should use the {@link #getTrackURL(Track, StreamQuality)}</b> method, which is easier to handle.
      * TODO: provide way to get session token.
      *
      * @param title   Title of the Song. This song has to be inside {@link Station#getTracks()}
@@ -148,7 +148,7 @@ public final class GPlayMusic {
      * @throws IOException on severe failures (no internet connection...)
      *                     or a {@link NetworkException} on request failures.
      */
-    public String getStationTrackURL(Track title, FilledStation station, SongQuality quality)
+    public String getStationTrackURL(Track title, FilledStation station, StreamQuality quality)
             throws IOException {
         if (getConfig().getSubscription() == SubscriptionType.SUBSCRIBED) {
             return getTrackURL(title, quality);
@@ -161,8 +161,51 @@ public final class GPlayMusic {
     }
 
     /**
-     * Wrapper for the {@link GPlayService#getTrackLocationMJCK(String, Provider, SongQuality, String, String, String, Map)}
-     * and {@link GPlayService#getTrackLocationSongId(String, Provider, SongQuality, String, String, String, Map)}
+     * Returns a URL to download a podcast episode in set quality.
+     * URL will only be valid for 1 minute.
+     * You will likely need to handle redirects.
+     * <br>
+     * <b>Please note that this function is available for Subscribers only.
+     * On free accounts use getStationTrackURL.</b>
+     *
+     * @param episode title to download
+     * @param quality quality of the stream
+     * @return temporary url to the title
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    public String getPodcastURL(PodcastEpisode episode, StreamQuality quality)
+            throws IOException {
+        return urlFetcher(episode, quality, Provider.PODCAST, EMPTY_MAP);
+    }
+
+    /**
+     * Wrap {@link #getTrackURL(Track, StreamQuality)} and {@link #getPodcastURL(PodcastEpisode, StreamQuality)}
+     * to have a single method handle all URL calls for subscribers.
+     * <br>
+     * <b>Please note that this function is available for Subscribers only.
+     * On free accounts use getStationTrackURL.</b>
+     *
+     * @param title   Title of the {@link Track} or {@link PodcastEpisode}
+     * @param quality Quality of the stream
+     * @return temporary url to the title
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    public String getURL(Signable title, StreamQuality quality)
+            throws IOException {
+        if (title instanceof PodcastEpisode) {
+            return getPodcastURL((PodcastEpisode) title, quality);
+        }
+        if (title instanceof Track) {
+            return getTrackURL((Track) title, quality);
+        }
+        throw new RuntimeException(String.format("Signable subclass %s not recognized.", title.getClass().getName()));
+    }
+
+    /**
+     * Wrapper for the {@link GPlayService#getTrackLocationMJCK(String, Provider, StreamQuality, String, String, String, Map)}
+     * and {@link GPlayService#getTrackLocationSongId(String, Provider, StreamQuality, String, String, String, Map)}
      * methods. Determines which call to use and which parameters to add.
      *
      * @param signable A Childclass of singable as a {@link com.github.felixgail.gplaymusic.model.abstracts.Signable.Signature}
@@ -174,7 +217,7 @@ public final class GPlayMusic {
      * @throws IOException - on severe failures (no internet connection...)
      *                     or a {@link NetworkException} on request failures.
      */
-    private String urlFetcher(Signable signable, SongQuality quality,
+    private String urlFetcher(Signable signable, StreamQuality quality,
                               Provider provider, Map<String, String> kwargs)
             throws IOException {
         Track.Signature sig = signable.getSignature();

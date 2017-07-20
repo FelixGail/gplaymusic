@@ -1,13 +1,13 @@
 package com.github.felixgail.gplaymusic.model;
 
-public enum SongQuality {
+public enum StreamQuality {
     LOW("lo"),
     MEDIUM("med"),
     HIGH("hi");
 
     private String rep;
 
-    SongQuality(String q) {
+    StreamQuality(String q) {
         this.rep = q;
     }
 

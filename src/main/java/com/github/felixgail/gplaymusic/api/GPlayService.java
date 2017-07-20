@@ -2,7 +2,7 @@ package com.github.felixgail.gplaymusic.api;
 
 
 import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.SongQuality;
+import com.github.felixgail.gplaymusic.model.StreamQuality;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
@@ -26,7 +26,7 @@ public interface GPlayService {
     @GET("music/{provider}?net=mob&pt=e")
     Call<Void> getTrackLocationMJCK(@Header("X-Device-ID") String androidID,
                                     @Path("provider") Provider provider,
-                                    @Query("opt") SongQuality quality,
+                                    @Query("opt") StreamQuality quality,
                                     @Query("slt") String salt,
                                     @Query("sig") String signature,
                                     @Query("mjck") String trackID,
@@ -35,7 +35,7 @@ public interface GPlayService {
     @GET("music/{provider}?net=mob&pt=e")
     Call<Void> getTrackLocationSongId(@Header("X-Device-ID") String androidID,
                                       @Path("provider") Provider provider,
-                                      @Query("opt") SongQuality quality,
+                                      @Query("opt") StreamQuality quality,
                                       @Query("slt") String salt,
                                       @Query("sig") String signature,
                                       @Query("songid") String trackID,
