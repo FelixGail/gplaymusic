@@ -4,9 +4,12 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.model.Provider;
 import com.github.felixgail.gplaymusic.model.StreamQuality;
 import com.github.felixgail.gplaymusic.model.config.Config;
+import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowItem;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -55,6 +58,12 @@ public interface GPlayService {
 
     @GET("sj/v2.5/podcast/browse")
     Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
+
+    @GET("sj/v2.5/listennow/getlistennowitems")
+    Call<ListResult<ListenNowItem>> listListenNowItems();
+
+    @POST("sj/v2.5/listennow/situations")
+    Call<ListenNowSituation> listListenNowSituations(@Body TimeZoneOffset offset);
 
     /**
      * As far as my understanding goes, this simply returns a list of {@link PlaylistEntry}
