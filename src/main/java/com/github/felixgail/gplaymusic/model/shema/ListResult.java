@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -9,6 +10,8 @@ import java.util.List;
 public class ListResult<T> implements Serializable {
 
     @Expose
+    @SerializedName(value="data",
+            alternate = {"series", "listennow_items"})
     private InnerData<T> data = new InnerData<>();
 
     public List<T> toList() {
@@ -17,6 +20,8 @@ public class ListResult<T> implements Serializable {
 
     private class InnerData<U> implements Serializable {
         @Expose
+        @SerializedName(value = "items",
+                alternate = "stations")
         private List<U> items = new LinkedList<>();
     }
 }
