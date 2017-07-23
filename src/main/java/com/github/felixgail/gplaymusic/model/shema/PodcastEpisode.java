@@ -1,9 +1,13 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.Provider;
+import com.github.felixgail.gplaymusic.model.StreamQuality;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -142,5 +146,23 @@ public class PodcastEpisode extends Signable implements Serializable {
 
     public Signature getSignature() {
         return super.createSignature(this.getID());
+    }
+
+    /**
+     * Returns a URL to download a podcast episode in set quality.
+     * URL will only be valid for 1 minute.
+     * You will likely need to handle redirects.
+     * <br>
+     * <b>TODO: Find out if free users have access to podcast episodes</b>
+     *
+     * @param quality quality of the stream
+     * @return temporary url to the title
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    @Override
+    public String getStreamURL(StreamQuality quality)
+            throws IOException {
+        return urlFetcher(quality, Provider.PODCAST, EMPTY_MAP);
     }
 }

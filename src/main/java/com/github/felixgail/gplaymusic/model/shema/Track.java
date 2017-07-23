@@ -1,12 +1,23 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.Provider;
+import com.github.felixgail.gplaymusic.model.StreamQuality;
+import com.github.felixgail.gplaymusic.model.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+import com.sun.istack.internal.NotNull;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Track extends Signable implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.TRACK;
@@ -53,6 +64,11 @@ public class Track extends Signable implements Result, Serializable {
     private boolean albumAvailableForPurchase;
     @Expose
     private String explicitType;
+
+    //This attribute is only set when the track is retrieved from a station.
+    @Expose
+    @SerializedName("wentryid")
+    private String wentryID;
 
     public String getTitle() {
         return title;
@@ -229,6 +245,14 @@ public class Track extends Signable implements Result, Serializable {
         this.explicitType = explicitType;
     }
 
+    public String getWentryID() {
+        return wentryID;
+    }
+
+    public void setWentryID(String wentryID) {
+        this.wentryID = wentryID;
+    }
+
     @Override
     public boolean equals(Object o) {
         return (o instanceof Track) && ((Track) o).getID().equals(this.getID());
@@ -241,5 +265,67 @@ public class Track extends Signable implements Result, Serializable {
     @Override
     public ResultType getResultType() {
         return RESULT_TYPE;
+    }
+
+    /**
+     * Returns a URL to download the song in set quality.
+     * URL will only be valid for 1 minute.
+     * You will likely need to handle redirects.
+     * <br>
+     * <b>Please note that this function is available for Subscribers only.
+     * On free accounts use getStationTrackURL.</b>
+     *
+     * @param quality quality of the stream
+     * @return temporary url to the title
+     * @throws IOException Throws an IOException on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    @Override
+    public String getStreamURL(@NotNull StreamQuality quality)
+            throws IOException
+    {
+        if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
+            throw new IOException("Function not allowed for Free users");
+        }
+        if (getID() == null || getID().isEmpty()) {
+            throw new IOException("Track does not contain a valid TrackID.");
+        }
+        return urlFetcher(quality, Provider.STREAM, EMPTY_MAP);
+    }
+
+    /**
+     * Fetch the URL from a free Station.
+     * Make sure the provided {@link Station} does not return Null on {@link Station#getSessionToken()}.
+     * <br>
+     * <b>Subscribers should use the {@link #getStreamURL(StreamQuality)}</b> method, which is easier to handle.
+     * TODO: provide way to get session token.
+     *
+     * @param station A station created by TODO.
+     *                that contains the song queried for.
+     * @param quality - quality of the stream
+     * @return a url to download songs from.
+     * @throws IOException on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    public String getStationTrackURL(@NotNull Station station, @NotNull StreamQuality quality)
+            throws IOException {
+        if (getWentryID() == null || getWentryID().isEmpty()) {
+            throw new IOException("Track does not contain a valid WentryID." +
+                    "This means this track was not taken from a Station! Shame on you.");
+        }
+        if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.SUBSCRIBED) {
+            return getStreamURL(quality);
+        }
+        if (!station.getTracks().contains(this)) {
+            throw new IOException("Provided station does not contain this Track. This is a requirement for free users.");
+        }
+        if (station.getSessionToken() == null || station.getSessionToken().isEmpty()) {
+            throw new IOException("Station does not contain a valid session token.");
+        }
+        Map<String, String> map = new HashMap<>();
+        map.putAll(STATION_MAP);
+        map.put("wentryid", getWentryID());
+        map.put("sesstok", station.getSessionToken());
+        return urlFetcher(quality, Provider.STATION, map);
     }
 }

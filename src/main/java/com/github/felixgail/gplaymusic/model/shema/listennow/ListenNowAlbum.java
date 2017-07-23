@@ -1,5 +1,6 @@
 package com.github.felixgail.gplaymusic.model.shema.listennow;
 
+import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.shema.snippets.Attribution;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ProfileImage;
 import com.google.gson.annotations.Expose;

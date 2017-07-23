@@ -8,7 +8,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowItem;
+import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import retrofit2.Call;
 import retrofit2.http.*;

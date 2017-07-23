@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.model.shema.listennow;
+package com.github.felixgail.gplaymusic.model.abstracts;
 
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;

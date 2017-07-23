@@ -29,18 +29,13 @@ import java.util.*;
  * Use the {@link GPlayMusic.Builder} to create a new instance.
  */
 public final class GPlayMusic {
-    private static final Map<String, String> EMPTY_MAP = new HashMap<>();
-    private static final Map<String, String> STATION_MAP = new HashMap<>();
-
-    static {
-        STATION_MAP.put("audio_formats", "mp3");
-    }
-
     private GPlayService service;
+    private static GPlayMusic instance;
     private Config config;
 
     private GPlayMusic(GPlayService service) {
         this.service = service;
+        instance = this;
     }
 
     public Config getConfig() {
@@ -110,129 +105,6 @@ public final class GPlayMusic {
     }
 
     /**
-     * Returns a URL to download the song in set quality.
-     * URL will only be valid for 1 minute.
-     * You will likely need to handle redirects.
-     * <br>
-     * <b>Please note that this function is available for Subscribers only.
-     * On free accounts use getStationTrackURL.</b>
-     *
-     * @param title   title to download
-     * @param quality quality of the stream
-     * @return temporary url to the title
-     * @throws IOException Throws an IOException on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    public String getTrackURL(Track title, StreamQuality quality)
-            throws IOException {
-        if (getConfig().getSubscription() == SubscriptionType.FREE) {
-            throw new IOException("Function not allowed for Free users");
-        }
-        return urlFetcher(title, quality, Provider.STREAM, EMPTY_MAP);
-    }
-
-    /**
-     * Fetch the URL from a free Station.
-     * Make sure the provided {@link Station} does not return Null on {@link Station#getSessionToken()}.
-     * <br>
-     * <b>Subscribers should use the {@link #getTrackURL(Track, StreamQuality)}</b> method, which is easier to handle.
-     * TODO: provide way to get session token.
-     *
-     * @param title   Title of the Song. This song has to be inside {@link Station#getTracks()}
-     *                or the Server will respond with an error.
-     *                To get a Station with Tracks call TODO!
-     * @param station A station created by TODO.
-     *                that contains the song queried for.
-     * @param quality - quality of the stream
-     * @return a url to download songs from.
-     * @throws IOException on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    public String getStationTrackURL(Track title, FilledStation station, StreamQuality quality)
-            throws IOException {
-        if (getConfig().getSubscription() == SubscriptionType.SUBSCRIBED) {
-            return getTrackURL(title, quality);
-        }
-        Map<String, String> map = new HashMap<>();
-        map.putAll(STATION_MAP);
-        map.put("wentryid", title.getNid());
-        map.put("sesstok", station.getSessionToken());
-        return urlFetcher(title, quality, Provider.STATION, map);
-    }
-
-    /**
-     * Returns a URL to download a podcast episode in set quality.
-     * URL will only be valid for 1 minute.
-     * You will likely need to handle redirects.
-     * <br>
-     * <b>Please note that this function is available for Subscribers only.
-     * On free accounts use getStationTrackURL.</b>
-     *
-     * @param episode title to download
-     * @param quality quality of the stream
-     * @return temporary url to the title
-     * @throws IOException Throws an IOException on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    public String getPodcastURL(PodcastEpisode episode, StreamQuality quality)
-            throws IOException {
-        return urlFetcher(episode, quality, Provider.PODCAST, EMPTY_MAP);
-    }
-
-    /**
-     * Wrap {@link #getTrackURL(Track, StreamQuality)} and {@link #getPodcastURL(PodcastEpisode, StreamQuality)}
-     * to have a single method handle all URL calls for subscribers.
-     * <br>
-     * <b>Please note that this function is available for Subscribers only.
-     * On free accounts use getStationTrackURL.</b>
-     *
-     * @param title   Title of the {@link Track} or {@link PodcastEpisode}
-     * @param quality Quality of the stream
-     * @return temporary url to the title
-     * @throws IOException Throws an IOException on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    public String getURL(Signable title, StreamQuality quality)
-            throws IOException {
-        if (title instanceof PodcastEpisode) {
-            return getPodcastURL((PodcastEpisode) title, quality);
-        }
-        if (title instanceof Track) {
-            return getTrackURL((Track) title, quality);
-        }
-        throw new RuntimeException(String.format("Signable subclass %s not recognized.", title.getClass().getName()));
-    }
-
-    /**
-     * Wrapper for the {@link GPlayService#getTrackLocationMJCK(String, Provider, StreamQuality, String, String, String, Map)}
-     * and {@link GPlayService#getTrackLocationSongId(String, Provider, StreamQuality, String, String, String, Map)}
-     * methods. Determines which call to use and which parameters to add.
-     *
-     * @param signable A Childclass of singable as a {@link com.github.felixgail.gplaymusic.model.abstracts.Signable.Signature}
-     *                 is needed for each url fetch
-     * @param quality  Quality of the stream
-     * @param provider Provider of the Signable. Determines wich url path to use (mplay,wplay,fplay)
-     * @param kwargs   Map for additional query arguments. E.g. session token for stations
-     * @return the url to the provided signable. expires after 1 minute.
-     * @throws IOException - on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    private String urlFetcher(Signable signable, StreamQuality quality,
-                              Provider provider, Map<String, String> kwargs)
-            throws IOException {
-        Track.Signature sig = signable.getSignature();
-        if (signable.getID().matches("^[TD]\\S*$")) {
-            return getService().getTrackLocationMJCK(getConfig().getAndroidID(), provider,
-                    quality, sig.getSalt(), sig.getSignature(), signable.getID(), kwargs
-            ).execute().headers().get("Location");
-        } else {
-            return getService().getTrackLocationSongId(getConfig().getAndroidID(), provider,
-                    quality, sig.getSalt(), sig.getSignature(), signable.getID(), kwargs
-            ).execute().headers().get("Location");
-        }
-    }
-
-    /**
      * Returns a list of promoted {@link Track}s.
      * Which tracks are in the returned list is determined by google
      *
@@ -242,6 +114,13 @@ public final class GPlayMusic {
     public List<Track> getPromotedTracks()
             throws IOException {
         return getService().getPromotedTracks().execute().body().toList();
+    }
+
+    public static GPlayMusic getApiInstance() {
+        if (instance == null) {
+            throw new InitializationException("No instance of API initialized!");
+        }
+        return instance;
     }
 
     /**

@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Station implements Result, Serializable {
@@ -35,7 +36,7 @@ public class Station implements Result, Serializable {
     @Expose
     private String description;
     @Expose
-    private List<Track> tracks;
+    private List<Track> tracks = new LinkedList<>();
     @Expose
     @SerializedName("imageUrls")
     private List<ArtRef> imageArtRefs;
