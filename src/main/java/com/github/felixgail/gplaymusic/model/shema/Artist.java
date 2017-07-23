@@ -101,4 +101,9 @@ public class Artist implements Result, Serializable {
     public boolean equals(Object o) {
         return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

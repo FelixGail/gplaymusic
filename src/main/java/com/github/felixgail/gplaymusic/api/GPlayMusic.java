@@ -405,7 +405,7 @@ public final class GPlayMusic {
 
                 if (androidID == null) {
                     Optional<DeviceInfo> optional =
-                            gPlay.getRegisteredDevices().stream()
+                            gPlay.getRegisteredDevices().toList().stream()
                                     .filter(deviceInfo -> (deviceInfo.getType().equals("ANDROID")))
                                     .findFirst();
                     if (optional.isPresent()) {

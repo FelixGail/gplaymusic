@@ -74,4 +74,9 @@ public class Situation implements Result, Serializable {
     public boolean equals(Object o) {
         return (o instanceof Situation) && ((Situation) o).getId().equals(this.id);
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

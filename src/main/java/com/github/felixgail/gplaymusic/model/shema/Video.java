@@ -45,4 +45,9 @@ public class Video implements Result, Serializable {
     public boolean equals(Object o) {
         return (o instanceof Video) && ((Video) o).getId().equals(this.id);
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

@@ -173,4 +173,9 @@ public class Station implements Result, Serializable {
     public void setSessionToken(String sessionToken) {
         this.sessionToken = sessionToken;
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

@@ -136,4 +136,9 @@ public class PodcastSeries implements Result, Serializable {
     public boolean equals(Object o) {
         return (o instanceof PodcastSeries) && ((PodcastSeries) o).getSeriesId().equals(this.seriesId);
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

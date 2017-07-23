@@ -108,4 +108,9 @@ public class Album implements Result, Serializable {
     public boolean equals(Object o) {
         return (o instanceof Album) && ((Album) o).getAlbumId().equals(this.albumId);
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

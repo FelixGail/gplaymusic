@@ -187,4 +187,9 @@ public class Playlist implements Result, Serializable {
         @SerializedName("PUBLIC")
         PUBLIC;
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }

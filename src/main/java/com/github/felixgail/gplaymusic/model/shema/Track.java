@@ -237,4 +237,9 @@ public class Track extends Signable implements Result, Serializable {
     public Signature getSignature() {
         return super.createSignature(this.getID());
     }
+
+    @Override
+    public ResultType getResultType() {
+        return RESULT_TYPE;
+    }
 }
