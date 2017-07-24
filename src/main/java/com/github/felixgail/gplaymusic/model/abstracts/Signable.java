@@ -1,10 +1,9 @@
 package com.github.felixgail.gplaymusic.model.abstracts;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.GPlayService;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.StreamQuality;
+import com.github.felixgail.gplaymusic.model.enums.Provider;
+import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

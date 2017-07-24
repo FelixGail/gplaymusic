@@ -23,15 +23,15 @@ public class Playlist implements Result, Serializable {
     @Expose
     private String ownerProfilePhotoUrl;
     @Expose
-    private String lastModifiedTimeStamp;
+    private String lastModifiedTimestamp;
     @Expose
-    private String recentTimeStamp;
+    private String recentTimestamp;
     @Expose
     private boolean accessControlled;
     @Expose
     private boolean deleted;
     @Expose
-    private String creationTimeStamp;
+    private String creationTimestamp;
     @Expose
     private String id;
     @Expose
@@ -41,6 +41,8 @@ public class Playlist implements Result, Serializable {
     private String explicitType;
     @Expose
     private String contentType;
+    @Expose
+    private PlaylistShareState shareState;
 
     public String getName() {
         return name;
@@ -90,20 +92,20 @@ public class Playlist implements Result, Serializable {
         this.ownerProfilePhotoUrl = ownerProfilePhotoUrl;
     }
 
-    public String getLastModifiedTimeStamp() {
-        return lastModifiedTimeStamp;
+    public String getLastModifiedTimestamp() {
+        return lastModifiedTimestamp;
     }
 
-    public void setLastModifiedTimeStamp(String lastModifiedTimeStamp) {
-        this.lastModifiedTimeStamp = lastModifiedTimeStamp;
+    public void setLastModifiedTimestamp(String lastModifiedTimestamp) {
+        this.lastModifiedTimestamp = lastModifiedTimestamp;
     }
 
-    public String getRecentTimeStamp() {
-        return recentTimeStamp;
+    public String getRecentTimestamp() {
+        return recentTimestamp;
     }
 
-    public void setRecentTimeStamp(String recentTimeStamp) {
-        this.recentTimeStamp = recentTimeStamp;
+    public void setRecentTimestamp(String recentTimestamp) {
+        this.recentTimestamp = recentTimestamp;
     }
 
     public boolean isAccessControlled() {
@@ -122,12 +124,12 @@ public class Playlist implements Result, Serializable {
         this.deleted = deleted;
     }
 
-    public String getCreationTimeStamp() {
-        return creationTimeStamp;
+    public String getCreationTimestamp() {
+        return creationTimestamp;
     }
 
-    public void setCreationTimeStamp(String creationTimeStamp) {
-        this.creationTimeStamp = creationTimeStamp;
+    public void setCreationTimestamp(String creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
     }
 
     public String getId() {
@@ -160,6 +162,14 @@ public class Playlist implements Result, Serializable {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public PlaylistShareState getShareState() {
+        return shareState;
+    }
+
+    public void setShareState(PlaylistShareState shareState) {
+        this.shareState = shareState;
     }
 
     @Override

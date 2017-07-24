@@ -1,10 +1,11 @@
 package com.github.felixgail.gplaymusic.api;
 
 
-import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.StreamQuality;
+import com.github.felixgail.gplaymusic.model.enums.Provider;
+import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
@@ -73,4 +74,7 @@ public interface GPlayService {
      */
     @POST("sj/v2.5/plentryfeed")
     Call<ListResult<PlaylistEntry>> listPlaylistEntries();
+
+    @POST("sj/v2.5/{path}")
+    Call<ListResult<MutateResponse>> batchCall(@Path("path") String path, @Body Mutator mutator);
 }

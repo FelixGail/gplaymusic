@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.StreamQuality;
+import com.github.felixgail.gplaymusic.model.enums.Provider;
+import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;

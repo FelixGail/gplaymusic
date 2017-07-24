@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.model.config;
 
-import com.github.felixgail.gplaymusic.model.SubscriptionType;
+import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;

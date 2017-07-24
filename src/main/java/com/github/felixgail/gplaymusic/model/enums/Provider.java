@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.model;
+package com.github.felixgail.gplaymusic.model.enums;
 
 public enum Provider {
     STREAM("mplay"),

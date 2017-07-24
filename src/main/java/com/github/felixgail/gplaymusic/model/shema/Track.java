@@ -2,9 +2,9 @@ package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.Provider;
-import com.github.felixgail.gplaymusic.model.StreamQuality;
-import com.github.felixgail.gplaymusic.model.SubscriptionType;
+import com.github.felixgail.gplaymusic.model.enums.Provider;
+import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
+import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
@@ -13,7 +13,6 @@ import com.google.gson.annotations.SerializedName;
 import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
