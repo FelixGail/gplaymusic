@@ -25,7 +25,7 @@ public class ErrorInterceptor implements Interceptor {
         Response response = chain.proceed(request);
         if (response.code() >= 400) {
             NetworkException networkException = NetworkException.parse(response);
-            networkException.setRequest(request);
+            networkException.setResponse(response);
             if (behaviour == InterceptorBehaviour.THROW_EXCEPTION) {
                 throw networkException;
             } else {
