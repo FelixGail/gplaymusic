@@ -151,7 +151,7 @@ public class MutationFactory {
      * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
      * @param entry PlaylistEntry to delete
      */
-    public static Mutation<String> getPlaylistEntryDeleteMutation(@NotNull PlaylistEntry entry) {
+    public static Mutation<String> getDeletePlaylistEntryMutation(@NotNull PlaylistEntry entry) {
         return new StringMutation("delete", entry.getId());
     }
 
@@ -162,7 +162,7 @@ public class MutationFactory {
      * <b>WARNING: THIS CAN NOT BE UNDONE!</b>
      * @param playlist - playlist to remove
      */
-    public static Mutation<String> getPlaylistDeleteMutation(@NotNull Playlist playlist) {
+    public static Mutation<String> getDeletePlaylistMutation(@NotNull Playlist playlist) {
         return new StringMutation("delete", playlist.getId());
     }
 
@@ -238,7 +238,7 @@ public class MutationFactory {
      * @param preceedingEntry Entry that will be before the provided entry, or null provided will be the first
      * @param followingEntry Entry that will be after the providen entry, or null if provided will be the last
      */
-    public static Mutation<Map<String, Object>> getPlaylistEntryReorderMutation(
+    public static Mutation<Map<String, Object>> getReorderPlaylistEntryMutation(
             @NotNull PlaylistEntry plentry, @NotNull PlaylistEntry preceedingEntry,
             @NotNull PlaylistEntry followingEntry) {
         Map<String, Object> update = new HashMap<>();
@@ -262,7 +262,7 @@ public class MutationFactory {
      * <br>
      * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
      */
-    public static Mutation<Map<String, Object>> getPlaylistUpdateMutation(
+    public static Mutation<Map<String, Object>> getUpdatePlaylistMutation(
             @Nullable String newID, @Nullable String newName, @Nullable String newDescription,
             @Nullable Playlist.PlaylistShareState newShareState) {
 
