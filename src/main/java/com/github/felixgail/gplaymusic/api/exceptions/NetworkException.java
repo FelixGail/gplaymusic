@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
+import okio.Buffer;
+import okio.BufferedSink;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -24,7 +26,7 @@ public class NetworkException extends IOException implements Serializable {
     @SerializedName("error")
     private ErrorHelper helper = new ErrorHelper();
 
-    private Request request;
+    private Response response;
 
     public NetworkException(int code, String message) {
         helper = new ErrorHelper();
@@ -48,40 +50,53 @@ public class NetworkException extends IOException implements Serializable {
         return helper.getMessage();
     }
 
-    public Request getRequest() {
-        return request;
+
+    public Response getResponse() {
+        return response;
     }
 
-    public void setRequest(Request request) {
-        this.request = request;
+    public void setResponse(Response response) {
+        this.response = response;
     }
 
     private String getRequestInformation() {
-        if (request != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("More Request Information:\n")
-                    .append("URL: ").append(request.url()).append(System.lineSeparator());
+
+        if (response != null) {
+            Request request = response.request();
+            Buffer buffer = new Buffer();
+            buffer.writeUtf8("Request Information:\n")
+                    .writeUtf8("URL: ").writeUtf8(request.url().toString()).writeUtf8(System.lineSeparator())
+                    .writeUtf8("Method: ").writeUtf8(request.method()).writeUtf8(System.lineSeparator());
             for (Map.Entry<String, List<String>> entry :
                     request.headers().toMultimap().entrySet()){
-                sb.append(entry.getKey()).append(": ");
+                buffer.writeUtf8(entry.getKey()).writeUtf8(": ");
                 for (String value : entry.getValue()) {
-                    sb.append("\t");
+                    buffer.writeUtf8("\t");
                     if (value.startsWith("GoogleLogin")) {
-                        sb.append("<ommited>");
+                        buffer.writeUtf8("<ommited>");
                     } else {
-                        sb.append(value);
+                        buffer.writeUtf8(value);
                     }
-                    sb.append(System.lineSeparator());
+                    buffer.writeUtf8(System.lineSeparator());
                 }
             }
-            return sb.toString();
+            if (request.body() != null) {
+                try {
+                    buffer.writeUtf8("\nRequest body:\n");
+                    request.body().writeTo(buffer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return buffer.readUtf8();
         }
         return "";
     }
 
     @Override
     public String toString() {
-        return String.format("%d: %s\n\n%s", getCode(), getMessage(), getRequestInformation());
+        return String.format("A NetworkException occured: \nError Code: %d \nMessage: %s \n\n%s\n",
+                getCode(), getMessage(), getRequestInformation());
     }
 
     private class ErrorHelper implements Serializable {
