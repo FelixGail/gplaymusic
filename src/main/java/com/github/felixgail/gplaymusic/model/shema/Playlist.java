@@ -1,15 +1,25 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sun.istack.internal.NotNull;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
+    private final static String batchUrl = "playlistbatch";
+
     @Expose
     private String name;
     @Expose
@@ -43,6 +53,17 @@ public class Playlist implements Result, Serializable {
     private String contentType;
     @Expose
     private PlaylistShareState shareState;
+
+    protected Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
+                     String lastModifiedTimestamp, String creationTimestamp) {
+        this.name = name;
+        this.id = id;
+        this.shareState = shareState;
+        this.description = description;
+        this.type = type;
+        this.lastModifiedTimestamp = lastModifiedTimestamp;
+        this.creationTimestamp = creationTimestamp;
+    }
 
     public String getName() {
         return name;
@@ -188,18 +209,67 @@ public class Playlist implements Result, Serializable {
         @SerializedName("MAGIC")
         MAGIC,
         @SerializedName("USER_GENERATED")
-        USER_GENERATED;
+        USER_GENERATED
     }
 
     public enum PlaylistShareState implements Serializable {
         @SerializedName("PRIVATE")
         PRIVATE,
         @SerializedName("PUBLIC")
-        PUBLIC;
+        PUBLIC
     }
 
     @Override
     public ResultType getResultType() {
         return RESULT_TYPE;
+    }
+
+    /**
+     * Creates a new playlist.
+     * @param name Name of the playlist. <b>Doesn't</b> have to be unique
+     * @param description Optional. A description for the playlist.
+     * @param shareState share state of the playlist. defaults to {@link PlaylistShareState#PRIVATE} on null.
+     * @return The newly created Playlist. Warning: Playlist is not filled yet.
+     * @throws IOException
+     */
+    public static Playlist create(@NotNull String name, String description, PlaylistShareState shareState)
+            throws IOException {
+        Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
+        MutateResponse response = GPlayMusic.getApiInstance().makeBatchCall(batchUrl, mutator);
+        String id = response.getItems().get(0).getId();
+        return new Playlist(name, id, (shareState == null?PlaylistShareState.PRIVATE:shareState),
+                description, PlaylistType.USER_GENERATED, "0", "-1");
+    }
+
+    /**
+     * Adds {@link Track}s to this playlist.
+     *
+     * @param tracks Array of tracks to be added
+     * @return List of created PlaylistEntries. As this list is only filled with the information available,
+     * <b>{@link PlaylistEntry#creationTiestamp}, {@link PlaylistEntry#lastModifiedTimestamp} and
+     * {@link PlaylistEntry#source}</b> are not set (null).
+     * @throws IOException
+     */
+    public List<PlaylistEntry> addTracks(Track... tracks)
+            throws IOException{
+        List<PlaylistEntry> playlistEntries = new LinkedList<>();
+        Mutator mutator = new Mutator();
+        UUID last = null;
+        UUID current = UUID.randomUUID();
+        UUID next = UUID.randomUUID();
+        for (Track track : tracks) {
+            Mutation currentMutation = MutationFactory.getAddPlaylistEntryMutation(this, track, last, current, next);
+            mutator.addMutation(currentMutation);
+            last = current;
+            current = next;
+            next = UUID.randomUUID();
+        }
+        MutateResponse response = GPlayMusic.getApiInstance().makeBatchCall("plentriesbatch", mutator);
+        for (int i = 0; i < tracks.length; i++) {
+            MutateResponse.Item item = response.getItems().get(i);
+            playlistEntries.add(new PlaylistEntry(item.getId(), item.getClientID(), this.getId(),
+                    tracks[i], null, null, null, false));
+        }
+        return playlistEntries;
     }
 }

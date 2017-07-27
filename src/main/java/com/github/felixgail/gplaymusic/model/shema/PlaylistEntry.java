@@ -26,6 +26,19 @@ public class PlaylistEntry implements Serializable {
     @Expose
     private Track track;
 
+    protected PlaylistEntry(String id, String clientId, String playlistId, Track track, String creationTimestamp,
+                            String lastModifiedTimestamp, String source, boolean deleted) {
+        this.id = id;
+        this.clientId = clientId;
+        this.playlistId = playlistId;
+        this.track = track;
+        this.lastModifiedTimestamp = lastModifiedTimestamp;
+        this.creationTiestamp = creationTimestamp;
+        this.lastModifiedTimestamp = lastModifiedTimestamp;
+        this.source = source;
+        this.deleted = deleted;
+    }
+
     public String getId() {
         return id;
     }
