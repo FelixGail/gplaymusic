@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MutateResponse implements Serializable {
+public class MutationResponse implements Serializable {
 
     @Expose
     private List<Item> mutate_response = new LinkedList<>();

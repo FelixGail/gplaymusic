@@ -1,10 +1,16 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.google.gson.annotations.Expose;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class PlaylistEntry implements Serializable {
+    public final static String BATCH_URL = "plentriesbatch";
+
     @Expose
     private String id;
     @Expose
@@ -26,7 +32,7 @@ public class PlaylistEntry implements Serializable {
     @Expose
     private Track track;
 
-    protected PlaylistEntry(String id, String clientId, String playlistId, Track track, String creationTimestamp,
+    PlaylistEntry(String id, String clientId, String playlistId, Track track, String creationTimestamp,
                             String lastModifiedTimestamp, String source, boolean deleted) {
         this.id = id;
         this.clientId = clientId;
@@ -43,79 +49,60 @@ public class PlaylistEntry implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getClientId() {
         return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
     }
 
     public String getPlaylistId() {
         return playlistId;
     }
 
-    public void setPlaylistId(String playlistId) {
-        this.playlistId = playlistId;
-    }
-
     public String getAbsolutePosition() {
         return absolutePosition;
-    }
-
-    public void setAbsolutePosition(String absolutePosition) {
-        this.absolutePosition = absolutePosition;
     }
 
     public String getTrackId() {
         return trackId;
     }
 
-    public void setTrackId(String trackId) {
-        this.trackId = trackId;
-    }
-
     public String getCreationTiestamp() {
         return creationTiestamp;
-    }
-
-    public void setCreationTiestamp(String creationTiestamp) {
-        this.creationTiestamp = creationTiestamp;
     }
 
     public String getLastModifiedTimestamp() {
         return lastModifiedTimestamp;
     }
 
-    public void setLastModifiedTimestamp(String lastModifiedTimestamp) {
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
-    }
-
     public boolean isDeleted() {
         return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public String getSource() {
         return source;
     }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
-
     public Track getTrack() {
         return track;
     }
 
-    public void setTrack(Track track) {
-        this.track = track;
+    public void delete()
+        throws IOException {
+        GPlayMusic.getApiInstance().deletePlaylistEntries(this);
+    }
+
+    /**
+     * Moves the position of this entry in the playlist.
+     * Leaving preceding/following empty, implies that the element will be this first/last entry.
+     * Leaving a parameter empty, while not aiming for the first/last element of the playlist is undefined - as well as
+     * using entries not present in the playlist.
+     * @param preceding the entry that will be before the moved entry, or null if moved entry will be first
+     * @param following the entry that will be after the moved entry, or null if moved entry will be the last
+     * @throws IOException
+     */
+    public void move(PlaylistEntry preceding, PlaylistEntry following)
+            throws IOException{
+        Mutator mutator = new Mutator(MutationFactory.
+                getReorderPlaylistEntryMutation(this, preceding, following));
+        GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
     }
 }

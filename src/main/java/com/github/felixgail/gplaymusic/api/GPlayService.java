@@ -76,5 +76,5 @@ public interface GPlayService {
     Call<ListResult<PlaylistEntry>> listPlaylistEntries();
 
     @POST("sj/v2.5/{path}")
-    Call<MutateResponse> batchCall(@Path("path") String path, @Body Mutator mutator);
+    Call<MutationResponse> batchCall(@Path("path") String path, @Body Mutator mutator);
 }

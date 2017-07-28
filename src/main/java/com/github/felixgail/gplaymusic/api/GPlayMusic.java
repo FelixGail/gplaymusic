@@ -3,7 +3,7 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.config.Config;
-import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
@@ -13,14 +13,12 @@ import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
-import com.github.felixgail.gplaymusic.util.serializer.MutationSerializer;
 import com.google.gson.GsonBuilder;
 import com.sun.istack.internal.NotNull;
 import okhttp3.*;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import sun.nio.ch.Net;
 import svarzee.gps.gpsoauth.AuthToken;
 
 import java.io.IOException;
@@ -128,15 +126,42 @@ public final class GPlayMusic {
         return instance;
     }
 
-    public MutateResponse makeBatchCall(@NotNull String path, @NotNull Mutator body)
+    public MutationResponse makeBatchCall(@NotNull String path, @NotNull Mutator body)
             throws IOException{
-        Response<MutateResponse> response = getService().batchCall(path, body).execute();
+        Response<MutationResponse> response = getService().batchCall(path, body).execute();
         if (!response.body().checkSuccess()) {
             NetworkException exception = new NetworkException(400, "The server reported a failure. Please open an" +
                     "issue and provide this output.");
             exception.setResponse(response.raw());
         }
         return response.body();
+    }
+
+    public void deletePlaylistEntries(PlaylistEntry... entries)
+            throws IOException {
+        Mutator mutator = new Mutator();
+        for (PlaylistEntry entry : entries) {
+            mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(entry));
+        }
+        makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
+    }
+
+    public void deletePlaylists(Playlist... playlists)
+        throws IOException {
+        Mutator mutator = new Mutator();
+        for (Playlist playlist : playlists) {
+            mutator.addMutation(MutationFactory.getDeletePlaylistMutation(playlist));
+        }
+        makeBatchCall(Playlist.BATCH_URL, mutator);
+    }
+
+    public void deleteStations(Station... stations)
+            throws IOException {
+        Mutator mutator = new Mutator();
+        for(Station station : stations) {
+            mutator.addMutation(MutationFactory.getDeleteStationMutation(station));
+        }
+        makeBatchCall(Station.BATCH_URL, mutator);
     }
 
     /**

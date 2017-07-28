@@ -12,7 +12,6 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.*;
 
 public class MutationFactory {
@@ -107,7 +106,7 @@ public class MutationFactory {
         }
 
         @Override
-        public Object getMutation() {
+        public Mutation getMutation() {
             return this;
         }
 
@@ -146,6 +145,30 @@ public class MutationFactory {
         }
     }
 
+    private static class DeleteStationMutation implements Mutation, Serializable {
+
+        @Expose
+        private String delete;
+        @Expose
+        private boolean includeFeed = false;
+        @Expose
+        private int numEntries = 0;
+
+        DeleteStationMutation(@NotNull Station station) {
+            delete = station.getId();
+        }
+
+        @Override
+        public Object getMutation() {
+            return this;
+        }
+
+        @Override
+        public String getSerializedAttributeName() {
+            return "custom";
+        }
+    }
+
     /**
      * Creates the Mutation needed to remove a PlaylistEntry from a playlist.
      * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
@@ -181,7 +204,7 @@ public class MutationFactory {
                                                                      @NotNull Track track, UUID preceedingID,
                                                                      @NotNull UUID currentID, UUID followingID) {
         Map<String, Object> create = new HashMap<>();
-        create.put("clientID", currentID);
+        create.put("clientID", currentID.toString());
         create.put("creationTimestamp", "-1");
         create.put("deleted", false);
         create.put("lastModifiedTimestamp", "0");
@@ -194,11 +217,11 @@ public class MutationFactory {
         }
 
         if(preceedingID != null) {
-            create.put("precedingEntryId", preceedingID);
+            create.put("precedingEntryId", preceedingID.toString());
         }
 
         if(followingID != null) {
-            create.put("followingEntryId", followingID);
+            create.put("followingEntryId", followingID.toString());
         }
         return new MapMutation("create", create);
     }
@@ -239,8 +262,11 @@ public class MutationFactory {
      * @param followingEntry Entry that will be after the providen entry, or null if provided will be the last
      */
     public static Mutation<Map<String, Object>> getReorderPlaylistEntryMutation(
-            @NotNull PlaylistEntry plentry, @NotNull PlaylistEntry preceedingEntry,
-            @NotNull PlaylistEntry followingEntry) {
+            @NotNull PlaylistEntry plentry, PlaylistEntry preceedingEntry,
+            PlaylistEntry followingEntry) {
+        if (preceedingEntry == null && followingEntry == null ){
+            throw new IllegalArgumentException("Either preceding or following entry must be provided.");
+        }
         Map<String, Object> update = new HashMap<>();
         update.put("clientId", plentry.getClientId());
         update.put("creationTimestamp", plentry.getCreationTiestamp());
@@ -300,8 +326,8 @@ public class MutationFactory {
         return getPodcastMutation(seriesID, false, false);
     }
 
-    public static Mutation<Map<String, Object>> getDeleteStationMutation(@NotNull Station station) {
-        return null;
+    public static Mutation getDeleteStationMutation(@NotNull Station station) {
+        return new DeleteStationMutation(station);
     }
 
     /**

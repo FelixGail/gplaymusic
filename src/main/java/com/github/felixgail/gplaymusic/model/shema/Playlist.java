@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
-    private final static String batchUrl = "playlistbatch";
+    public final static String BATCH_URL = "playlistbatch";
 
     @Expose
     private String name;
@@ -54,7 +54,7 @@ public class Playlist implements Result, Serializable {
     @Expose
     private PlaylistShareState shareState;
 
-    protected Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
+    Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
                      String lastModifiedTimestamp, String creationTimestamp) {
         this.name = name;
         this.id = id;
@@ -69,128 +69,64 @@ public class Playlist implements Result, Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public PlaylistType getType() {
         return type;
-    }
-
-    public void setType(PlaylistType type) {
-        this.type = type;
     }
 
     public String getShareToken() {
         return shareToken;
     }
 
-    public void setShareToken(String shareToken) {
-        this.shareToken = shareToken;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getOwnerName() {
         return ownerName;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
     public String getOwnerProfilePhotoUrl() {
         return ownerProfilePhotoUrl;
-    }
-
-    public void setOwnerProfilePhotoUrl(String ownerProfilePhotoUrl) {
-        this.ownerProfilePhotoUrl = ownerProfilePhotoUrl;
     }
 
     public String getLastModifiedTimestamp() {
         return lastModifiedTimestamp;
     }
 
-    public void setLastModifiedTimestamp(String lastModifiedTimestamp) {
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
-    }
-
     public String getRecentTimestamp() {
         return recentTimestamp;
-    }
-
-    public void setRecentTimestamp(String recentTimestamp) {
-        this.recentTimestamp = recentTimestamp;
     }
 
     public boolean isAccessControlled() {
         return accessControlled;
     }
 
-    public void setAccessControlled(boolean accessControlled) {
-        this.accessControlled = accessControlled;
-    }
-
     public boolean isDeleted() {
         return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public String getCreationTimestamp() {
         return creationTimestamp;
     }
 
-    public void setCreationTimestamp(String creationTimestamp) {
-        this.creationTimestamp = creationTimestamp;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public List<ArtRef> getArtRef() {
         return artRef;
     }
 
-    public void setArtRef(List<ArtRef> artRef) {
-        this.artRef = artRef;
-    }
-
     public String getExplicitType() {
         return explicitType;
-    }
-
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
     }
 
     public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
     public PlaylistShareState getShareState() {
         return shareState;
-    }
-
-    public void setShareState(PlaylistShareState shareState) {
-        this.shareState = shareState;
     }
 
     @Override
@@ -235,10 +171,14 @@ public class Playlist implements Result, Serializable {
     public static Playlist create(@NotNull String name, String description, PlaylistShareState shareState)
             throws IOException {
         Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
-        MutateResponse response = GPlayMusic.getApiInstance().makeBatchCall(batchUrl, mutator);
+        MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
         String id = response.getItems().get(0).getId();
         return new Playlist(name, id, (shareState == null?PlaylistShareState.PRIVATE:shareState),
                 description, PlaylistType.USER_GENERATED, "0", "-1");
+    }
+
+    public void delete() throws IOException {
+        GPlayMusic.getApiInstance().deletePlaylists(this);
     }
 
     /**
@@ -247,7 +187,7 @@ public class Playlist implements Result, Serializable {
      * @param tracks Array of tracks to be added
      * @return List of created PlaylistEntries. As this list is only filled with the information available,
      * <b>{@link PlaylistEntry#creationTiestamp}, {@link PlaylistEntry#lastModifiedTimestamp} and
-     * {@link PlaylistEntry#source}</b> are not set (null).
+     * {@link PlaylistEntry#source}</b> are not set (null). To get fully filled entries, use TODO!
      * @throws IOException
      */
     public List<PlaylistEntry> addTracks(Track... tracks)
@@ -258,15 +198,16 @@ public class Playlist implements Result, Serializable {
         UUID current = UUID.randomUUID();
         UUID next = UUID.randomUUID();
         for (Track track : tracks) {
-            Mutation currentMutation = MutationFactory.getAddPlaylistEntryMutation(this, track, last, current, next);
+            Mutation currentMutation = MutationFactory.
+                    getAddPlaylistEntryMutation(this, track, last, current, next);
             mutator.addMutation(currentMutation);
             last = current;
             current = next;
             next = UUID.randomUUID();
         }
-        MutateResponse response = GPlayMusic.getApiInstance().makeBatchCall("plentriesbatch", mutator);
+        MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
         for (int i = 0; i < tracks.length; i++) {
-            MutateResponse.Item item = response.getItems().get(i);
+            MutationResponse.Item item = response.getItems().get(i);
             playlistEntries.add(new PlaylistEntry(item.getId(), item.getClientID(), this.getId(),
                     tracks[i], null, null, null, false));
         }

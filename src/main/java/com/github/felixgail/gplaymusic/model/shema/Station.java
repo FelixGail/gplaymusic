@@ -1,17 +1,23 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
+import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sun.istack.internal.NotNull;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
+    public final static String BATCH_URL = "radio/editstation";
 
     @Expose
     private String name;
@@ -47,124 +53,70 @@ public class Station implements Result, Serializable {
     @Expose
     private String byline;
 
-    public String getName() {
-        return name;
+    Station(String name, StationSeed seed, List<Track> tracks;) {
+        this.name = name;
+        this.seed = seed;
+        this.tracks = tracks;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public boolean isDeleted() {
         return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
     }
 
     public String getLastModifiedTimestamp() {
         return lastModifiedTimestamp;
     }
 
-    public void setLastModifiedTimestamp(String lastModifiedTimestamp) {
-        this.lastModifiedTimestamp = lastModifiedTimestamp;
-    }
-
     public String getRecentTimestamp() {
         return recentTimestamp;
-    }
-
-    public void setRecentTimestamp(String recentTimestamp) {
-        this.recentTimestamp = recentTimestamp;
     }
 
     public String getClientId() {
         return clientId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
     public StationSeed getSeed() {
         return seed;
-    }
-
-    public void setSeed(StationSeed seed) {
-        this.seed = seed;
     }
 
     public List<StationSeed> getStationSeeds() {
         return stationSeeds;
     }
 
-    public void setStationSeeds(List<StationSeed> stationSeeds) {
-        this.stationSeeds = stationSeeds;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public List<Track> getTracks() {
         return tracks;
-    }
-
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
     }
 
     public List<ArtRef> getImageArtRefs() {
         return imageArtRefs;
     }
 
-    public void setImageArtRefs(List<ArtRef> imageArtRefs) {
-        this.imageArtRefs = imageArtRefs;
-    }
-
     public List<ArtRef> getCompositeArtRefs() {
         return compositeArtRefs;
-    }
-
-    public void setCompositeArtRefs(List<ArtRef> compositeArtRefs) {
-        this.compositeArtRefs = compositeArtRefs;
     }
 
     public List<String> getContentTypes() {
         return contentTypes;
     }
 
-    public void setContentTypes(List<String> contentTypes) {
-        this.contentTypes = contentTypes;
-    }
-
     public String getByline() {
         return byline;
-    }
-
-    public void setByline(String byline) {
-        this.byline = byline;
     }
 
     public String getSessionToken() {
@@ -178,5 +130,18 @@ public class Station implements Result, Serializable {
     @Override
     public ResultType getResultType() {
         return RESULT_TYPE;
+    }
+
+    public void delete()
+        throws IOException {
+        GPlayMusic.getApiInstance().deleteStations(this);
+    }
+
+    public static Station create(@NotNull StationSeed seed, String name, boolean includeTracks, int numEntries)
+            throws IOException {
+        Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
+        MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
+        String id = response.getItems().get(0).getId();
+        return null;
     }
 }
