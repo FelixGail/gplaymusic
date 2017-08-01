@@ -8,7 +8,6 @@ import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -53,7 +52,7 @@ public class Station implements Result, Serializable {
     @Expose
     private String byline;
 
-    Station(String name, StationSeed seed, List<Track> tracks;) {
+    Station(String name, StationSeed seed, List<Track> tracks) {
         this.name = name;
         this.seed = seed;
         this.tracks = tracks;
