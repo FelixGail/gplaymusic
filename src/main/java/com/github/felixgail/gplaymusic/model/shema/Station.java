@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.ResultType;

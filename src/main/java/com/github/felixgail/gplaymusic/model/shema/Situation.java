@@ -1,5 +1,6 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
 import com.google.gson.annotations.Expose;
 

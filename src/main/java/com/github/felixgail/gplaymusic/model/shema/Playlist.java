@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;

@@ -3,6 +3,7 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.config.Config;
+import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.ResultType;
