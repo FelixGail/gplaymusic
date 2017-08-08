@@ -51,7 +51,7 @@ public interface GPlayService {
     @POST("sj/v2.5/ephemeral/top")
     Call<ListResult<Track>> getPromotedTracks();
 
-    @POST("sj/v2.5/radio/stations")
+    @POST("sj/v2.5/radio/station")
     Call<ListResult<Station>> listStations();
 
     @POST("sj/v2.5/playlistfeed")

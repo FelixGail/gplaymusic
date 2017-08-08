@@ -1,4 +1,4 @@
-package com.github.felixgail.gplaymusic.model.search;
+package com.github.felixgail.gplaymusic.model.enums;
 
 import com.github.felixgail.gplaymusic.model.shema.*;
 import com.google.gson.annotations.SerializedName;

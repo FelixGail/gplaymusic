@@ -5,17 +5,16 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
-import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sun.istack.internal.NotNull;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;

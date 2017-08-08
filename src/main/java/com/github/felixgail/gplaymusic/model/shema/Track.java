@@ -7,7 +7,7 @@ import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.util.deserializer;
 
-import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.google.gson.*;
 

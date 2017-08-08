@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.search.ResultType;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.UserPreference;
 import com.google.gson.annotations.Expose;
