@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.util.deserializer;
 
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum;
 import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
 import com.google.gson.*;
 
@@ -16,7 +16,7 @@ public class ListenNowItemDeserializer implements JsonDeserializer<ListenNowItem
             addSubEntries(content, content.getAsJsonObject("album"));
             return jdc.deserialize(content, ListenNowAlbum.class);
         }
-        if (content.has("radio_station")){
+        if (content.has("radio_station")) {
             addSubEntries(content, content.getAsJsonObject("radio_station"));
             return jdc.deserialize(content, ListenNowStation.class);
         }

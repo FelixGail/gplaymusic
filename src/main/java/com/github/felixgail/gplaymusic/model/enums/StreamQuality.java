@@ -1,18 +1,14 @@
 package com.github.felixgail.gplaymusic.model.enums;
 
-public enum StreamQuality {
-    LOW("lo"),
-    MEDIUM("med"),
-    HIGH("hi");
+import com.google.gson.annotations.SerializedName;
 
-    private String rep;
+import java.io.Serializable;
 
-    StreamQuality(String q) {
-        this.rep = q;
-    }
-
-    @Override
-    public String toString() {
-        return this.rep;
-    }
+public enum StreamQuality implements Serializable{
+    @SerializedName("lo")
+    LOW,
+    @SerializedName("med")
+    MEDIUM,
+    @SerializedName("hi")
+    HIGH
 }

@@ -4,11 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.Buffer;
-import okio.BufferedSink;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -68,7 +66,7 @@ public class NetworkException extends IOException implements Serializable {
                     .writeUtf8("URL: ").writeUtf8(request.url().toString()).writeUtf8(System.lineSeparator())
                     .writeUtf8("Method: ").writeUtf8(request.method()).writeUtf8(System.lineSeparator());
             for (Map.Entry<String, List<String>> entry :
-                    request.headers().toMultimap().entrySet()){
+                    request.headers().toMultimap().entrySet()) {
                 buffer.writeUtf8(entry.getKey()).writeUtf8(": ");
                 for (String value : entry.getValue()) {
                     buffer.writeUtf8("\t");
@@ -84,8 +82,9 @@ public class NetworkException extends IOException implements Serializable {
                 try {
                     buffer.writeUtf8("\nRequest body:\n");
                     request.body().writeTo(buffer);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException|NullPointerException e) {
+                    buffer.writeUtf8("\n\nWhile handling above exception another exception occured:\n")
+                            .writeUtf8(e.getMessage());
                 }
             }
             return buffer.readUtf8();

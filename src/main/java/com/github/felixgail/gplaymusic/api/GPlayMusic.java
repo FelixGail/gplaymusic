@@ -3,10 +3,10 @@ package com.github.felixgail.gplaymusic.api;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.config.Config;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
@@ -15,28 +15,39 @@ import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
 import com.google.gson.GsonBuilder;
-import com.sun.istack.internal.NotNull;
 import okhttp3.*;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import svarzee.gps.gpsoauth.AuthToken;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * The main API, wrapping calls to the service.
  * Use the {@link GPlayMusic.Builder} to create a new instance.
  */
 public final class GPlayMusic {
-    private GPlayService service;
     private static GPlayMusic instance;
+    private GPlayService service;
     private Config config;
 
     private GPlayMusic(GPlayService service) {
         this.service = service;
         instance = this;
+    }
+
+    /**
+     * @return Returns the last initiated api instance or a {@link InitializationException} if none was initialized.
+     */
+    public static GPlayMusic getApiInstance() {
+        if (instance == null) {
+            throw new InitializationException("No instance of API initialized!");
+        }
+        return instance;
     }
 
     public Config getConfig() {
@@ -117,52 +128,54 @@ public final class GPlayMusic {
         return getService().getPromotedTracks().execute().body().toList();
     }
 
-    /**
-     * @return Returns the last initiated api instance or a {@link InitializationException} if none was initialized.
-     */
-    public static GPlayMusic getApiInstance() {
-        if (instance == null) {
-            throw new InitializationException("No instance of API initialized!");
-        }
-        return instance;
-    }
-
-    public MutationResponse makeBatchCall(@NotNull String path, @NotNull Mutator body)
-            throws IOException{
-        Response<MutationResponse> response = getService().batchCall(path, body).execute();
-        if (!response.body().checkSuccess()) {
-            NetworkException exception = new NetworkException(400, "The server reported a failure. Please open an" +
-                    "issue and provide this output.");
-            exception.setResponse(response.raw());
-        }
-        return response.body();
-    }
-
     public void deletePlaylistEntries(PlaylistEntry... entries)
             throws IOException {
         Mutator mutator = new Mutator();
         for (PlaylistEntry entry : entries) {
             mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(entry));
         }
-        makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
+        service.makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
     }
 
     public void deletePlaylists(Playlist... playlists)
-        throws IOException {
+            throws IOException {
         Mutator mutator = new Mutator();
         for (Playlist playlist : playlists) {
             mutator.addMutation(MutationFactory.getDeletePlaylistMutation(playlist));
         }
-        makeBatchCall(Playlist.BATCH_URL, mutator);
+        service.makeBatchCall(Playlist.BATCH_URL, mutator);
     }
 
     public void deleteStations(Station... stations)
             throws IOException {
         Mutator mutator = new Mutator();
-        for(Station station : stations) {
+        for (Station station : stations) {
             mutator.addMutation(MutationFactory.getDeleteStationMutation(station));
         }
-        makeBatchCall(Station.BATCH_URL, mutator);
+        service.makeBatchCall(Station.BATCH_URL, mutator);
+    }
+
+    public List<Station> listStations()
+            throws IOException {
+        return service.listStations().execute().body().toList();
+    }
+
+    public List<Playlist> listPlaylists()
+            throws IOException {
+        return service.listPlaylists().execute().body().toList();
+    }
+
+    /**
+     * See the Doc at {@link GPlayService#listPlaylistEntries()} for detailed information.
+     */
+    public List<PlaylistEntry> listAllPlaylistEntries()
+            throws IOException {
+        return service.listPlaylistEntries().execute().body().toList();
+    }
+
+    public List<PodcastSeries> browsePodcastSeries(Genre genre)
+            throws IOException {
+        return service.listBrowsePodcastSeries(genre.getId()).execute().body().toList();
     }
 
     /**

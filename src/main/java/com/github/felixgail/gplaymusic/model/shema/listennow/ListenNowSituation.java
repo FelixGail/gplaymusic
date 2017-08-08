@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListenNowSituation implements Serializable{
+public class ListenNowSituation implements Serializable {
 
     @Expose
     private String primaryHeader;
@@ -50,7 +50,7 @@ public class ListenNowSituation implements Serializable{
         this.distilledContextWrapper = distilledContextWrapper;
     }
 
-    public class DistilledContextWrapper implements Serializable{
+    public class DistilledContextWrapper implements Serializable {
         @Expose
         private String distilledContextToken;
 

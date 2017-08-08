@@ -2,12 +2,12 @@ package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
-import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -282,8 +282,7 @@ public class Track extends Signable implements Result, Serializable {
      */
     @Override
     public String getStreamURL(@NotNull StreamQuality quality)
-            throws IOException
-    {
+            throws IOException {
         if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
             throw new IOException("Function not allowed for Free users");
         }

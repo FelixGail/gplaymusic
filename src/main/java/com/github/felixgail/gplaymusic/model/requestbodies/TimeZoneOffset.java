@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-public class TimeZoneOffset implements Serializable{
+public class TimeZoneOffset implements Serializable {
     @Expose
     private RequestSignal requestSignals;
 
@@ -17,7 +17,7 @@ public class TimeZoneOffset implements Serializable{
         this.requestSignals = new RequestSignal("0");
     }
 
-    private class RequestSignal implements Serializable{
+    private class RequestSignal implements Serializable {
         @Expose
         private String timeZoneOffsetSecs;
 

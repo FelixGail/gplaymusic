@@ -1,13 +1,15 @@
 package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
-import com.github.felixgail.gplaymusic.model.shema.Album;
-import com.github.felixgail.gplaymusic.model.shema.Artist;
+import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.util.serializer.StationSeedSerializer;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+@JsonAdapter(StationSeedSerializer.class)
 public class StationSeed implements Serializable {
 
     @Expose
@@ -19,6 +21,8 @@ public class StationSeed implements Serializable {
     @Expose
     private MetadataSeed metadataSeed;
 
+    public StationSeed() {}
+
     public StationSeed(Album album) {
         this.seedType = StationSeedType.ALBUM;
         this.seedId = album.getAlbumId();
@@ -26,6 +30,27 @@ public class StationSeed implements Serializable {
 
     public StationSeed(Artist artist) {
         this.seedType = StationSeedType.ARTIST;
+        this.seedId = artist.getArtistId();
+    }
+
+    public StationSeed(Playlist playlist) {
+        this.seedType = StationSeedType.PLAYLIST;
+        this.seedId = playlist.getShareToken();
+    }
+
+    public StationSeed(Genre genre) {
+        this.seedType = StationSeedType.GENRE;
+        this.seedId = genre.getId();
+    }
+
+    public StationSeed(Station curatedStation) {
+        this.seedType = StationSeedType.CURATED_STATION;
+        this.seedId = curatedStation.getId();
+    }
+
+    public StationSeed(Track track) {
+        this.seedType = StationSeedType.TRACK;
+        this.seedId = track.getID();
     }
 
     public StationSeedType getSeedType() {
@@ -38,5 +63,9 @@ public class StationSeed implements Serializable {
 
     public void setMetadataSeed(MetadataSeed metadataSeed) {
         this.metadataSeed = metadataSeed;
+    }
+
+    public String getSeed() {
+        return seedId;
     }
 }

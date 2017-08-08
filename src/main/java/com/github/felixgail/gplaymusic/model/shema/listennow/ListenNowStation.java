@@ -14,7 +14,7 @@ import java.util.List;
 public class ListenNowStation extends ListenNowItem {
     @Expose
     @SerializedName("highlight_color")
-    private String  highlightColor;
+    private String highlightColor;
     @Expose
     private List<StationSeed> seeds = new LinkedList<>();
     @Expose

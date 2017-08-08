@@ -1,11 +1,11 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
@@ -56,7 +57,7 @@ public class Playlist implements Result, Serializable {
     private PlaylistShareState shareState;
 
     Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
-                     String lastModifiedTimestamp, String creationTimestamp) {
+             String lastModifiedTimestamp, String creationTimestamp) {
         this.name = name;
         this.id = id;
         this.shareState = shareState;
@@ -64,6 +65,26 @@ public class Playlist implements Result, Serializable {
         this.type = type;
         this.lastModifiedTimestamp = lastModifiedTimestamp;
         this.creationTimestamp = creationTimestamp;
+    }
+
+    /**
+     * Creates a new playlist.
+     *
+     * @param name        Name of the playlist. <b>Doesn't</b> have to be unique
+     * @param description Optional. A description for the playlist.
+     * @param shareState  share state of the playlist. defaults to {@link PlaylistShareState#PRIVATE} on null.
+     * @return The newly created Playlist. Warning: Playlist is not filled yet and timestamps are not valid
+     * (Systemtime@Request != Servertime@Creation)
+     * @throws IOException
+     */
+    public static Playlist create(@NotNull String name, String description, PlaylistShareState shareState)
+            throws IOException {
+        Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
+        String systemTime = Long.toString(System.currentTimeMillis());
+        MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
+        String id = response.getItems().get(0).getId();
+        return new Playlist(name, id, (shareState == null ? PlaylistShareState.PRIVATE : shareState),
+                description, PlaylistType.USER_GENERATED, systemTime, systemTime);
     }
 
     public String getName() {
@@ -140,42 +161,9 @@ public class Playlist implements Result, Serializable {
                                 this.getId().equals(((Playlist) o).getId())));
     }
 
-    public enum PlaylistType implements Serializable {
-        @SerializedName("SHARED")
-        SHARED,
-        @SerializedName("MAGIC")
-        MAGIC,
-        @SerializedName("USER_GENERATED")
-        USER_GENERATED
-    }
-
-    public enum PlaylistShareState implements Serializable {
-        @SerializedName("PRIVATE")
-        PRIVATE,
-        @SerializedName("PUBLIC")
-        PUBLIC
-    }
-
     @Override
     public ResultType getResultType() {
         return RESULT_TYPE;
-    }
-
-    /**
-     * Creates a new playlist.
-     * @param name Name of the playlist. <b>Doesn't</b> have to be unique
-     * @param description Optional. A description for the playlist.
-     * @param shareState share state of the playlist. defaults to {@link PlaylistShareState#PRIVATE} on null.
-     * @return The newly created Playlist. Warning: Playlist is not filled yet.
-     * @throws IOException
-     */
-    public static Playlist create(@NotNull String name, String description, PlaylistShareState shareState)
-            throws IOException {
-        Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
-        MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
-        String id = response.getItems().get(0).getId();
-        return new Playlist(name, id, (shareState == null?PlaylistShareState.PRIVATE:shareState),
-                description, PlaylistType.USER_GENERATED, "0", "-1");
     }
 
     public void delete() throws IOException {
@@ -192,7 +180,7 @@ public class Playlist implements Result, Serializable {
      * @throws IOException
      */
     public List<PlaylistEntry> addTracks(Track... tracks)
-            throws IOException{
+            throws IOException {
         List<PlaylistEntry> playlistEntries = new LinkedList<>();
         Mutator mutator = new Mutator();
         UUID last = null;
@@ -206,12 +194,48 @@ public class Playlist implements Result, Serializable {
             current = next;
             next = UUID.randomUUID();
         }
-        MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
+        MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
         for (int i = 0; i < tracks.length; i++) {
             MutationResponse.Item item = response.getItems().get(i);
             playlistEntries.add(new PlaylistEntry(item.getId(), item.getClientID(), this.getId(),
                     tracks[i], null, null, null, false));
         }
         return playlistEntries;
+    }
+
+    public List<PlaylistEntry> getContents()
+        throws IOException {
+        if (!getShareState().equals(PlaylistType.SHARED)) {
+            //python implementation suggests that this should also work for magic playlists
+            return getContentsForUserGeneratedPlaylist();
+        }
+        //TODO: get contents for shared playlists
+        return null;
+    }
+
+    private List<PlaylistEntry> getContentsForUserGeneratedPlaylist() throws IOException {
+        List<PlaylistEntry> all_entries =
+                GPlayMusic.getApiInstance().listAllPlaylistEntries();
+        return all_entries.stream()
+                .filter(entry -> entry.getPlaylistId().equals(getId()))
+                .sorted(PlaylistEntry::compareTo)
+                .collect(Collectors.toList());
+    }
+
+    public enum PlaylistType implements Serializable {
+        @SerializedName("SHARED")
+        SHARED,
+        //TODO: find out what a magic playlist is. last hint: i don't have any. next idea: crawl python implementation
+        @SerializedName("MAGIC")
+        MAGIC,
+        @SerializedName("USER_GENERATED")
+        USER_GENERATED
+    }
+
+    public enum PlaylistShareState implements Serializable {
+        @SerializedName("PRIVATE")
+        PRIVATE,
+        @SerializedName("PUBLIC")
+        PUBLIC
     }
 }

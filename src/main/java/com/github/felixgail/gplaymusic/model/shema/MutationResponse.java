@@ -26,7 +26,7 @@ public class MutationResponse implements Serializable {
     }
 
 
-    public class Item implements Serializable{
+    public class Item implements Serializable {
         @Expose
         private String id;
         @Expose

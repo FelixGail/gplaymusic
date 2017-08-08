@@ -1,20 +1,20 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sun.istack.internal.NotNull;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
@@ -58,6 +58,14 @@ public class Station implements Result, Serializable {
         this.name = name;
         this.seed = seed;
         this.tracks = tracks;
+    }
+
+    public static Station create(@NotNull final StationSeed seed, final String name, final boolean includeTracks, final int numEntries)
+            throws IOException {
+        final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
+        final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
+        response.getItems().get(0).getId();
+        return null;
     }
 
     public String getName() {
@@ -134,15 +142,7 @@ public class Station implements Result, Serializable {
     }
 
     public void delete()
-        throws IOException {
-        GPlayMusic.getApiInstance().deleteStations(this);
-    }
-
-    public static Station create(@NotNull final StationSeed seed, final String name, final boolean includeTracks, final int numEntries)
             throws IOException {
-        final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
-        final MutationResponse response = GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
-        response.getItems().get(0).getId();
-        return null;
+        GPlayMusic.getApiInstance().deleteStations(this);
     }
 }

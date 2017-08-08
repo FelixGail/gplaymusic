@@ -33,7 +33,7 @@ public class PlaylistEntry implements Serializable {
     private Track track;
 
     PlaylistEntry(String id, String clientId, String playlistId, Track track, String creationTimestamp,
-                            String lastModifiedTimestamp, String source, boolean deleted) {
+                  String lastModifiedTimestamp, String source, boolean deleted) {
         this.id = id;
         this.clientId = clientId;
         this.playlistId = playlistId;
@@ -86,7 +86,7 @@ public class PlaylistEntry implements Serializable {
     }
 
     public void delete()
-        throws IOException {
+            throws IOException {
         GPlayMusic.getApiInstance().deletePlaylistEntries(this);
     }
 
@@ -95,14 +95,19 @@ public class PlaylistEntry implements Serializable {
      * Leaving preceding/following empty, implies that the element will be this first/last entry.
      * Leaving a parameter empty, while not aiming for the first/last element of the playlist is undefined - as well as
      * using entries not present in the playlist.
+     *
      * @param preceding the entry that will be before the moved entry, or null if moved entry will be first
      * @param following the entry that will be after the moved entry, or null if moved entry will be the last
      * @throws IOException
      */
     public void move(PlaylistEntry preceding, PlaylistEntry following)
-            throws IOException{
+            throws IOException {
         Mutator mutator = new Mutator(MutationFactory.
                 getReorderPlaylistEntryMutation(this, preceding, following));
-        GPlayMusic.getApiInstance().makeBatchCall(BATCH_URL, mutator);
+        GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
+    }
+
+    public int compareTo(PlaylistEntry entry) {
+        return getAbsolutePosition().compareTo(entry.getAbsolutePosition());
     }
 }

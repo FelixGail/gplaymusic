@@ -18,11 +18,6 @@ import java.util.stream.IntStream;
 public abstract class Signable {
     protected static final Map<String, String> EMPTY_MAP = new HashMap<>();
     protected static final Map<String, String> STATION_MAP = new HashMap<>();
-
-    static {
-        STATION_MAP.put("audio_formats", "mp3");
-    }
-
     private final static byte[] s1 = Base64.getDecoder()
             .decode("VzeC4H4h+T2f0VI180nVX8x+Mb5HiTtGnKgH52Otj8" +
                     "ZCGDz9jRWyHb6QXK0JskSiOgzQfwTY5xgLLSdUSreaLVMsVVWfxfa8Rw==");
@@ -30,6 +25,10 @@ public abstract class Signable {
             .decode("ZAPnhUkYwQ6y5DdQxWThbvhJHN8msQ1rqJw0ggKdufQjelrKuiG" +
                     "GJI30aswkgCWTDyHkTGK9ynlqTkJ5L4CiGGUabGeo8M6JTQ==");
     private final static byte[] key;
+
+    static {
+        STATION_MAP.put("audio_formats", "mp3");
+    }
 
     static {
         int length = Math.min(s1.length, s2.length);
@@ -66,6 +65,33 @@ public abstract class Signable {
         }
     }
 
+    /**
+     * Determines which {@link com.github.felixgail.gplaymusic.api.GPlayService} url call
+     * to use and which parameters to add.
+     *
+     * @param quality  Quality of the stream
+     * @param provider Provider of the Signable. Determines wich url path to use (mplay,wplay,fplay)
+     * @param kwargs   Map for additional query arguments. E.g. session token for stations
+     * @return the url to the signable. expires after 1 minute.
+     * @throws IOException - on severe failures (no internet connection...)
+     *                     or a {@link NetworkException} on request failures.
+     */
+    protected String urlFetcher(StreamQuality quality,
+                                Provider provider, Map<String, String> kwargs)
+            throws IOException {
+        Signature sig = getSignature();
+        GPlayMusic api = GPlayMusic.getApiInstance();
+        if (getID().matches("^[TD]\\S*$")) {
+            return api.getService().getTrackLocationMJCK(api.getConfig().getAndroidID(), provider,
+                    quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
+            ).execute().headers().get("Location");
+        } else {
+            return api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
+                    quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
+            ).execute().headers().get("Location");
+        }
+    }
+
     public class Signature {
         private String sig;
         private String slt;
@@ -81,33 +107,6 @@ public abstract class Signable {
 
         public String getSalt() {
             return slt;
-        }
-    }
-
-    /**
-     * Determines which {@link com.github.felixgail.gplaymusic.api.GPlayService} url call
-     * to use and which parameters to add.
-     *
-     * @param quality  Quality of the stream
-     * @param provider Provider of the Signable. Determines wich url path to use (mplay,wplay,fplay)
-     * @param kwargs   Map for additional query arguments. E.g. session token for stations
-     * @return the url to the signable. expires after 1 minute.
-     * @throws IOException - on severe failures (no internet connection...)
-     *                     or a {@link NetworkException} on request failures.
-     */
-    protected String urlFetcher(StreamQuality quality,
-                              Provider provider, Map<String, String> kwargs)
-            throws IOException {
-        Signature sig = getSignature();
-        GPlayMusic api = GPlayMusic.getApiInstance();
-        if (getID().matches("^[TD]\\S*$")) {
-            return api.getService().getTrackLocationMJCK(api.getConfig().getAndroidID(), provider,
-                    quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
-            ).execute().headers().get("Location");
-        } else {
-            return api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
-                    quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
-            ).execute().headers().get("Location");
         }
     }
 }

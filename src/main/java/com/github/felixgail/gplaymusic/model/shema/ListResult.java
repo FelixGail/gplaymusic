@@ -10,7 +10,7 @@ import java.util.List;
 public class ListResult<T> implements Serializable {
 
     @Expose
-    @SerializedName(value="data",
+    @SerializedName(value = "data",
             alternate = {"series", "listennow_items", "mutate_response"})
     private InnerData<T> data = new InnerData<>();
 

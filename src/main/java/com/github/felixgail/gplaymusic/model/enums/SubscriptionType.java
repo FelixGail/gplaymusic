@@ -1,23 +1,12 @@
 package com.github.felixgail.gplaymusic.model.enums;
 
-public enum SubscriptionType {
-    SUBSCRIBED("aa"),
-    FREE("fr");
+import com.google.gson.annotations.SerializedName;
 
-    private final String text;
+import java.io.Serializable;
 
-    /**
-     * @param text
-     */
-    SubscriptionType(final String text) {
-        this.text = text;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString() {
-        return text;
-    }
+public enum SubscriptionType implements Serializable{
+    @SerializedName("aa")
+    SUBSCRIBED,
+    @SerializedName("fr")
+    FREE
 }

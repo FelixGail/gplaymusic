@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @JsonAdapter(ListenNowItemDeserializer.class)
-public abstract class ListenNowItem implements Serializable{
+public abstract class ListenNowItem implements Serializable {
     @Expose
     private List<ArtRef> compositeArtRefs;
     @Expose

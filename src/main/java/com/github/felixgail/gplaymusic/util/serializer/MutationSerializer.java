@@ -6,8 +6,7 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 
 public class MutationSerializer implements JsonSerializer<Mutation> {
-
-    private Gson gson = new Gson();
+    private final static Gson gson = new Gson();
 
     @Override
     public JsonElement serialize(Mutation mutation, Type type, JsonSerializationContext jsonSerializationContext) {
