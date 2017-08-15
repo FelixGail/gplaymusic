@@ -9,7 +9,6 @@ import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -60,7 +59,7 @@ public class Station implements Result, Serializable {
         this.tracks = tracks;
     }
 
-    public static Station create(@NotNull final StationSeed seed, final String name, final boolean includeTracks, final int numEntries)
+    public static Station create(final StationSeed seed, final String name, final boolean includeTracks, final int numEntries)
             throws IOException {
         final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
         final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);

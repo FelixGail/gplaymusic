@@ -8,17 +8,16 @@ import java.io.PrintWriter;
 import java.util.Properties;
 
 public class TestUtil {
-    private static final Properties PROPS;
-    private static final String RESOURCE = "gplaymusic.properties";
     public static final String USERNAME_KEY = "auth.username";
     public static final String PASSWORD_KEY = "auth.password";
     public static final String ANDROID_ID_KEY = "auth.android_id";
     public static final String TOKEN_KEY = "auth.token";
-
     public static final Property USERNAME;
     public static final Property PASSWORD;
     public static final Property ANDROID_ID;
     public static final Property TOKEN;
+    private static final Properties PROPS;
+    private static final String RESOURCE = "gplaymusic.properties";
 
     static {
         PROPS = new Properties();
@@ -55,6 +54,32 @@ public class TestUtil {
         }
     }
 
+    public static void assume(Property... properties) {
+        for (Property property : properties) {
+            Assume.assumeTrue(
+                    String.format("Test has been skipped. Required value \"%s\" is missing.", property.getKey()),
+                    property.isValid());
+        }
+    }
+
+    public static void assumeFilled(Property... properties) {
+        assume(properties);
+        for (Property property : properties) {
+            Assume.assumeTrue(
+                    String.format("Test has been skipped. \"%s\" is not allowed to be an empty String.",
+                            property.getKey()),
+                    !property.get().isEmpty());
+        }
+    }
+
+    public static void assume(Object... objects) {
+        for (Object object : objects) {
+            Assume.assumeNotNull(
+                    String.format("Test has been skipped. Required object \"%s\" is null.", object),
+                    object);
+        }
+    }
+
     public static class Property {
         private String key;
 
@@ -77,24 +102,6 @@ public class TestUtil {
 
         public boolean isValid() {
             return (get() != null);
-        }
-    }
-
-    public static void assume(Property... properties) {
-        for (Property property : properties) {
-            Assume.assumeTrue(
-                    String.format("Test has been skipped. Required value \"%s\" is missing.", property.getKey()),
-                    property.isValid());
-        }
-    }
-
-    public static void assumeFilled(Property... properties) {
-        assume(properties);
-        for (Property property : properties) {
-            Assume.assumeTrue(
-                    String.format("Test has been skipped. \"%s\" is not allowed to be an empty String.",
-                            property.getKey()),
-                    !property.get().isEmpty());
         }
     }
 }

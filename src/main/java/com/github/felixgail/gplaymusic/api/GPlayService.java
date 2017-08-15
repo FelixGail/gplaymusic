@@ -6,13 +6,13 @@ import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
+import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
-import com.sun.istack.internal.NotNull;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.*;
@@ -74,11 +74,11 @@ public interface GPlayService {
      * As far as my understanding goes, this simply returns a list containing
      * every {@link PlaylistEntry} from every {@link Playlist}
      * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
-     *
+     * <p>
      * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
      * the user is subscribed to are <b>not</b> included. To contents from such a playlist use
      * TODO
-     *
+     * <p>
      * The Server has no option to return the contents of a single Playlist.
      *
      * @return the {@link Call} to request a list of {@link PlaylistEntry}
@@ -88,12 +88,12 @@ public interface GPlayService {
 
     //TODO: METHOD BODY/RESPONSE BODY (link: mobilclient/ListSharedPlaylistEntries)
     @POST("sj/v2.5/plentries/shared")
-    Call<ListResult<PlaylistEntry>> listSharedPlaylistEntries();
+    Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);
 
     @POST("sj/v2.5/{path}")
     Call<MutationResponse> batchCall(@Path("path") String path, @Body Mutator mutator);
 
-    default MutationResponse makeBatchCall(@NotNull String path, @NotNull Mutator body)
+    default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {
         Response<MutationResponse> response = batchCall(path, body).execute();
         if (!response.body().checkSuccess()) {

@@ -11,7 +11,6 @@ import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -174,6 +173,7 @@ public class Track extends Signable implements Result, Serializable {
         this.trackType = trackType;
     }
 
+    @Override
     public String getID() {
         if (storeId == null) {
             return getNid();
@@ -258,6 +258,7 @@ public class Track extends Signable implements Result, Serializable {
         return (o instanceof Track) && ((Track) o).getID().equals(this.getID());
     }
 
+    @Override
     public Signature getSignature() {
         return super.createSignature(this.getID());
     }
@@ -281,7 +282,7 @@ public class Track extends Signable implements Result, Serializable {
      *                     or a {@link NetworkException} on request failures.
      */
     @Override
-    public String getStreamURL(@NotNull StreamQuality quality)
+    public String getStreamURL(StreamQuality quality)
             throws IOException {
         if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
             throw new IOException("Function not allowed for Free users");
@@ -306,7 +307,7 @@ public class Track extends Signable implements Result, Serializable {
      * @throws IOException on severe failures (no internet connection...)
      *                     or a {@link NetworkException} on request failures.
      */
-    public String getStationTrackURL(@NotNull Station station, @NotNull StreamQuality quality)
+    public String getStationTrackURL(Station station, StreamQuality quality)
             throws IOException {
         if (getWentryID() == null || getWentryID().isEmpty()) {
             throw new IOException("Track does not contain a valid WentryID." +

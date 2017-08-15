@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public enum StreamQuality implements Serializable{
+public enum StreamQuality implements Serializable {
     @SerializedName("lo")
     LOW,
     @SerializedName("med")

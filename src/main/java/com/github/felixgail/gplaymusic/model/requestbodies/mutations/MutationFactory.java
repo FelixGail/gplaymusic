@@ -8,8 +8,6 @@ import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.serializer.MutationSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 
 import java.io.Serializable;
 import java.util.*;
@@ -21,7 +19,7 @@ public class MutationFactory {
      *
      * @param entry PlaylistEntry to delete
      */
-    public static Mutation<String> getDeletePlaylistEntryMutation(@NotNull PlaylistEntry entry) {
+    public static Mutation<String> getDeletePlaylistEntryMutation(PlaylistEntry entry) {
         return new StringMutation("delete", entry.getId());
     }
 
@@ -33,7 +31,7 @@ public class MutationFactory {
      *
      * @param playlist - playlist to remove
      */
-    public static Mutation<String> getDeletePlaylistMutation(@NotNull Playlist playlist) {
+    public static Mutation<String> getDeletePlaylistMutation(Playlist playlist) {
         return new StringMutation("delete", playlist.getId());
     }
 
@@ -49,9 +47,9 @@ public class MutationFactory {
      *                     will be added.
      * @param followingID  clientID of the following {@link com.github.felixgail.gplaymusic.model.shema.PlaylistEntry} or null if this is the last entry to add.
      */
-    public static Mutation<Map<String, Object>> getAddPlaylistEntryMutation(@NotNull Playlist playlist,
-                                                                            @NotNull Track track, UUID preceedingID,
-                                                                            @NotNull UUID currentID, UUID followingID) {
+    public static Mutation<Map<String, Object>> getAddPlaylistEntryMutation(Playlist playlist,
+                                                                            Track track, UUID preceedingID,
+                                                                            UUID currentID, UUID followingID) {
         Map<String, Object> create = new HashMap<>();
         create.put("clientID", currentID.toString());
         create.put("creationTimestamp", "-1");
@@ -85,8 +83,8 @@ public class MutationFactory {
      * @param shareState  share state of the playlist. defaults to
      *                    {@link com.github.felixgail.gplaymusic.model.shema.Playlist.PlaylistShareState#PRIVATE} if left null
      */
-    public static Mutation<Map<String, Object>> getAddPlaylistMutation(@NotNull String name, @Nullable String description,
-                                                                       @Nullable Playlist.PlaylistShareState shareState) {
+    public static Mutation<Map<String, Object>> getAddPlaylistMutation(String name, String description,
+                                                                       Playlist.PlaylistShareState shareState) {
         shareState = (shareState != null) ? shareState : Playlist.PlaylistShareState.PRIVATE;
 
         Map<String, Object> create = new HashMap<>();
@@ -112,7 +110,7 @@ public class MutationFactory {
      * @param followingEntry  Entry that will be after the providen entry, or null if provided will be the last
      */
     public static Mutation<Map<String, Object>> getReorderPlaylistEntryMutation(
-            @NotNull PlaylistEntry plentry, PlaylistEntry preceedingEntry,
+            PlaylistEntry plentry, PlaylistEntry preceedingEntry,
             PlaylistEntry followingEntry) {
         if (preceedingEntry == null && followingEntry == null) {
             throw new IllegalArgumentException("Either preceding or following entry must be provided.");
@@ -139,8 +137,8 @@ public class MutationFactory {
      * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
      */
     public static Mutation<Map<String, Object>> getUpdatePlaylistMutation(
-            @Nullable String newID, @Nullable String newName, @Nullable String newDescription,
-            @Nullable Playlist.PlaylistShareState newShareState) {
+            String newID, String newName, String newDescription,
+            Playlist.PlaylistShareState newShareState) {
 
         if (newID == null && newName == null && newDescription == null && newShareState == null) {
             throw new IllegalArgumentException("At least one update parameter has to be set!");
@@ -154,7 +152,7 @@ public class MutationFactory {
         return new MapMutation("update", update);
     }
 
-    public static Mutation<Map<String, Object>> getPodcastMutation(@NotNull String seriesID,
+    public static Mutation<Map<String, Object>> getPodcastMutation(String seriesID,
                                                                    boolean subscribe,
                                                                    boolean notifyOnNewEpisode) {
         MapMutation mutation = new MapMutation("update");
@@ -168,15 +166,15 @@ public class MutationFactory {
     }
 
     public static Mutation<Map<String, Object>> getAddPodcastSeriesMutation(
-            @NotNull String seriesID, boolean notifyOnNewEpisode) {
+            String seriesID, boolean notifyOnNewEpisode) {
         return getPodcastMutation(seriesID, true, notifyOnNewEpisode);
     }
 
-    public static Mutation<Map<String, Object>> getDeletePodcastSeriesMutation(@NotNull String seriesID) {
+    public static Mutation<Map<String, Object>> getDeletePodcastSeriesMutation(String seriesID) {
         return getPodcastMutation(seriesID, false, false);
     }
 
-    public static Mutation getDeleteStationMutation(@NotNull Station station) {
+    public static Mutation getDeleteStationMutation(Station station) {
         return new DeleteStationMutation(station);
     }
 
@@ -200,12 +198,12 @@ public class MutationFactory {
         private Map<String, Object> data;
         private String attributeName;
 
-        MapMutation(@NotNull String attributeName) {
+        MapMutation(String attributeName) {
             data = new HashMap<>();
             this.attributeName = attributeName;
         }
 
-        MapMutation(@NotNull String attributeName, @NotNull Map<String, Object> map) {
+        MapMutation(String attributeName, Map<String, Object> map) {
             data = map;
             this.attributeName = attributeName;
         }
@@ -241,7 +239,7 @@ public class MutationFactory {
 
         private String attributeName;
 
-        StringMutation(@NotNull String attributeName, @NotNull String data) {
+        StringMutation(String attributeName, String data) {
             this.attributeName = attributeName;
             this.data = data;
         }
@@ -332,7 +330,7 @@ public class MutationFactory {
         @Expose
         private int numEntries = 0;
 
-        DeleteStationMutation(@NotNull Station station) {
+        DeleteStationMutation(Station station) {
             delete = station.getId();
         }
 

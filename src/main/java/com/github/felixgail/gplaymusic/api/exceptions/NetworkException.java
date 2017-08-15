@@ -44,6 +44,7 @@ public class NetworkException extends IOException implements Serializable {
         return helper.getCode();
     }
 
+    @Override
     public String getMessage() {
         return helper.getMessage();
     }
@@ -82,7 +83,7 @@ public class NetworkException extends IOException implements Serializable {
                 try {
                     buffer.writeUtf8("\nRequest body:\n");
                     request.body().writeTo(buffer);
-                } catch (IOException|NullPointerException e) {
+                } catch (IOException | NullPointerException e) {
                     buffer.writeUtf8("\n\nWhile handling above exception another exception occured:\n")
                             .writeUtf8(e.getMessage());
                 }

@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic.api;
 
-import com.sun.istack.internal.NotNull;
 import okhttp3.OkHttpClient;
 import svarzee.gps.gpsoauth.AuthToken;
 import svarzee.gps.gpsoauth.Gpsoauth;
@@ -22,8 +21,8 @@ public class TokenProvider {
      * @throws IOException                 on network or connectivity issues
      * @throws Gpsoauth.TokenRequestFailed on invalid credentials
      */
-    public static AuthToken provideToken(@NotNull final String user, @NotNull final String password,
-                                         @NotNull final String androidID)
+    public static AuthToken provideToken(final String user, final String password,
+                                         final String androidID)
             throws IOException, Gpsoauth.TokenRequestFailed {
         OkHttpClient client = new OkHttpClient();
         Gpsoauth auth = new Gpsoauth(client);
@@ -32,7 +31,7 @@ public class TokenProvider {
                 "AIzaSyARTC1h-_puqO0PHCHUoj1BTDjuAOxNVA8");
     }
 
-    public static AuthToken provideToken(@NotNull final String token) {
+    public static AuthToken provideToken(final String token) {
         return new AuthToken(token);
     }
 

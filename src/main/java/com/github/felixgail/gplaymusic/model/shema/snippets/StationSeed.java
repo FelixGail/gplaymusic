@@ -21,7 +21,8 @@ public class StationSeed implements Serializable {
     @Expose
     private MetadataSeed metadataSeed;
 
-    public StationSeed() {}
+    public StationSeed() {
+    }
 
     public StationSeed(Album album) {
         this.seedType = StationSeedType.ALBUM;

@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.model.requestbodies.mutations;
 
 import com.google.gson.annotations.Expose;
-import com.sun.istack.internal.NotNull;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -20,7 +19,7 @@ public class Mutator implements Serializable {
         mutations = new LinkedList<>();
     }
 
-    public Mutator(@NotNull List<Mutation> list) {
+    public Mutator(List<Mutation> list) {
         mutations = list;
     }
 

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public enum SubscriptionType implements Serializable{
+public enum SubscriptionType implements Serializable {
     @SerializedName("aa")
     SUBSCRIBED,
     @SerializedName("fr")

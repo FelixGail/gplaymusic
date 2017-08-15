@@ -18,10 +18,14 @@ public class ListResult<T> implements Serializable {
         return data.items;
     }
 
-    private class InnerData<U> implements Serializable {
+    class InnerData<U> implements Serializable {
         @Expose
         @SerializedName(value = "items",
-                alternate = "stations")
+                alternate = {"stations", "playlistEntry"})
         private List<U> items = new LinkedList<>();
+
+        public List<U> getItems() {
+            return items;
+        }
     }
 }

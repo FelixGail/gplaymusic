@@ -3,13 +3,13 @@ package com.github.felixgail.gplaymusic.model.shema;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -77,7 +77,7 @@ public class Playlist implements Result, Serializable {
      * (Systemtime@Request != Servertime@Creation)
      * @throws IOException
      */
-    public static Playlist create(@NotNull String name, String description, PlaylistShareState shareState)
+    public static Playlist create(String name, String description, PlaylistShareState shareState)
             throws IOException {
         Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
         String systemTime = Long.toString(System.currentTimeMillis());
@@ -92,6 +92,9 @@ public class Playlist implements Result, Serializable {
     }
 
     public PlaylistType getType() {
+        if (type == null) {
+            return PlaylistType.USER_GENERATED;
+        }
         return type;
     }
 
@@ -148,6 +151,9 @@ public class Playlist implements Result, Serializable {
     }
 
     public PlaylistShareState getShareState() {
+        if (shareState == null) {
+            return PlaylistShareState.PRIVATE;
+        }
         return shareState;
     }
 
@@ -203,14 +209,21 @@ public class Playlist implements Result, Serializable {
         return playlistEntries;
     }
 
-    public List<PlaylistEntry> getContents()
-        throws IOException {
-        if (!getShareState().equals(PlaylistType.SHARED)) {
+    /**
+     * Returns the contents (as a list of PlaylistEntries) for this playlist.
+     *
+     * @param maxResults only applicable for shared playlist, otherwise ignored.
+     *                   Sets the amount of entries that should be returned.
+     *                   Valid range between 0 and 1000. Invalid values will default to 1000.
+     * @throws IOException
+     */
+    public List<PlaylistEntry> getContents(int maxResults)
+            throws IOException {
+        if (!getType().equals(PlaylistType.SHARED)) {
             //python implementation suggests that this should also work for magic playlists
             return getContentsForUserGeneratedPlaylist();
         }
-        //TODO: get contents for shared playlists
-        return null;
+        return getContentsForSharedPlaylist(maxResults);
     }
 
     private List<PlaylistEntry> getContentsForUserGeneratedPlaylist() throws IOException {
@@ -220,6 +233,11 @@ public class Playlist implements Result, Serializable {
                 .filter(entry -> entry.getPlaylistId().equals(getId()))
                 .sorted(PlaylistEntry::compareTo)
                 .collect(Collectors.toList());
+    }
+
+    private List<PlaylistEntry> getContentsForSharedPlaylist(int maxResults) throws IOException {
+        SharedPlaylistRequest requestBody = new SharedPlaylistRequest(this, maxResults);
+        return GPlayMusic.getApiInstance().getService().listSharedPlaylistEntries(requestBody).execute().body().toList();
     }
 
     public enum PlaylistType implements Serializable {
