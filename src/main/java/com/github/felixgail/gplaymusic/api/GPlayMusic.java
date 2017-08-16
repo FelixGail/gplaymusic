@@ -335,7 +335,7 @@ public final class GPlayMusic {
 
                 parameterInterceptor.addParameter("dv", "0")
                         .addParameter("hl", locale.toString())
-                        .addParameter("tier", config.getSubscription().toString());
+                        .addParameter("tier", config.getSubscription().getValue());
 
                 if (androidID == null) {
                     Optional<DeviceInfo> optional =

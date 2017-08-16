@@ -6,6 +6,7 @@ import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
+import com.github.felixgail.gplaymusic.model.requestbodies.ListStationTracksRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
@@ -86,12 +87,14 @@ public interface GPlayService {
     @POST("sj/v2.5/plentryfeed")
     Call<ListResult<PlaylistEntry>> listPlaylistEntries();
 
-    //TODO: METHOD BODY/RESPONSE BODY (link: mobilclient/ListSharedPlaylistEntries)
     @POST("sj/v2.5/plentries/shared")
     Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);
 
     @POST("sj/v2.5/{path}")
     Call<MutationResponse> batchCall(@Path("path") String path, @Body Mutator mutator);
+
+    @POST("sj/v2.5/radio/stationfeed")
+    Call<ListResult<Station>> getFilledStations(@Body ListStationTracksRequest request);
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {

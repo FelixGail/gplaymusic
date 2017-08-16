@@ -15,7 +15,7 @@ public class ListResult<T> implements Serializable {
     private InnerData<T> data = new InnerData<>();
 
     public List<T> toList() {
-        return data.items;
+        return data.getItems();
     }
 
     class InnerData<U> implements Serializable {

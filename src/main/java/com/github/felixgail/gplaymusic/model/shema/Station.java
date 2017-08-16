@@ -3,6 +3,7 @@ package com.github.felixgail.gplaymusic.model.shema;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.requestbodies.ListStationTracksRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
@@ -107,8 +108,13 @@ public class Station implements Result, Serializable {
         return description;
     }
 
-    public List<Track> getTracks() {
-        return tracks;
+    public List<Track> getTracks(int numEntries, List<Track> recentlyPlayed, boolean newCall) throws IOException {
+        if (!newCall) {
+            return tracks;
+        }
+        ListStationTracksRequest request = new ListStationTracksRequest(this, numEntries, recentlyPlayed);
+        return GPlayMusic.getApiInstance().getService().getFilledStations(request)
+                .execute().body().toList().get(0).tracks;
     }
 
     public List<ArtRef> getImageArtRefs() {

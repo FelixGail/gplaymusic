@@ -6,7 +6,17 @@ import java.io.Serializable;
 
 public enum SubscriptionType implements Serializable {
     @SerializedName("aa")
-    SUBSCRIBED,
+    ALL_ACCESS("aa"),
     @SerializedName("fr")
-    FREE
+    FREE("fr");
+
+    private String value;
+
+    SubscriptionType(String v) {
+        this.value = v;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
 }

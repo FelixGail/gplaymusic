@@ -313,11 +313,8 @@ public class Track extends Signable implements Result, Serializable {
             throw new IOException("Track does not contain a valid WentryID." +
                     "This means this track was not taken from a Station! Shame on you.");
         }
-        if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.SUBSCRIBED) {
+        if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
             return getStreamURL(quality);
-        }
-        if (!station.getTracks().contains(this)) {
-            throw new IOException("Provided station does not contain this Track. This is a requirement for free users.");
         }
         if (station.getSessionToken() == null || station.getSessionToken().isEmpty()) {
             throw new IOException("Station does not contain a valid session token.");
