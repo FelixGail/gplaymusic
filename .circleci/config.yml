@@ -29,12 +29,13 @@ jobs:
     - run:
         command: mvn test
         name: Running unit tests
-        when: always
-    - deploy:
+
+    - run:
         command: |
           mkdir -p target/junit/
           find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} target/junit/ \;
         name: Copy test artifacts
+        
     - store_test_results:
         path: target/junit/
     - store_artifacts:
