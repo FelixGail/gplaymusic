@@ -17,8 +17,8 @@ jobs:
     - run:
         name: Create test properties file
         command: |
-          mkdir -p src/test/java/resources
-          cd src/test/java/resources
+          mkdir -p target/test-classes
+          cd target/test-classes
           if [ ! -f gplaymusic.properties ]; then
               printf "auth.username=${auth_username}" >> gplaymusic.properties
               printf "auth.password=${auth_password}" >> gplaymusic.properties
