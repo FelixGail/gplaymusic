@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
@@ -108,13 +109,25 @@ public class Station implements Result, Serializable {
         return description;
     }
 
+    /**
+     * Get Tracks for this Station.<br>
+     * <b>Keep in mind that this can return an empty list, if this station is created on an empty playlist.</b>
+     *
+     * @param numEntries     number of tracks that will be returned.
+     * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list will be excluded from the response
+     * @param newCall        true if a new call shall be dispatched. false if the list from a previous call is to be returned.
+     *                       Careful: Will return null if no call has been made.
+     * @return A list of tracks for this station.
+     */
     public List<Track> getTracks(int numEntries, List<Track> recentlyPlayed, boolean newCall) throws IOException {
         if (!newCall) {
             return tracks;
         }
         ListStationTracksRequest request = new ListStationTracksRequest(this, numEntries, recentlyPlayed);
-        return GPlayMusic.getApiInstance().getService().getFilledStations(request)
-                .execute().body().toList().get(0).tracks;
+        Optional<List<Track>> trackOptional =
+                Optional.of(GPlayMusic.getApiInstance().getService().getFilledStations(request)
+                        .execute().body().toList().get(0).tracks);
+        return trackOptional.orElse(new LinkedList<>());
     }
 
     public List<ArtRef> getImageArtRefs() {

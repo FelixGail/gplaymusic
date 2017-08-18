@@ -54,8 +54,9 @@ public class NetworkException extends IOException implements Serializable {
         return response;
     }
 
-    public void setResponse(Response response) {
+    public NetworkException setResponse(Response response) {
         this.response = response;
+        return this;
     }
 
     private String getRequestInformation() {

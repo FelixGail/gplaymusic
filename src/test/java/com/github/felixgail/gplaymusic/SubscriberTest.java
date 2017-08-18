@@ -3,6 +3,7 @@ package com.github.felixgail.gplaymusic;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.TokenProvider;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
+import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.shema.Playlist;
 import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
@@ -134,7 +135,11 @@ public class SubscriberTest {
         List<Station> stations = GPlayMusic.getApiInstance().listStations();
         assertNotNull(stations);
         assertFalse(stations.isEmpty());
-        Station station = stations.get(0);
+        //Prefer a non Playlist station, as they can return empty lists if created on empty playlists.
+        Optional<Station> stationOptional = stations.stream()
+                .filter(s -> !s.getSeed().getSeedType().equals(StationSeedType.PLAYLIST)).findFirst();
+        Station station;
+        station = stationOptional.orElseGet(() -> stations.get(0));
         assertNotNull(station);
         assertNotNull(station.getName());
         assertNotNull(station.getId());
