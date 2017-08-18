@@ -1,0 +1,52 @@
+version: 2
+jobs:
+  build:
+    docker:
+    - image: maven:3.5.0-jdk-8
+    working_directory: ~/app
+    steps:
+    - checkout
+
+    - restore_cache:
+        keys:
+        - v1-{{ checksum "pom.xml" }}
+        - v1-
+        paths:
+        - ~/.m2
+
+    - run:
+        name: Create test properties file
+        command: |
+          cd src/test/resources
+          if [ ! -f gplaymusic.properties ]; then
+              printf "auth.username=${auth_username}" >> gplaymusic.properties
+              printf "auth.password=${auth_password}" >> gplaymusic.properties
+              printf "auth.android_id=${auth_android_id}" >> gplaymusic.properties
+              printf "auth.token=${auth_token}" >> gplaymusic.properties
+          fi
+          cd ../../..
+
+    - run:
+        command: mvn test
+        name: Running unit tests
+        when: always
+    - deploy:
+        command: |
+          mkdir -p target/junit/
+          find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} target/junit/ \;
+        name: Copy test artifacts
+    - store_test_results:
+        path: target/junit/
+    - store_artifacts:
+        path: target/junit/
+
+    - deploy:
+        command: mvn site -P report
+        name: Building reports
+    - store_artifacts:
+        path: target/site/
+
+    - save_cache:
+        key: v1-{{ checksum "pom.xml" }}
+        paths:
+        - ~/.m2

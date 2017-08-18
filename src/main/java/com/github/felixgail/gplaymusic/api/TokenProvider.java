@@ -31,6 +31,13 @@ public class TokenProvider {
                 "AIzaSyARTC1h-_puqO0PHCHUoj1BTDjuAOxNVA8");
     }
 
+    /**
+     * Generate a token from a saved one. Use this function with care, as PlayMusic tokens have no expiry date - but
+     * can be invalidated if (for example) the same android id was used in the meantime to generate a new token.
+     *
+     * @param token Token string recovered from {@link AuthToken#getToken()};
+     * @return a new Token, recovered from the saved string.
+     */
     public static AuthToken provideToken(final String token) {
         return new AuthToken(token);
     }

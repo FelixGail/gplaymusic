@@ -28,8 +28,8 @@ public class TestUtil {
         try {
             PROPS.load(in);
             in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | NullPointerException e) {
+            System.out.println("gplaymusic.properties file not found. Most test will not be executed.");
         }
         USERNAME = new Property(USERNAME_KEY);
         PASSWORD = new Property(PASSWORD_KEY);
