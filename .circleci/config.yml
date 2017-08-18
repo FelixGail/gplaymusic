@@ -14,6 +14,8 @@ jobs:
         paths:
         - ~/.m2
 
+    - compile
+
     - run:
         name: Create test properties file
         command: |
