@@ -14,7 +14,10 @@ jobs:
         paths:
         - ~/.m2
 
-    - compile
+    - run:
+        name: Echo Test Variable
+        commands: |
+          echo ${test_variable}
 
     - run:
         name: Create test properties file
