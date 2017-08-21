@@ -1,11 +1,17 @@
 package com.github.felixgail.gplaymusic.util;
 
+import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.shema.Track;
 import org.junit.Assume;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+
+import static org.junit.Assert.assertNotNull;
 
 public class TestUtil {
     public static final String USERNAME_KEY = "auth.username";
@@ -78,6 +84,44 @@ public class TestUtil {
                     String.format("Test has been skipped. Required object \"%s\" is null.", object),
                     object);
         }
+    }
+
+    public static void testPlaylistEntries(List<PlaylistEntry> entries) {
+        for (PlaylistEntry entry : entries) {
+            assertNotNull(entry);
+            assertNotNull(entry.getAbsolutePosition());
+            assertNotNull(entry.getTrackId());
+            assertTracks(entry.getTrack());
+        }
+    }
+
+    public static void assertTracks(Track... tracks) {
+        assertTracks(Arrays.asList(tracks));
+    }
+
+    public static void assertTracks(List<Track> tracks) {
+        for (Track track : tracks) {
+            assertNotNull(track);
+            assertNotNull(track.getTitle());
+            assertNotNull(track.getArtist());
+            assertNotNull(track.getID());
+        }
+    }
+
+    public static boolean containsEqualSong(List<Track> list1, List<Track> list2) {
+        if (list1 != null && list2 != null) {
+            for (Track fromList1 : list1) {
+                for (Track fromList2 : list2) {
+                    if (fromList1.getID().equals(fromList2.getID())) {
+                        System.out.printf("Equal Songs:\nSong1: %s (%s)\nSong2: %s (%s)",
+                                fromList1.getTitle(), fromList1.getID(),
+                                fromList2.getTitle(), fromList2.getID());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static class Property {

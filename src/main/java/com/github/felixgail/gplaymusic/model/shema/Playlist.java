@@ -13,9 +13,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Playlist implements Result, Serializable {
@@ -65,6 +63,32 @@ public class Playlist implements Result, Serializable {
         this.type = type;
         this.lastModifiedTimestamp = lastModifiedTimestamp;
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public Playlist(String id) throws IOException {
+        Optional<Playlist> playlistOptional = GPlayMusic.getApiInstance().listPlaylists()
+                .stream().filter(p -> p.getId().equals(id)).findFirst();
+        if (playlistOptional.isPresent()) {
+            Playlist remote = playlistOptional.get();
+            this.name = remote.name;
+            this.id = remote.id;
+            this.shareState = remote.shareState;
+            this.description = remote.description;
+            this.shareToken = remote.shareToken;
+            this.lastModifiedTimestamp = remote.lastModifiedTimestamp;
+            this.creationTimestamp = remote.creationTimestamp;
+            this.recentTimestamp = remote.recentTimestamp;
+            this.ownerName = remote.ownerName;
+            this.ownerProfilePhotoUrl = remote.ownerProfilePhotoUrl;
+            this.type = remote.type;
+            this.accessControlled = remote.accessControlled;
+            this.deleted = remote.deleted;
+            this.artRef = remote.artRef;
+            this.explicitType = remote.explicitType;
+            this.contentType = remote.contentType;
+        } else {
+            throw new IllegalArgumentException("This user is not subscribed to any playlist with that id.");
+        }
     }
 
     /**
@@ -185,7 +209,7 @@ public class Playlist implements Result, Serializable {
      * {@link PlaylistEntry#source}</b> are not set (null). To get fully filled entries, use TODO!
      * @throws IOException
      */
-    public List<PlaylistEntry> addTracks(Track... tracks)
+    public List<PlaylistEntry> addTracks(List<Track> tracks)
             throws IOException {
         List<PlaylistEntry> playlistEntries = new LinkedList<>();
         Mutator mutator = new Mutator();
@@ -201,12 +225,19 @@ public class Playlist implements Result, Serializable {
             next = UUID.randomUUID();
         }
         MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
-        for (int i = 0; i < tracks.length; i++) {
+        for (int i = 0; i < tracks.size(); i++) {
             MutationResponse.Item item = response.getItems().get(i);
             playlistEntries.add(new PlaylistEntry(item.getId(), item.getClientID(), this.getId(),
-                    tracks[i], null, null, null, false));
+                    tracks.get(i), null, null, null, false));
         }
         return playlistEntries;
+    }
+
+    /**
+     * see javadoc at {@link #addTracks(List)}.
+     */
+    public List<PlaylistEntry> addTracks(Track... tracks) throws IOException {
+        return addTracks(Arrays.asList(tracks));
     }
 
     /**
