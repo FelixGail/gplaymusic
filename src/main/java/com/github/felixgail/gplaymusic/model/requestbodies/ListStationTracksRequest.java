@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListStationTracksRequest implements Serializable {
+public class ListStationTracksRequest extends PagingRequest implements Serializable {
     @Expose
     private int contentFilter = 1;
     @Expose
@@ -24,6 +24,19 @@ public class ListStationTracksRequest implements Serializable {
      *                             in the result.
      */
     public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) {
+        this(station, numEntries, recentlyPlayedTracks, null, -1);
+    }
+
+    /**
+     * Create a request to return a list of Tracks for a Station.
+     *
+     * @param station              A Station the {@link Track}s will be received for.
+     * @param numEntries           number of {@link Track}s that will be requested. Max. 1000.
+     * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this list will not be
+     *                             in the result.
+     */
+    public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks, String nextPageToken, int maxResults) {
+        super(nextPageToken, maxResults);
         stations = Collections.singletonList(new StationRequest(station, numEntries, recentlyPlayedTracks));
     }
 

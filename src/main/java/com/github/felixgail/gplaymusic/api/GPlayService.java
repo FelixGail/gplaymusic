@@ -7,6 +7,7 @@ import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.requestbodies.ListStationTracksRequest;
+import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
@@ -59,8 +60,14 @@ public interface GPlayService {
     @POST("sj/v2.5/radio/station")
     Call<ListResult<Station>> listStations();
 
+    @POST("sj/v2.5/radio/station")
+    Call<ListResult<Station>> listStations(@Body PagingRequest body);
+
     @POST("sj/v2.5/playlistfeed")
     Call<ListResult<Playlist>> listPlaylists();
+
+    @POST("sj/v2.5/playlistfeed")
+    Call<ListResult<Playlist>> listPlaylists(@Body PagingRequest body);
 
     @GET("sj/v2.5/podcast/browse")
     Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
@@ -86,6 +93,22 @@ public interface GPlayService {
      */
     @POST("sj/v2.5/plentryfeed")
     Call<ListResult<PlaylistEntry>> listPlaylistEntries();
+
+    /**
+     * As far as my understanding goes, this simply returns a list containing
+     * every {@link PlaylistEntry} from every {@link Playlist}
+     * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
+     * <p>
+     * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
+     * the user is subscribed to are <b>not</b> included. To contents from such a playlist use
+     * TODO
+     * <p>
+     * The Server has no option to return the contents of a single Playlist.
+     *
+     * @return the {@link Call} to request a list of {@link PlaylistEntry}
+     */
+    @POST("sj/v2.5/plentryfeed")
+    Call<ListResult<PlaylistEntry>> listPlaylistEntries(@Body PagingRequest body);
 
     @POST("sj/v2.5/plentries/shared")
     Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);

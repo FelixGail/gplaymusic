@@ -7,7 +7,6 @@ import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assume;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
@@ -52,6 +51,7 @@ public class PlaylistTest extends TestWithLogin {
         List<PlaylistEntry> entries = privatePlaylist.getContents(-1);
         assertNotNull(entries);
         testPlaylistEntries(entries);
+        System.out.printf("%d playlist entries found and validated.", entries.size());
     }
 
     @Test
@@ -66,10 +66,10 @@ public class PlaylistTest extends TestWithLogin {
         List<PlaylistEntry> entries = sharedPlaylist.getContents(100);
         assertNotNull(entries);
         testPlaylistEntries(entries);
+        System.out.printf("%d playlist entries found and validated.", entries.size());
     }
 
     @Test
-    @Ignore //TODO: Not working due to paging not implemented
     public void testMutatePlaylist() throws IOException, InterruptedException {
         Playlist newPlaylist = Playlist.create("TestPlaylist_" + System.currentTimeMillis(),
                 "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
@@ -80,10 +80,9 @@ public class PlaylistTest extends TestWithLogin {
         Assume.assumeTrue("List with exactly 4 songs needed.", tracksToAdd.size() == 4);
         TestUtil.assertTracks(tracksToAdd);
         newPlaylist.addTracks(tracksToAdd);
-        System.out.println(newPlaylist.getId());
         List<PlaylistEntry> playlistContent = newPlaylist.getContents(-1);
-        assertTrue("Playlist should now have 4 entries but has " + newPlaylist.getContents(10).size(),
-                newPlaylist.getContents(100).size() == 4);
+        assertTrue("Playlist should now have 4 entries but has " + playlistContent.size(),
+                playlistContent.size() == 4);
         TestUtil.testPlaylistEntries(playlistContent);
         newPlaylist.delete();
         List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();

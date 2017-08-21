@@ -2,7 +2,9 @@ package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
+import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
@@ -252,14 +254,21 @@ public class Playlist implements Result, Serializable {
             throws IOException {
         if (!getType().equals(PlaylistType.SHARED)) {
             //python implementation suggests that this should also work for magic playlists
-            return getContentsForUserGeneratedPlaylist();
+            return getContentsForUserGeneratedPlaylist(maxResults);
         }
         return getContentsForSharedPlaylist(maxResults);
     }
 
-    private List<PlaylistEntry> getContentsForUserGeneratedPlaylist() throws IOException {
-        List<PlaylistEntry> all_entries =
-                GPlayMusic.getApiInstance().listAllPlaylistEntries();
+    private List<PlaylistEntry> getContentsForUserGeneratedPlaylist(int maxResults) throws IOException {
+        List<PlaylistEntry> all_entries = new PagingHandler<PlaylistEntry>() {
+
+            @Override
+            public ListResult<PlaylistEntry> getChunk(String nextPageToken) throws IOException {
+                return GPlayMusic.getApiInstance().getService().listPlaylistEntries(
+                        new PagingRequest(nextPageToken, maxResults)
+                ).execute().body();
+            }
+        }.getAll();
         return all_entries.stream()
                 .filter(entry -> entry.getPlaylistId().equals(getId()))
                 .sorted(PlaylistEntry::compareTo)

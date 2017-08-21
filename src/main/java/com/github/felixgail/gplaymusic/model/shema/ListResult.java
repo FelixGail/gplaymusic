@@ -13,9 +13,15 @@ public class ListResult<T> implements Serializable {
     @SerializedName(value = "data",
             alternate = {"series", "listennow_items", "mutate_response"})
     private InnerData<T> data = new InnerData<>();
+    @Expose
+    private String nextPageToken;
 
     public List<T> toList() {
         return data.getItems();
+    }
+
+    public String getNextPageToken() {
+        return nextPageToken;
     }
 
     class InnerData<U> implements Serializable {
