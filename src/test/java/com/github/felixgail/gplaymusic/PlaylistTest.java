@@ -52,7 +52,7 @@ public class PlaylistTest extends TestWithLogin {
         List<PlaylistEntry> entries = privatePlaylist.getContents(-1);
         assertNotNull(entries);
         testPlaylistEntries(entries);
-        System.out.printf("%d playlist entries found and validated.", entries.size());
+        System.out.printf("%d playlist entries found and validated.\n", entries.size());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PlaylistTest extends TestWithLogin {
         List<PlaylistEntry> entries = sharedPlaylist.getContents(100);
         assertNotNull(entries);
         testPlaylistEntries(entries);
-        System.out.printf("%d playlist entries found and validated.", entries.size());
+        System.out.printf("%d playlist entries found and validated.\n", entries.size());
     }
 
     @Test

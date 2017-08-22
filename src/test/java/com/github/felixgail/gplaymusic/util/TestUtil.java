@@ -119,7 +119,8 @@ public class TestUtil {
                 tracks.size() == 25);
     }
 
-    public static boolean containsEqualSong(List<Track> list1, List<Track> list2) {
+    public static int containsDoubledTracks(List<Track> list1, List<Track> list2) {
+        int doubledTracks = 0;
         if (list1 != null && list2 != null) {
             for (Track fromList1 : list1) {
                 for (Track fromList2 : list2) {
@@ -127,12 +128,12 @@ public class TestUtil {
                         System.out.printf("Equal Songs:\nSong1: %s (%s)\nSong2: %s (%s)",
                                 fromList1.getTitle(), fromList1.getID(),
                                 fromList2.getTitle(), fromList2.getID());
-                        return true;
+                        doubledTracks++;
                     }
                 }
             }
         }
-        return false;
+        return doubledTracks;
     }
 
     public static class Property {

@@ -127,7 +127,10 @@ public class Station implements Result, Serializable {
      *                       close to the selected value. e.g. while testing numEntries=78 returned 53 results.
      *                       TODO: Investigate
      *                       </b>
-     * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list will be excluded from the response
+     * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list will,
+     *                       <b>most of the time</b>,
+     *                       be excluded from the response. For some reason this is sometimes ignored by the server.
+     *                       TODO: Exclude doubled tracks manually?
      * @param newCall        true if a new call shall be dispatched. false if the list from a previous call is to be returned.
      *                       Careful: Will return an empty list if no call has been made.
      * @return A list of tracks for this station.

@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.felixgail.gplaymusic.util.TestUtil.*;
+import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
+import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -45,16 +46,15 @@ public class StationTest extends TestWithLogin {
         int numEntries = 68;
         List<Track> stationTracks = station.getTracks(numEntries, null, true);
         assertNotNull(stationTracks);
-        assertTrue(String.format("Expected list length >=25, got '%d'", numEntries, stationTracks.size()),
+        assertTrue(String.format("Expected list length >=25, got '%d'", stationTracks.size()),
                 stationTracks.size() >= 25);
         assertTracks(stationTracks);
-        numEntries = 40;
+        numEntries = 20;
         List<Track> newTracks = station.getTracks(numEntries, stationTracks, true);
         assertNotNull(newTracks);
-        assertTrue(String.format("Expected list length >=25', got '%d'", numEntries, newTracks.size()),
-                newTracks.size() >= 25);
+        assertTrue(String.format("Expected list length expected %d', got '%d'", numEntries, newTracks.size()),
+                newTracks.size() == 20);
         assertTracks(newTracks);
-        assertFalse(containsEqualSong(stationTracks, newTracks));
     }
 
     @Test
