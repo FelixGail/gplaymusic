@@ -28,7 +28,10 @@ public class TestWithLogin {
             TestUtil.set(token.getKey(), authToken.getToken());
         }
         try {
-            new GPlayMusic.Builder().setAuthToken(authToken).build();
+            new GPlayMusic.Builder()
+                    .setAuthToken(authToken)
+                    .setDebug(false)
+                    .build();
         } catch (InitializationException e) {
             if (usingExistingToken) {
                 //Retry as token could be invalid.

@@ -184,11 +184,10 @@ public class MutationFactory {
      *
      * @param name          name of the station
      * @param seed          seed of the station
-     * @param includeTracks whether or not the response should include a list of tracks in the new station
-     * @param numEntries    server response includes set number of Tracks for the created station.
+     * @param includeTracks whether or not the response should include a list of 25 tracks for the new station
      */
-    public static Mutation getAddStationMutation(String name, StationSeed seed, boolean includeTracks, int numEntries) {
-        return new CreateStationMutation(name, seed, includeTracks, numEntries);
+    public static Mutation getAddStationMutation(String name, StationSeed seed, boolean includeTracks) {
+        return new CreateStationMutation(name, seed, includeTracks, 25);
     }
 
     @JsonAdapter(MutationSerializer.class)

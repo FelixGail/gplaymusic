@@ -13,6 +13,7 @@ import com.github.felixgail.gplaymusic.model.shema.*;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
+import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
@@ -189,6 +190,22 @@ public final class GPlayMusic {
         private String androidID;
         private ErrorInterceptor.InterceptorBehaviour
                 interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.THROW_EXCEPTION;
+        private boolean debug = false;
+
+        public boolean isDebug() {
+            return debug;
+        }
+
+        /**
+         * If set to <em>true</em>, will log every request and response made by the Client.<br>
+         * <b>
+         * Be careful as this can easily leak personal information. Be sure to always check the output.
+         * </b>
+         */
+        public GPlayMusic.Builder setDebug(boolean debug) {
+            this.debug = debug;
+            return this;
+        }
 
         /**
          * Used while building the {@link GPlayMusic} instance. If no {@link OkHttpClient.Builder} is
@@ -307,12 +324,16 @@ public final class GPlayMusic {
 
                 ParameterInterceptor parameterInterceptor = new ParameterInterceptor();
 
-                OkHttpClient httpClient = this.httpClientBuilder
+                this.httpClientBuilder
                         .addInterceptor(getHeaderInterceptor())
                         .addInterceptor(parameterInterceptor)
                         .addInterceptor(new ErrorInterceptor(this.interceptorBehaviour))
-                        .followRedirects(false)
-                        .build();
+                        .followRedirects(false);
+                if (this.debug) {
+                    this.httpClientBuilder.addInterceptor(new LoggingInterceptor());
+                }
+
+                OkHttpClient httpClient = this.httpClientBuilder.build();
 
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("https://mclients.googleapis.com/")

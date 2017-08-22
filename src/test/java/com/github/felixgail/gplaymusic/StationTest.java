@@ -17,8 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
-import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
+import static com.github.felixgail.gplaymusic.util.TestUtil.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -43,25 +42,25 @@ public class StationTest extends TestWithLogin {
         assertNotNull(station);
         assertNotNull(station.getName());
         assertNotNull(station.getId());
-        int numEntries = 68;
-        List<Track> stationTracks = station.getTracks(numEntries, null, true);
+        List<Track> stationTracks = station.getTracks(null, true, false);
         assertNotNull(stationTracks);
-        assertTrue(String.format("Expected list length >=25, got '%d'", stationTracks.size()),
-                stationTracks.size() >= 25);
+        assertTrue(String.format("Expected list length ==25, got '%d'", stationTracks.size()),
+                stationTracks.size() == 25);
         assertTracks(stationTracks);
-        numEntries = 20;
-        List<Track> newTracks = station.getTracks(numEntries, stationTracks, true);
+        List<Track> newTracks = station.getTracks(stationTracks, true, true);
         assertNotNull(newTracks);
-        assertTrue(String.format("Expected list length expected %d', got '%d'", numEntries, newTracks.size()),
-                newTracks.size() == 20);
+        assertTrue(String.format("Expected list length expected <=25, got '%d'", newTracks.size()),
+                newTracks.size() <= 25);
         assertTracks(newTracks);
+        int doubles = containsDoubledTracks(stationTracks, newTracks);
+        assertTrue(String.format("Second Call contained %d doubles.", doubles), doubles == 0);
     }
 
     @Test
     public void createTrackStation() throws IOException {
         Track track = GPlayMusic.getApiInstance().searchTracks("Imagine", 1).get(0);
         assume(track);
-        Station station = Station.create(new StationSeed(track), "TestTrackStation", true, -1);
+        Station station = Station.create(new StationSeed(track), "TestTrackStation", true);
         TestUtil.testStation(station);
     }
 
@@ -70,7 +69,7 @@ public class StationTest extends TestWithLogin {
         Album album = GPlayMusic.getApiInstance()
                 .search("Imagine", 1, new SearchTypes(ResultType.ALBUM)).getAlbums().get(0);
         assume(album);
-        Station station = Station.create(new StationSeed(album), "TestAlbumStation", true, -1);
+        Station station = Station.create(new StationSeed(album), "TestAlbumStation", true);
         TestUtil.testStation(station);
     }
 }

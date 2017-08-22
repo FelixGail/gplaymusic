@@ -14,10 +14,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
@@ -63,9 +60,9 @@ public class Station implements Result, Serializable {
         this.tracks = tracks;
     }
 
-    public static Station create(final StationSeed seed, final String name, final boolean includeTracks, final int numEntries)
+    public static Station create(final StationSeed seed, final String name, final boolean includeTracks)
             throws IOException {
-        final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
+        final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks));
         final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
         MutationResponse.Item item = response.getItems().get(0);
         if (item.hasStationKey()) {
@@ -120,30 +117,39 @@ public class Station implements Result, Serializable {
      * Keep in mind that this can return an empty list, if this station is created on an empty playlist.
      * </b>
      *
-     * @param numEntries     number of tracks that will be returned. Valid values are 0<=x<=79.
-     *                       Invalid values will default to 25.<br>
-     *                       <b>
-     *                       Warning: This seems to be an upper bound for results. It can not be expected to get even
-     *                       close to the selected value. e.g. while testing numEntries=78 returned 53 results.
-     *                       TODO: Investigate
-     *                       </b>
-     * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list will,
-     *                       <b>most of the time</b>,
-     *                       be excluded from the response. For some reason this is sometimes ignored by the server.
-     *                       TODO: Exclude doubled tracks manually?
-     * @param newCall        true if a new call shall be dispatched. false if the list from a previous call is to be returned.
-     *                       Careful: Will return an empty list if no call has been made.
-     * @return A list of tracks for this station.
+     * @param recentlyPlayed     a list of tracks that have recently been played. tracks from this list will,
+     *                           <b>most of the time</b>,
+     *                           be excluded from the response. For some reason this is sometimes ignored by the server.
+     *                           Use {@code forceRemoveDoubles} to remove doubles returned by the server.
+     * @param newCall            true if a new call shall be dispatched. false if the list from a previous call is to be returned.
+     *                           Careful: Will return an empty list if no call has been made.
+     * @param forceRemoveDoubles see {@code recentlyPlayed}. Force remove doubles returned by the server.
+     * @return A list of 25 tracks for this station.
      */
-    public List<Track> getTracks(int numEntries, List<Track> recentlyPlayed, boolean newCall) throws IOException {
+    public List<Track> getTracks(List<Track> recentlyPlayed, boolean newCall, boolean forceRemoveDoubles)
+            throws IOException {
         if (!newCall) {
             return Optional.of(tracks).orElse(Collections.emptyList());
         }
-        ListStationTracksRequest request = new ListStationTracksRequest(this, numEntries, recentlyPlayed);
+        ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
         Optional<List<Track>> trackOptional =
                 Optional.of(GPlayMusic.getApiInstance().getService().getFilledStations(request)
                         .execute().body().toList().get(0).tracks);
-        return trackOptional.orElse(Collections.emptyList());
+        List<Track> tracks = trackOptional.orElse(Collections.emptyList());
+        if (forceRemoveDoubles) {
+            Iterator<Track> iter = tracks.iterator();
+            while (iter.hasNext()) {
+                Track track = iter.next();
+                for (Track recent : recentlyPlayed) {
+                    if (track.getID().equals(recent.getID())) {
+                        System.out.printf("Removing double %s (%s == %s)\n",
+                                track.getTitle(), track.getID(), recent.getID());
+                        iter.remove();
+                    }
+                }
+            }
+        }
+        return tracks;
     }
 
     public List<ArtRef> getImageArtRefs() {

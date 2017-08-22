@@ -1,17 +1,14 @@
 package com.github.felixgail.gplaymusic.api.exceptions;
 
+import com.github.felixgail.gplaymusic.util.NetworkPrettyPrinter;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import okhttp3.Request;
 import okhttp3.Response;
-import okio.Buffer;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Will be thrown when the network responds with an error.
@@ -62,42 +59,15 @@ public class NetworkException extends IOException implements Serializable {
     private String getRequestInformation() {
 
         if (response != null) {
-            Request request = response.request();
-            Buffer buffer = new Buffer();
-            buffer.writeUtf8("Request Information:\n")
-                    .writeUtf8("URL: ").writeUtf8(request.url().toString()).writeUtf8(System.lineSeparator())
-                    .writeUtf8("Method: ").writeUtf8(request.method()).writeUtf8(System.lineSeparator());
-            for (Map.Entry<String, List<String>> entry :
-                    request.headers().toMultimap().entrySet()) {
-                buffer.writeUtf8(entry.getKey()).writeUtf8(": ");
-                for (String value : entry.getValue()) {
-                    buffer.writeUtf8("\t");
-                    if (value.startsWith("GoogleLogin")) {
-                        buffer.writeUtf8("<ommited>");
-                    } else {
-                        buffer.writeUtf8(value);
-                    }
-                    buffer.writeUtf8(System.lineSeparator());
-                }
-            }
-            if (request.body() != null) {
-                try {
-                    buffer.writeUtf8("\nRequest body:\n");
-                    request.body().writeTo(buffer);
-                } catch (IOException | NullPointerException e) {
-                    buffer.writeUtf8("\n\nWhile handling above exception another exception occured:\n")
-                            .writeUtf8(e.getMessage());
-                }
-            }
-            return buffer.readUtf8();
+            return NetworkPrettyPrinter.getRequestPrint(response.request());
         }
         return "";
     }
 
     @Override
     public String toString() {
-        return String.format("A NetworkException occured: \nError Code: %d \nMessage: %s \n\n%s\n",
-                getCode(), getMessage(), getRequestInformation());
+        return String.format("A NetworkException occured: \nError Code: %d \nMessage: %s \n\n%s\n\n%s\n",
+                getCode(), getMessage(), getRequestInformation(), NetworkPrettyPrinter.getResponsePrint(response));
     }
 
     private class ErrorHelper implements Serializable {
