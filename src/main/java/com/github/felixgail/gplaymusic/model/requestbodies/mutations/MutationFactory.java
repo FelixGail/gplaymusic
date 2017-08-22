@@ -278,6 +278,9 @@ public class MutationFactory {
         CreateStationMutation(String name, StationSeed seed, boolean includeFeed, int numEntries) {
             this.createOrGet = new CreateOrGet(name, seed);
             this.includeFeed = includeFeed;
+            if (numEntries < 0 || numEntries > 78) {
+                numEntries = 25;
+            }
             this.numEntries = numEntries;
         }
 

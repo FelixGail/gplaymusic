@@ -110,13 +110,13 @@ public class TestUtil {
         }
     }
 
-    public static void testStation(Station station, int numEntries) throws IOException {
+    public static void testStation(Station station) throws IOException {
         assertNotNull(station);
         List<Track> tracks = station.getTracks(-1, null, false);
         assertNotNull(tracks);
         assertTracks(tracks);
-        assertTrue(String.format("Expected list length '%d', got '%d'", numEntries, tracks.size()),
-                tracks.size() == numEntries);
+        assertTrue(String.format("Expected list length '%d', got '%d'", 25, tracks.size()),
+                tracks.size() == 25);
     }
 
     public static boolean containsEqualSong(List<Track> list1, List<Track> list2) {
