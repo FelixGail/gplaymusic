@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.util;
 
 import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import org.junit.Assume;
 
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
 public class TestUtil {
@@ -106,6 +108,15 @@ public class TestUtil {
             assertNotNull(track.getArtist());
             assertNotNull(track.getID());
         }
+    }
+
+    public static void testStation(Station station, int numEntries) throws IOException {
+        assertNotNull(station);
+        List<Track> tracks = station.getTracks(-1, null, false);
+        assertNotNull(tracks);
+        assertTracks(tracks);
+        assertTrue(String.format("Expected list length '%d', got '%d'", numEntries, tracks.size()),
+                tracks.size() == numEntries);
     }
 
     public static boolean containsEqualSong(List<Track> list1, List<Track> list2) {

@@ -13,6 +13,7 @@ import svarzee.gps.gpsoauth.Gpsoauth;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
 import static com.github.felixgail.gplaymusic.util.TestUtil.testPlaylistEntries;
@@ -71,24 +72,34 @@ public class PlaylistTest extends TestWithLogin {
 
     @Test
     public void testMutatePlaylist() throws IOException, InterruptedException {
+        long testStartTime = System.currentTimeMillis();
         Playlist newPlaylist = Playlist.create("TestPlaylist_" + System.currentTimeMillis(),
                 "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
         assertNotNull(newPlaylist);
         assertTrue("Newly created Playlist should be empty.",
                 newPlaylist.getContents(100).size() == 0);
+        System.out.printf("[%ds] new playlist created.\n", timeDifferenceinSeconds(testStartTime));
         List<Track> tracksToAdd = GPlayMusic.getApiInstance().searchTracks("Imagine", 4);
         Assume.assumeTrue("List with exactly 4 songs needed.", tracksToAdd.size() == 4);
         TestUtil.assertTracks(tracksToAdd);
         newPlaylist.addTracks(tracksToAdd);
+        System.out.printf("[%ds] 4 tracks added.\n", timeDifferenceinSeconds(testStartTime));
         List<PlaylistEntry> playlistContent = newPlaylist.getContents(-1);
         assertTrue("Playlist should now have 4 entries but has " + playlistContent.size(),
                 playlistContent.size() == 4);
         TestUtil.testPlaylistEntries(playlistContent);
+        System.out.printf("[%ds] playlist length verified.\n", timeDifferenceinSeconds(testStartTime));
         newPlaylist.delete();
+        System.out.printf("[%ds] playlist deleted.\n", timeDifferenceinSeconds(testStartTime));
         List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();
         for (Playlist fromList : allPlaylists) {
             assertFalse("PlaylistFeed should not contain created playlist anymore.",
                     fromList.getId().equals(newPlaylist.getId()));
         }
+        System.out.printf("[%ds] playlist deletion tested\n.", timeDifferenceinSeconds(testStartTime));
+    }
+
+    private long timeDifferenceinSeconds(long to) {
+        return TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - to);
     }
 }

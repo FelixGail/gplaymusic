@@ -113,15 +113,15 @@ public interface GPlayService {
     @POST("sj/v2.5/plentries/shared")
     Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);
 
-    @POST("sj/v2.5/{path}")
-    Call<MutationResponse> batchCall(@Path("path") String path, @Body Mutator mutator);
+    @POST
+    Call<MutationResponse> batchCall(@Url String path, @Body Mutator mutator);
 
     @POST("sj/v2.5/radio/stationfeed")
     Call<ListResult<Station>> getFilledStations(@Body ListStationTracksRequest request);
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {
-        Response<MutationResponse> response = batchCall(path, body).execute();
+        Response<MutationResponse> response = batchCall("sj/v2.5/" + path, body).execute();
         if (!response.body().checkSuccess()) {
             NetworkException exception = new NetworkException(400, "The server reported a failure. Please open an" +
                     "issue and provide this output.");

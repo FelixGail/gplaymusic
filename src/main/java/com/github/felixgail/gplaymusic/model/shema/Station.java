@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.ListStationTracksRequest;
@@ -66,8 +67,11 @@ public class Station implements Result, Serializable {
             throws IOException {
         final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks, numEntries));
         final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
-        response.getItems().get(0).getId();
-        return null;
+        MutationResponse.Item item = response.getItems().get(0);
+        if (item.hasStationKey()) {
+            return item.getStation();
+        }
+        throw new NetworkException(400, "Response did not contain a station.");
     }
 
     public String getName() {
@@ -112,9 +116,17 @@ public class Station implements Result, Serializable {
 
     /**
      * Get Tracks for this Station.<br>
-     * <b>Keep in mind that this can return an empty list, if this station is created on an empty playlist.</b>
+     * <b>
+     * Keep in mind that this can return an empty list, if this station is created on an empty playlist.
+     * </b>
      *
-     * @param numEntries     number of tracks that will be returned.
+     * @param numEntries     number of tracks that will be returned. Valid values are 0<=x<=79.
+     *                       Invalid values will default to 25.<br>
+     *                       <b>
+     *                       Warning: This seems to be an upper bound for results. It can not be expected to get even
+     *                       close to the selected value. e.g. while testing numEntries=78 returned 53 results.
+     *                       TODO: Investigate
+     *                       </b>
      * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list will be excluded from the response
      * @param newCall        true if a new call shall be dispatched. false if the list from a previous call is to be returned.
      *                       Careful: Will return an empty list if no call has been made.

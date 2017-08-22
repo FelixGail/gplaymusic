@@ -34,6 +34,8 @@ public class MutationResponse implements Serializable {
         private String clientID;
         @Expose
         private String response_code;
+        @Expose
+        private Station station;
 
         public String getId() {
             return id;
@@ -57,6 +59,18 @@ public class MutationResponse implements Serializable {
 
         public void setResponse_code(String response_code) {
             this.response_code = response_code;
+        }
+
+        public boolean hasStationKey() {
+            return (station != null);
+        }
+
+        /**
+         * Returns a Station if one was present in the response, or null.
+         * Check if it was present in the response with {@link #hasStationKey()};
+         */
+        public Station getStation() {
+            return station;
         }
     }
 }

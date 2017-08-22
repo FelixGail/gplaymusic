@@ -54,17 +54,33 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
         @Expose
         private String radioId;
         @Expose
-        private List<String> recentlyPlayed;
+        private List<RecentlyPlayedTrack> recentlyPlayed;
 
         StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) {
             this.radioId = station.getId();
-            this.numEntries = numEntries;
+            if (numEntries > -1 && numEntries < 79) {
+                this.numEntries = numEntries;
+            } else {
+                this.numEntries = 25;
+            }
             if (recentlyPlayedTracks != null) {
                 this.recentlyPlayed = new LinkedList<>();
                 for (Track track : recentlyPlayedTracks) {
-                    this.recentlyPlayed.add(track.getID());
+                    this.recentlyPlayed.add(new RecentlyPlayedTrack(track));
                 }
             }
+        }
+    }
+
+    private class RecentlyPlayedTrack implements Serializable {
+        @Expose
+        private String id;
+        @Expose
+        private int type;
+
+        RecentlyPlayedTrack(Track track) {
+            this.id = track.getID();
+            this.type = track.getID().startsWith("T") ? 1 : 0;
         }
     }
 }
