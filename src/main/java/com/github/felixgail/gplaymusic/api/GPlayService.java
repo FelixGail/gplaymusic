@@ -15,6 +15,7 @@ import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.*;
@@ -123,9 +124,9 @@ public interface GPlayService {
             throws IOException {
         Response<MutationResponse> response = batchCall("sj/v2.5/" + path, body).execute();
         if (!response.body().checkSuccess()) {
-            NetworkException exception = new NetworkException(400, "The server reported a failure. Please open an" +
-                    "issue and provide this output.");
+            NetworkException exception = new NetworkException(400, Language.get("network.GenericError"));
             exception.setResponse(response.raw());
+            throw exception;
         }
         return response.body();
     }

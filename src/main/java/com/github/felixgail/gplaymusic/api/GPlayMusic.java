@@ -15,6 +15,7 @@ import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import retrofit2.Retrofit;
@@ -46,7 +47,7 @@ public final class GPlayMusic {
      */
     public static GPlayMusic getApiInstance() {
         if (instance == null) {
-            throw new InitializationException("No instance of API initialized!");
+            throw new InitializationException(Language.get("api.NotInitialized"));
         }
         return instance;
     }
@@ -311,8 +312,7 @@ public final class GPlayMusic {
         public GPlayMusic build() {
             try {
                 if (this.authToken == null) {
-                    throw new InitializationException("AuthToken is not allowed to be empty. Use TokenProvider.provideToken" +
-                            " if you need to generate one.");
+                    throw new InitializationException(Language.get("api.init.EmptyToken"));
                 }
                 GsonBuilder gsonBuilder = new GsonBuilder()
                         .registerTypeAdapter(Result.class, new ResultDeserializer())
@@ -345,13 +345,14 @@ public final class GPlayMusic {
                 retrofit2.Response<Config> configResponse = null;
                 configResponse = gPlay.getService().config(this.locale).execute();
                 if (!configResponse.isSuccessful()) {
-                    throw new InitializationException("Network returned an error:", NetworkException.parse(configResponse.raw()));
+                    throw new InitializationException(Language.get("network.GenericError"), NetworkException.parse(configResponse.raw()));
                 }
                 Config config = configResponse.body();
                 if (config == null) {
-                    throw new InitializationException("Configuration Response empty.");
+                    throw new InitializationException(Language.get("api.init.EmptyConfig"));
                 }
                 config.setLocale(locale);
+                Language.setLocale(locale);
                 gPlay.setConfig(config);
 
                 parameterInterceptor.addParameter("dv", "0")
@@ -366,8 +367,7 @@ public final class GPlayMusic {
                     if (optional.isPresent()) {
                         config.setAndroidID(optional.get().getId());
                     } else {
-                        throw new InitializationException("#getAndroidID() returned null and" +
-                                " a connected device could not be determined.");
+                        throw new InitializationException(Language.get("api.init.NoAndroidId"));
                     }
                 } else {
                     config.setAndroidID(androidID);

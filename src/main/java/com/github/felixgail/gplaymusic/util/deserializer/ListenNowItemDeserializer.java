@@ -3,6 +3,7 @@ package com.github.felixgail.gplaymusic.util.deserializer;
 import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -20,8 +21,7 @@ public class ListenNowItemDeserializer implements JsonDeserializer<ListenNowItem
             addSubEntries(content, content.getAsJsonObject("radio_station"));
             return jdc.deserialize(content, ListenNowStation.class);
         }
-        throw new JsonParseException("Unknown ListenNowItem type." +
-                "Missing key album or radio_station!");
+        throw new JsonParseException(Language.get("listenNowItem.UnknownType"));
     }
 
     private void addSubEntries(JsonObject content, JsonObject lower) {

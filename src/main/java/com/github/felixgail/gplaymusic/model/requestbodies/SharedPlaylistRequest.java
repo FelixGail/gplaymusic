@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.requestbodies;
 
 import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public class SharedPlaylistRequest implements Serializable {
 
     public SharedPlaylistRequest(Playlist playlist, int maxResults) {
         if (!playlist.getType().equals(Playlist.PlaylistType.SHARED)) {
-            throw new IllegalArgumentException("Provided PlaylistType has to be PlaylistType.SHARED!");
+            throw new IllegalArgumentException(Language.get("api.SharedPlaylistRequest"));
         }
         HashMap<String, String> map = new HashMap<>();
         map.put("shareToken", playlist.getShareToken());

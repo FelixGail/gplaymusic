@@ -9,6 +9,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFac
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -68,7 +69,7 @@ public class Station implements Result, Serializable {
         if (item.hasStationKey()) {
             return item.getStation();
         }
-        throw new NetworkException(400, "Response did not contain a station.");
+        throw new NetworkException(400, Language.get("station.create.NetworkException"));
     }
 
     public String getName() {

@@ -1,5 +1,6 @@
 package com.github.felixgail.gplaymusic.util;
 
+import com.github.felixgail.gplaymusic.util.language.Language;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.Buffer;
@@ -14,7 +15,7 @@ public class NetworkPrettyPrinter {
     public static String getRequestPrint(Request request) {
         if (request != null) {
             Buffer buffer = new Buffer();
-            buffer.writeUtf8("Request Information:\n")
+            buffer.writeUtf8("Request Information\n")
                     .writeUtf8("URL: ").writeUtf8(request.url().toString()).writeUtf8(System.lineSeparator())
                     .writeUtf8("Method: ").writeUtf8(request.method()).writeUtf8(System.lineSeparator());
             for (Map.Entry<String, List<String>> entry :
@@ -23,7 +24,7 @@ public class NetworkPrettyPrinter {
                 for (String value : entry.getValue()) {
                     buffer.writeUtf8("\t");
                     if (value.startsWith("GoogleLogin")) {
-                        buffer.writeUtf8("<ommited>");
+                        buffer.writeUtf8(Language.get("network.print.Ommited"));
                     } else {
                         buffer.writeUtf8(value);
                     }
@@ -35,7 +36,7 @@ public class NetworkPrettyPrinter {
                     buffer.writeUtf8("\nRequest body:\n");
                     request.body().writeTo(buffer);
                 } catch (IOException | NullPointerException e) {
-                    buffer.writeUtf8("\n\nWhile handling above exception another exception occured:\n")
+                    buffer.writeUtf8("\n\n").writeUtf8(Language.get("exception.Generic"))
                             .writeUtf8(e.getMessage());
                 }
             }
@@ -61,7 +62,7 @@ public class NetworkPrettyPrinter {
                 String body = source.buffer().clone().readUtf8();
                 buffer.writeUtf8(body);
             } catch (IOException | NullPointerException e) {
-                buffer.writeUtf8("\n\nWhile handling above exception another exception occured:\n")
+                buffer.writeUtf8("\n\n").writeUtf8(Language.get("exception.Generic"))
                         .writeUtf8(e.getMessage());
             }
             return buffer.readUtf8();

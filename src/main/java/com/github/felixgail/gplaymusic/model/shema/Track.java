@@ -9,6 +9,7 @@ import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -285,10 +286,10 @@ public class Track extends Signable implements Result, Serializable {
     public String getStreamURL(StreamQuality quality)
             throws IOException {
         if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
-            throw new IOException("Function not allowed for Free users");
+            throw new IOException(Language.get("users.free.NotAllowed"));
         }
         if (getID() == null || getID().isEmpty()) {
-            throw new IOException("Track does not contain a valid TrackID.");
+            throw new IOException(Language.get("track.InvalidID"));
         }
         return urlFetcher(quality, Provider.STREAM, EMPTY_MAP);
     }
@@ -310,14 +311,13 @@ public class Track extends Signable implements Result, Serializable {
     public String getStationTrackURL(Station station, StreamQuality quality)
             throws IOException {
         if (getWentryID() == null || getWentryID().isEmpty()) {
-            throw new IOException("Track does not contain a valid WentryID." +
-                    "This means this track was not taken from a Station! Shame on you.");
+            throw new IOException(Language.get("track.InvalidWentryID"));
         }
         if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
             return getStreamURL(quality);
         }
         if (station.getSessionToken() == null || station.getSessionToken().isEmpty()) {
-            throw new IOException("Station does not contain a valid session token.");
+            throw new IOException(Language.get("station.InvalidSessionToken"));
         }
         Map<String, String> map = new HashMap<>();
         map.putAll(STATION_MAP);

@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.api.exceptions;
 
 import com.github.felixgail.gplaymusic.util.NetworkPrettyPrinter;
+import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
@@ -66,7 +67,7 @@ public class NetworkException extends IOException implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("A NetworkException occured: \nError Code: %d \nMessage: %s \n\n%s\n\n%s\n",
+        return String.format("%s:\nError Code: %d \nMessage: %s \n\n%s\n\n%s\n", Language.get("network.GenericError"),
                 getCode(), getMessage(), getRequestInformation(), NetworkPrettyPrinter.getResponsePrint(response));
     }
 

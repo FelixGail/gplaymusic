@@ -137,6 +137,7 @@ public class TestUtil {
     }
 
     public static class Property {
+
         private String key;
 
         public Property(String k) {
@@ -147,10 +148,6 @@ public class TestUtil {
             return key;
         }
 
-        public String get() {
-            return TestUtil.PROPS.getProperty(key);
-        }
-
         @Override
         public String toString() {
             return get();
@@ -159,5 +156,10 @@ public class TestUtil {
         public boolean isValid() {
             return (get() != null);
         }
+
+        public String get() {
+            return PROPS.getProperty(getKey());
+        }
     }
+
 }
