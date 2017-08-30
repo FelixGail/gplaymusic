@@ -4,7 +4,9 @@ import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
+import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
@@ -164,15 +166,12 @@ public final class GPlayMusic {
 
     public List<Playlist> listPlaylists()
             throws IOException {
-        return service.listPlaylists().execute().body().toList();
-    }
-
-    /**
-     * See the Doc at {@link GPlayService#listPlaylistEntries()} for detailed information.
-     */
-    public List<PlaylistEntry> listAllPlaylistEntries()
-            throws IOException {
-        return service.listPlaylistEntries().execute().body().toList();
+        return new PagingHandler<Playlist>() {
+            @Override
+            public ListResult<Playlist> getChunk(String nextPageToken) throws IOException {
+                return service.listPlaylists(new PagingRequest(nextPageToken, -1)).execute().body();
+            }
+        }.getAll();
     }
 
     public List<PodcastSeries> browsePodcastSeries(Genre genre)

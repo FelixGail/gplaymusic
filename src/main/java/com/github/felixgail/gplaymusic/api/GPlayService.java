@@ -93,7 +93,7 @@ public interface GPlayService {
      * @return the {@link Call} to request a list of {@link PlaylistEntry}
      */
     @POST("sj/v2.5/plentryfeed")
-    Call<ListResult<PlaylistEntry>> listPlaylistEntries();
+    Call<ListResult<PlaylistEntry>> listPrivatePlaylistEntries();
 
     /**
      * As far as my understanding goes, this simply returns a list containing
@@ -109,7 +109,7 @@ public interface GPlayService {
      * @return the {@link Call} to request a list of {@link PlaylistEntry}
      */
     @POST("sj/v2.5/plentryfeed")
-    Call<ListResult<PlaylistEntry>> listPlaylistEntries(@Body PagingRequest body);
+    Call<ListResult<PlaylistEntry>> listPrivatePlaylistEntries(@Body PagingRequest body);
 
     @POST("sj/v2.5/plentries/shared")
     Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);

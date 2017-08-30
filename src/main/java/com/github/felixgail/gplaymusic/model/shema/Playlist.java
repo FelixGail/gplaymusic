@@ -1,10 +1,9 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.cache.PrivatePlaylistEntriesCache;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
-import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
     public final static String BATCH_URL = "playlistbatch";
+    private static PrivatePlaylistEntriesCache cache = new PrivatePlaylistEntriesCache();
 
     @Expose
     private String name;
@@ -206,12 +206,9 @@ public class Playlist implements Result, Serializable {
      * Adds {@link Track}s to this playlist.
      *
      * @param tracks Array of tracks to be added
-     * @return List of created PlaylistEntries. As this list is only filled with the information available,
-     * <b>{@link PlaylistEntry#creationTiestamp}, {@link PlaylistEntry#lastModifiedTimestamp} and
-     * {@link PlaylistEntry#source}</b> are not set (null). To get fully filled entries, use TODO!
      * @throws IOException
      */
-    public List<PlaylistEntry> addTracks(List<Track> tracks)
+    public void addTracks(List<Track> tracks)
             throws IOException {
         List<PlaylistEntry> playlistEntries = new LinkedList<>();
         Mutator mutator = new Mutator();
@@ -227,19 +224,14 @@ public class Playlist implements Result, Serializable {
             next = UUID.randomUUID();
         }
         MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
-        for (int i = 0; i < tracks.size(); i++) {
-            MutationResponse.Item item = response.getItems().get(i);
-            playlistEntries.add(new PlaylistEntry(item.getId(), item.getClientID(), this.getId(),
-                    tracks.get(i), null, null, null, false));
-        }
-        return playlistEntries;
+        Playlist.updateCache();
     }
 
     /**
      * see javadoc at {@link #addTracks(List)}.
      */
-    public List<PlaylistEntry> addTracks(Track... tracks) throws IOException {
-        return addTracks(Arrays.asList(tracks));
+    public void addTracks(Track... tracks) throws IOException {
+        addTracks(Arrays.asList(tracks));
     }
 
     /**
@@ -259,31 +251,42 @@ public class Playlist implements Result, Serializable {
         return getContentsForSharedPlaylist(maxResults);
     }
 
-    private List<PlaylistEntry> getContentsForUserGeneratedPlaylist(int maxResults) throws IOException {
-        List<PlaylistEntry> all_entries = new PagingHandler<PlaylistEntry>() {
-
-            @Override
-            public ListResult<PlaylistEntry> getChunk(String nextPageToken) throws IOException {
-                return GPlayMusic.getApiInstance().getService().listPlaylistEntries(
-                        new PagingRequest(nextPageToken, maxResults)
-                ).execute().body();
-            }
-        }.getAll();
-        return all_entries.stream()
+    private List<PlaylistEntry> getContentsForUserGeneratedPlaylist(int maxResults)
+            throws IOException {
+        return cache.getStream()
                 .filter(entry -> entry.getPlaylistId().equals(getId()))
+                .filter(entry -> !entry.isDeleted())
                 .sorted(PlaylistEntry::compareTo)
+                .limit(maxResults > 0 ? maxResults : Long.MAX_VALUE)
                 .collect(Collectors.toList());
     }
 
-    private List<PlaylistEntry> getContentsForSharedPlaylist(int maxResults) throws IOException {
+    private List<PlaylistEntry> getContentsForSharedPlaylist(int maxResults)
+            throws IOException {
         SharedPlaylistRequest requestBody = new SharedPlaylistRequest(this, maxResults);
         return GPlayMusic.getApiInstance().getService().listSharedPlaylistEntries(requestBody).execute().body().toList();
+    }
+
+    public static void updateCache() throws IOException {
+        cache.update();
+    }
+
+    public void removeEntries(List<PlaylistEntry> entries) throws IOException {
+        List<Mutation> removeMutations = new LinkedList<>();
+        entries.forEach(e -> removeMutations.add(MutationFactory.getDeletePlaylistEntryMutation(e)));
+        Mutator mutator = new Mutator(removeMutations);
+        GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
+        cache.remove(entries);
+    }
+
+    public void removeEntries(PlaylistEntry... entries) throws IOException {
+        removeEntries(Arrays.asList(entries));
     }
 
     public enum PlaylistType implements Serializable {
         @SerializedName("SHARED")
         SHARED,
-        //TODO: find out what a magic playlist is. last hint: i don't have any. next idea: crawl python implementation
+        //TODO: find out what a magic playlist is. last hint: i don't have a magic playlist. next idea: crawl python implementation
         @SerializedName("MAGIC")
         MAGIC,
         @SerializedName("USER_GENERATED")
