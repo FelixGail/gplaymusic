@@ -8,20 +8,20 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractCache<T> {
+public abstract class Cache<T> {
     private List<T> cache = Collections.emptyList();
     ;
     private boolean initialized = false;
 
     public abstract void update() throws IOException;
 
-    public AbstractCache(boolean initialize) throws IOException {
+    public Cache(boolean initialize) throws IOException {
         if (initialize) {
             initialize();
         }
     }
 
-    public AbstractCache() {
+    public Cache() {
     }
 
     protected void setCache(List<T> newCache) {

@@ -44,7 +44,7 @@ public class StationTest extends TestWithLogin {
         assertNotNull(station.getId());
         List<Track> stationTracks = station.getTracks(null, true, false);
         assertNotNull(stationTracks);
-        assertTrue(String.format("Expected list length ==25, got '%d'", stationTracks.size()),
+        assertTrue(String.format("Expected list length 25, got '%d'", stationTracks.size()),
                 stationTracks.size() == 25);
         assertTracks(stationTracks);
         List<Track> newTracks = station.getTracks(stationTracks, true, true);
@@ -62,6 +62,7 @@ public class StationTest extends TestWithLogin {
         assume(track);
         Station station = Station.create(new StationSeed(track), "TestTrackStation", true);
         TestUtil.testStation(station);
+        station.delete();
     }
 
     @Test
@@ -71,5 +72,6 @@ public class StationTest extends TestWithLogin {
         assume(album);
         Station station = Station.create(new StationSeed(album), "TestAlbumStation", true);
         TestUtil.testStation(station);
+        station.delete();
     }
 }

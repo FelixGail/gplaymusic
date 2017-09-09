@@ -25,10 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import svarzee.gps.gpsoauth.AuthToken;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The main API, wrapping calls to the service.
@@ -134,11 +131,14 @@ public final class GPlayMusic {
 
     public void deletePlaylistEntries(PlaylistEntry... entries)
             throws IOException {
+        deletePlaylistEntries(Arrays.asList(entries));
+    }
+
+    public void deletePlaylistEntries(Collection<PlaylistEntry> entries) throws IOException {
         Mutator mutator = new Mutator();
-        for (PlaylistEntry entry : entries) {
-            mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(entry));
-        }
+        entries.forEach(e -> mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(e)));
         service.makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
+        Playlist.getCache().remove(entries);
     }
 
     public void deletePlaylists(Playlist... playlists)

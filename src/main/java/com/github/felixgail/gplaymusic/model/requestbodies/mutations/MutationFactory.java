@@ -50,8 +50,11 @@ public class MutationFactory {
     public static Mutation<Map<String, Object>> getAddPlaylistEntryMutation(Playlist playlist,
                                                                             Track track, UUID preceedingID,
                                                                             UUID currentID, UUID followingID) {
+        if (currentID == null) {
+            throw new NullPointerException("currentID is not allowed to be null.");
+        }
         Map<String, Object> create = new HashMap<>();
-        create.put("clientID", currentID.toString());
+        create.put("clientId", currentID);
         create.put("creationTimestamp", "-1");
         create.put("deleted", false);
         create.put("lastModifiedTimestamp", "0");
@@ -64,7 +67,7 @@ public class MutationFactory {
         }
 
         if (preceedingID != null) {
-            create.put("precedingEntryId", preceedingID.toString());
+            create.put("precedingEntryId", preceedingID);
         }
 
         if (followingID != null) {
@@ -124,9 +127,19 @@ public class MutationFactory {
         update.put("playlistId", plentry.getPlaylistId());
         update.put("source", plentry.getSource());
         update.put("trackId", plentry.getTrackId());
-        update.put("precedingEntryId", (preceedingEntry != null) ? preceedingEntry.getClientId() : null);
-        update.put("followingEntryId", (followingEntry != null) ? followingEntry.getClientId() : null);
+        update.put("precedingEntryId", getClientIDString(preceedingEntry));
+        update.put("followingEntryId", getClientIDString(followingEntry));
         return new MapMutation("update", update);
+    }
+
+    private static String getClientIDString(PlaylistEntry entry) {
+        if (entry != null) {
+            if (entry.getClientId() != null) {
+                return entry.getClientId();
+            }
+            throw new NullPointerException("ClientID is not allowed to be empty for entry in reorder mutation");
+        }
+        return null;
     }
 
     /**

@@ -9,7 +9,7 @@ import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
 import java.io.IOException;
 import java.util.List;
 
-public class PrivatePlaylistEntriesCache extends AbstractCache<PlaylistEntry> {
+public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
 
     @Override
     public void update() throws IOException {

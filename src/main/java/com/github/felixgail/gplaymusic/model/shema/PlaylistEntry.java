@@ -3,6 +3,8 @@ package com.github.felixgail.gplaymusic.model.shema;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.io.Serializable;
 
 public class PlaylistEntry implements Serializable {
     public final static String BATCH_URL = "plentriesbatch";
+    private final static Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
 
     @Expose
     private String id;
@@ -22,7 +25,7 @@ public class PlaylistEntry implements Serializable {
     @Expose
     private String trackId;
     @Expose
-    private String creationTiestamp;
+    private String creationTimestamp;
     @Expose
     private String lastModifiedTimestamp;
     @Expose
@@ -39,10 +42,13 @@ public class PlaylistEntry implements Serializable {
         this.playlistId = playlistId;
         this.track = track;
         this.lastModifiedTimestamp = lastModifiedTimestamp;
-        this.creationTiestamp = creationTimestamp;
+        this.creationTimestamp = creationTimestamp;
         this.lastModifiedTimestamp = lastModifiedTimestamp;
         this.source = source;
         this.deleted = deleted;
+    }
+
+    PlaylistEntry() {
     }
 
     public String getId() {
@@ -61,12 +67,16 @@ public class PlaylistEntry implements Serializable {
         return absolutePosition;
     }
 
+    private void setAbsolutePosition(String position) {
+        this.absolutePosition = position;
+    }
+
     public String getTrackId() {
         return trackId;
     }
 
     public String getCreationTiestamp() {
-        return creationTiestamp;
+        return creationTimestamp;
     }
 
     public String getLastModifiedTimestamp() {
@@ -105,9 +115,22 @@ public class PlaylistEntry implements Serializable {
         Mutator mutator = new Mutator(MutationFactory.
                 getReorderPlaylistEntryMutation(this, preceding, following));
         GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
+        String tmp = getAbsolutePosition();
+        if (preceding != null && compareTo(preceding) < 0) {
+            setAbsolutePosition(preceding.getAbsolutePosition());
+            preceding.setAbsolutePosition(tmp);
+        }
+        if (following != null && compareTo(following) > 0) {
+            setAbsolutePosition(following.getAbsolutePosition());
+            following.setAbsolutePosition(tmp);
+        }
     }
 
     public int compareTo(PlaylistEntry entry) {
         return getAbsolutePosition().compareTo(entry.getAbsolutePosition());
+    }
+
+    public String string() {
+        return prettyGson.toJson(this) + System.lineSeparator();
     }
 }

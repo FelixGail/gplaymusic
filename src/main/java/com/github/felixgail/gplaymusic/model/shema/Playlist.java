@@ -1,6 +1,8 @@
 package com.github.felixgail.gplaymusic.model.shema;
 
+import com.fasterxml.uuid.Generators;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.cache.Cache;
 import com.github.felixgail.gplaymusic.cache.PrivatePlaylistEntriesCache;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
@@ -213,15 +215,15 @@ public class Playlist implements Result, Serializable {
         List<PlaylistEntry> playlistEntries = new LinkedList<>();
         Mutator mutator = new Mutator();
         UUID last = null;
-        UUID current = UUID.randomUUID();
-        UUID next = UUID.randomUUID();
+        UUID current = Generators.timeBasedGenerator().generate();
+        UUID next = Generators.timeBasedGenerator().generate();
         for (Track track : tracks) {
             Mutation currentMutation = MutationFactory.
                     getAddPlaylistEntryMutation(this, track, last, current, next);
             mutator.addMutation(currentMutation);
             last = current;
             current = next;
-            next = UUID.randomUUID();
+            next = Generators.timeBasedGenerator().generate();
         }
         MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
         Playlist.updateCache();
@@ -271,12 +273,12 @@ public class Playlist implements Result, Serializable {
         cache.update();
     }
 
+    public static Cache<PlaylistEntry> getCache() {
+        return cache;
+    }
+
     public void removeEntries(List<PlaylistEntry> entries) throws IOException {
-        List<Mutation> removeMutations = new LinkedList<>();
-        entries.forEach(e -> removeMutations.add(MutationFactory.getDeletePlaylistEntryMutation(e)));
-        Mutator mutator = new Mutator(removeMutations);
-        GPlayMusic.getApiInstance().getService().makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
-        cache.remove(entries);
+        GPlayMusic.getApiInstance().deletePlaylistEntries(entries);
     }
 
     public void removeEntries(PlaylistEntry... entries) throws IOException {

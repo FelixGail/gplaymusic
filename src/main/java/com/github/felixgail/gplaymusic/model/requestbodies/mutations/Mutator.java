@@ -39,6 +39,6 @@ public class Mutator implements Serializable {
     }
 
     public String string() {
-        return gson.toJson(this);
+        return gson.toJson(this) + System.lineSeparator();
     }
 }
