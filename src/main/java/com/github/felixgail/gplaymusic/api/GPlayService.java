@@ -6,10 +6,7 @@ import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
-import com.github.felixgail.gplaymusic.model.requestbodies.ListStationTracksRequest;
-import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
-import com.github.felixgail.gplaymusic.model.requestbodies.SharedPlaylistRequest;
-import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
+import com.github.felixgail.gplaymusic.model.requestbodies.*;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
@@ -119,6 +116,9 @@ public interface GPlayService {
 
     @POST("sj/v2.5/radio/stationfeed")
     Call<ListResult<Station>> getFilledStations(@Body ListStationTracksRequest request);
+
+    @POST("sj/v2.5/trackstats")
+    Call<MutationResponse> incremetPlaycount(@Body IncrementPlaycountRequest request);
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {

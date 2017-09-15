@@ -8,6 +8,7 @@ import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.requestbodies.IncrementPlaycountRequest;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.annotations.Expose;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class Track extends Signable implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.TRACK;
 
+    //TODO: Not all Attributes added.
     @Expose
     private String title;
     @Expose
@@ -64,6 +66,16 @@ public class Track extends Signable implements Result, Serializable {
     private boolean albumAvailableForPurchase;
     @Expose
     private String explicitType;
+    @Expose
+    private int playCount;
+    @Expose
+    private String rating;
+    @Expose
+    private int beatsPerMinute;
+    @Expose
+    private String clientId;
+    @Expose
+    private String comment = "";
 
     //This attribute is only set when the track is retrieved from a station.
     @Expose
@@ -172,6 +184,26 @@ public class Track extends Signable implements Result, Serializable {
 
     public void setTrackType(String trackType) {
         this.trackType = trackType;
+    }
+
+    public int getPlayCount() {
+        return playCount;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public int getBeatsPerMinute() {
+        return beatsPerMinute;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     @Override
@@ -324,5 +356,21 @@ public class Track extends Signable implements Result, Serializable {
         map.put("wentryid", getWentryID());
         map.put("sesstok", station.getSessionToken());
         return urlFetcher(quality, Provider.STATION, map);
+    }
+
+    /**
+     * Increments the playcount of this song by {@code count}.
+     *
+     * @param count amount of plays that will be added to the current count.
+     * @return whether the incrementation was successful.
+     */
+    public boolean incrementPlaycount(int count) throws IOException {
+        MutationResponse response = GPlayMusic.getApiInstance().getService().incremetPlaycount(
+                new IncrementPlaycountRequest(count, this)).execute().body();
+        if (response.checkSuccess()) {
+            playCount += count;
+            return true;
+        }
+        return false;
     }
 }

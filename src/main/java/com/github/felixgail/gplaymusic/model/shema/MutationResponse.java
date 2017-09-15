@@ -10,6 +10,7 @@ import java.util.List;
 public class MutationResponse implements Serializable {
 
     @Expose
+    @SerializedName(value = "mutate_response", alternate = {"responses"})
     private List<Item> mutate_response = new LinkedList<>();
 
     public List<Item> getItems() {
