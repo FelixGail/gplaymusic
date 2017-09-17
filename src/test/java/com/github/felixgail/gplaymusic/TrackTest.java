@@ -4,13 +4,17 @@ import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import org.apache.tika.Tika;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
 import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
@@ -46,5 +50,16 @@ public class TrackTest extends TestWithLogin {
                 track.getID().equals(trackNew.getID()));
         Assert.assertEquals("Playcount was not increased at remote location.",
                 playcount + inc, trackNew.getPlayCount());
+    }
+
+    @Test
+    public void download() throws IOException {
+        Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
+        assume(track);
+        Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), "test.mp3");
+        track.download(StreamQuality.HIGH, path);
+        File file = path.toFile();
+        Assert.assertTrue("File does not exist", file.exists());
+        Assert.assertEquals("Is not an audio file", new Tika().detect(file), "audio/mpeg");
     }
 }

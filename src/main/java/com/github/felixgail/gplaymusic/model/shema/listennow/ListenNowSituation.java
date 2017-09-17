@@ -22,33 +22,18 @@ public class ListenNowSituation implements Serializable {
         return primaryHeader;
     }
 
-    public void setPrimaryHeader(String primaryHeader) {
-        this.primaryHeader = primaryHeader;
-    }
-
     public String getSubHeader() {
         return subHeader;
-    }
-
-    public void setSubHeader(String subHeader) {
-        this.subHeader = subHeader;
     }
 
     public List<Situation> getSituations() {
         return situations;
     }
 
-    public void setSituations(List<Situation> situations) {
-        this.situations = situations;
-    }
-
     public DistilledContextWrapper getDistilledContextWrapper() {
         return distilledContextWrapper;
     }
 
-    public void setDistilledContextWrapper(DistilledContextWrapper distilledContextWrapper) {
-        this.distilledContextWrapper = distilledContextWrapper;
-    }
 
     public class DistilledContextWrapper implements Serializable {
         @Expose

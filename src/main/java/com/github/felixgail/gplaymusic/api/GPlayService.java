@@ -82,10 +82,10 @@ public interface GPlayService {
      * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
      * <p>
      * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
-     * the user is subscribed to are <b>not</b> included. To contents from such a playlist use
-     * TODO
+     * the user is subscribed to are <b>not</b> included. To fetch contents from such a playlist use
+     * {@link #listSharedPlaylistEntries(SharedPlaylistRequest)}.
      * <p>
-     * The Server has no option to return the contents of a single Playlist.
+     * The Server has no option to return the contents of a single private Playlist.
      *
      * @return the {@link Call} to request a list of {@link PlaylistEntry}
      */
@@ -98,10 +98,10 @@ public interface GPlayService {
      * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
      * <p>
      * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
-     * the user is subscribed to are <b>not</b> included. To contents from such a playlist use
-     * TODO
+     * the user is subscribed to are <b>not</b> included. To fetch contents from such a playlist use
+     * {@link #listSharedPlaylistEntries(SharedPlaylistRequest)}.
      * <p>
-     * The Server has no option to return the contents of a single Playlist.
+     * The Server has no option to return the contents of a single private Playlist.
      *
      * @return the {@link Call} to request a list of {@link PlaylistEntry}
      */
@@ -119,6 +119,9 @@ public interface GPlayService {
 
     @POST("sj/v2.5/trackstats")
     Call<MutationResponse> incremetPlaycount(@Body IncrementPlaycountRequest request);
+
+    @GET("sj/v2.5/fetchtrack")
+    Call<Track> fetchTrack(@Query("nid") String trackId);
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {

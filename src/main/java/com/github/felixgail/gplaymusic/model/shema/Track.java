@@ -11,17 +11,24 @@ import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.IncrementPlaycountRequest;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.util.language.Language;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Track extends Signable implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.TRACK;
+    private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
 
     //TODO: Not all Attributes added.
     @Expose
@@ -81,6 +88,14 @@ public class Track extends Signable implements Result, Serializable {
     @Expose
     @SerializedName("wentryid")
     private String wentryID;
+
+    public static Track getTrack(String trackID) throws IOException {
+        Track track = GPlayMusic.getApiInstance().getService().fetchTrack(trackID).execute().body();
+        if (track.getID() == null) {
+            throw new IOException(String.format("'%s' did not return a valid track", trackID));
+        }
+        return track;
+    }
 
     public String getTitle() {
         return title;
@@ -186,6 +201,10 @@ public class Track extends Signable implements Result, Serializable {
         this.trackType = trackType;
     }
 
+    /**
+     * Returns how often the song has been played. Not valid, when song has been fetched via
+     * {@link Track#getTrack(String)} as the server response does not contain this key.
+     */
     public int getPlayCount() {
         return playCount;
     }
@@ -372,5 +391,14 @@ public class Track extends Signable implements Result, Serializable {
             return true;
         }
         return false;
+    }
+
+    public String string() {
+        return gsonPrettyPrinter.toJson(this);
+    }
+
+    public void download(StreamQuality quality, Path path) throws IOException {
+        URL url = new URL(getStreamURL(quality));
+        Files.copy(url.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
     }
 }
