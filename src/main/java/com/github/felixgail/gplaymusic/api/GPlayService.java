@@ -18,6 +18,7 @@ import retrofit2.Response;
 import retrofit2.http.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -122,6 +123,12 @@ public interface GPlayService {
 
     @GET("sj/v2.5/fetchtrack")
     Call<Track> fetchTrack(@Query("nid") String trackId);
+
+    @POST("sj/v2.5/listennow/situations")
+    Call<ListenNowSituation> getListenNowSiutation(@Body TimeZoneOffset offset);
+
+    @GET("sj/v2.5/listennow/getlistennowitems")
+    Call<List<ListenNowItem>> getListenNowItems();
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {

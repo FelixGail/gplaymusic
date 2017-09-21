@@ -4,6 +4,8 @@ package com.github.felixgail.gplaymusic.model.requestbodies;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.ZoneOffset;
 
 public class TimeZoneOffset implements Serializable {
     @Expose
@@ -14,7 +16,12 @@ public class TimeZoneOffset implements Serializable {
     }
 
     public TimeZoneOffset() {
-        this.requestSignals = new RequestSignal("0");
+        this.requestSignals = new RequestSignal(getLocalOffset());
+    }
+
+    private String getLocalOffset() {
+        return String.valueOf(ZoneOffset.systemDefault().getRules().getOffset(Instant.now())
+                .getTotalSeconds());
     }
 
     private class RequestSignal implements Serializable {
