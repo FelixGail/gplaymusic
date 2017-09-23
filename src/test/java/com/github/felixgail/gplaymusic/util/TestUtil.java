@@ -112,7 +112,7 @@ public class TestUtil {
 
     public static void testStation(Station station) throws IOException {
         assertNotNull(station);
-        List<Track> tracks = station.getTracks(null, false, false);
+        List<Track> tracks = station.getTracks(null, true, false);
         assertNotNull(tracks);
         assertTracks(tracks);
         assertTrue(String.format("Expected list length '%d', got '%d'", 25, tracks.size()),

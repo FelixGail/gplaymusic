@@ -11,7 +11,7 @@ public class ListResult<T> implements Serializable {
 
     @Expose
     @SerializedName(value = "data",
-            alternate = {"series", "mutate_response"})
+            alternate = {"series", "listennow_items", "mutate_response"})
     private InnerData<T> data = new InnerData<>();
     @Expose
     private String nextPageToken;
