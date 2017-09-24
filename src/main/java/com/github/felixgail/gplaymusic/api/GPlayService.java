@@ -72,10 +72,10 @@ public interface GPlayService {
     Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
 
     @GET("sj/v2.5/listennow/getlistennowitems")
-    Call<ListResult<ListenNowItem>> listListenNowItems();
+    Call<List<ListenNowItem>> listListenNowItems();
 
     @POST("sj/v2.5/listennow/situations")
-    Call<ListenNowSituation> listListenNowSituations(@Body TimeZoneOffset offset);
+    Call<ListenNowSituation> getListenNowSituation(@Body TimeZoneOffset offset);
 
     /**
      * As far as my understanding goes, this simply returns a list containing
@@ -123,12 +123,6 @@ public interface GPlayService {
 
     @GET("sj/v2.5/fetchtrack")
     Call<Track> fetchTrack(@Query("nid") String trackId);
-
-    @POST("sj/v2.5/listennow/situations")
-    Call<ListenNowSituation> getListenNowSiutation(@Body TimeZoneOffset offset);
-
-    @GET("sj/v2.5/listennow/getlistennowitems")
-    Call<List<ListenNowItem>> getListenNowItems();
 
     default MutationResponse makeBatchCall(String path, Mutator body)
             throws IOException {

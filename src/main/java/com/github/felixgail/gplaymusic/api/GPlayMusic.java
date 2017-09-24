@@ -2,16 +2,19 @@ package com.github.felixgail.gplaymusic.api;
 
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
 import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
+import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
@@ -174,9 +177,17 @@ public final class GPlayMusic {
         }.getAll();
     }
 
-    public List<PodcastSeries> browsePodcastSeries(Genre genre)
+    public List<PodcastSeries> listPodcastSeries(Genre genre)
             throws IOException {
         return service.listBrowsePodcastSeries(genre.getId()).execute().body().toList();
+    }
+
+    public List<ListenNowItem> listListenNowItems() throws IOException {
+        return service.listListenNowItems().execute().body();
+    }
+
+    public ListenNowSituation getListenNowSituation() throws IOException {
+        return service.getListenNowSituation(new TimeZoneOffset()).execute().body();
     }
 
     /**
