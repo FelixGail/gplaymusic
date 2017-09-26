@@ -14,6 +14,7 @@ public enum StationSeedType {
     ALBUM(4, "albumId", Album.class),
     @SerializedName("5")
     GENRE(5, "genreId", Genre.class),
+    //ID 6 IS "i'm feelin lucky radio"
     @SerializedName("8")
     PLAYLIST(8, "playlistShareToken", Playlist.class),
     @SerializedName("9")

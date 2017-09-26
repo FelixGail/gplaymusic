@@ -66,9 +66,13 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
                     StationSeed seed = station.getSeed();
                     if(seed.getSeedType().equals(StationSeedType.CURATED_STATION)) {
                         this.radioId = seed.getSeed();
+                    } else {
+                        throw new IllegalArgumentException("Unable to extract radio ID");
                     }
+                } else {
+                    throw new IllegalArgumentException("Unable to extract radio ID");
+
                 }
-                throw new IllegalArgumentException("Unable to extract radio ID");
             }
             if (numEntries > -1 && numEntries < 79) {
                 this.numEntries = numEntries;
