@@ -1,7 +1,9 @@
 package com.github.felixgail.gplaymusic.model.requestbodies;
 
+import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
 import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -57,7 +59,17 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
         private List<RecentlyPlayedTrack> recentlyPlayed;
 
         StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) {
-            this.radioId = station.getId();
+            if(station.getId() != null) {
+                this.radioId = station.getId();
+            }else {
+                if(station.getSeed() != null) {
+                    StationSeed seed = station.getSeed();
+                    if(seed.getSeedType().equals(StationSeedType.CURATED_STATION)) {
+                        this.radioId = seed.getSeed();
+                    }
+                }
+                throw new IllegalArgumentException("Unable to extract radio ID");
+            }
             if (numEntries > -1 && numEntries < 79) {
                 this.numEntries = numEntries;
             } else {
