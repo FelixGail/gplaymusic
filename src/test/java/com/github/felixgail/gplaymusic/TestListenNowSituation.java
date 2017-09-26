@@ -2,6 +2,7 @@ package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.shema.Situation;
+import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assert;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
 import java.io.IOException;
+import java.util.List;
 
 public class TestListenNowSituation extends TestWithLogin{
 
@@ -39,7 +41,10 @@ public class TestListenNowSituation extends TestWithLogin{
         Assert.assertNotNull(situation.getDescription());
         Assert.assertNotNull(situation.getResultType());
         Assert.assertNotNull(situation.getTitle());
-        Assert.assertNotNull(situation.getStations());
-        Assert.assertTrue(situation.getStations().size()>0);
+        List<Station> stations = situation.getStations();
+        Assert.assertNotNull(stations);
+        Assert.assertTrue(stations.size()>0);
+        TestUtil.testStation(stations.get(0));
+
     }
 }
