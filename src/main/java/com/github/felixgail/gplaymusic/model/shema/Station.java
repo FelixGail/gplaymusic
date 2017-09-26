@@ -143,8 +143,6 @@ public class Station implements Result, Serializable {
                 Track track = iter.next();
                 for (Track recent : recentlyPlayed) {
                     if (track.getID().equals(recent.getID())) {
-                        System.out.printf("Removing double %s (%s == %s)\n",
-                                track.getTitle(), track.getID(), recent.getID());
                         iter.remove();
                     }
                 }

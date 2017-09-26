@@ -11,6 +11,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListListenNowItemResponse;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import retrofit2.Call;
@@ -72,7 +73,7 @@ public interface GPlayService {
     Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
 
     @GET("sj/v2.5/listennow/getlistennowitems")
-    Call<List<ListenNowItem>> listListenNowItems();
+    Call<ListListenNowItemResponse> listListenNowItems();
 
     @POST("sj/v2.5/listennow/situations")
     Call<ListenNowSituation> getListenNowSituation(@Body TimeZoneOffset offset);

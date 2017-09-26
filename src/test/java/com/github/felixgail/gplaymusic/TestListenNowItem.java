@@ -2,6 +2,8 @@ package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -29,8 +31,22 @@ public class TestListenNowItem extends TestWithLogin{
             Assert.assertNotNull(item.getCompositeArtRefs());
             Assert.assertNotNull(item.getSuggestionText());
             Assert.assertNotNull(item.getSuggestionReason());
-            Assert.assertNotNull(item.getType());
-            Assert.assertEquals("Item is not of provided type", item.getType().getType(), item.getClass());
+            if (item instanceof ListenNowAlbum) {
+                ListenNowAlbum album = (ListenNowAlbum)item;
+                Assert.assertNotNull(album.getArtistMetajamID());
+                Assert.assertNotNull(album.getArtistName());
+                Assert.assertNotNull(album.getArtistProfileImage());
+                Assert.assertNotNull(album.getExplicitType());
+                ListenNowAlbum.MetajamID id = album.getId();
+                Assert.assertNotNull(id.getArtist());
+                Assert.assertNotNull(id.getMetajamCompactKey());
+                Assert.assertNotNull(id.getTitle());
+            } else if (item instanceof ListenNowStation) {
+                ListenNowStation station = (ListenNowStation)item;
+                Assert.assertNotNull(station.getSeeds());
+                Assert.assertNotNull(station.getTitle());
+                Assert.assertTrue(station.getSeeds().size()>0);
+            }
         });
     }
 

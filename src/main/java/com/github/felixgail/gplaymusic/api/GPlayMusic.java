@@ -183,7 +183,7 @@ public final class GPlayMusic {
     }
 
     public List<ListenNowItem> listListenNowItems() throws IOException {
-        return service.listListenNowItems().execute().body();
+        return service.listListenNowItems().execute().body().getListenNowItems();
     }
 
     public ListenNowSituation getListenNowSituation() throws IOException {

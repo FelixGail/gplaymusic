@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic.model.shema.listennow;
 
-import com.github.felixgail.gplaymusic.model.shema.Situation;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;

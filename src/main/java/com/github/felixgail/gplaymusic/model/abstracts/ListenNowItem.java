@@ -22,46 +22,20 @@ public abstract class ListenNowItem implements Serializable {
     @Expose
     @SerializedName("suggestion_text")
     private String suggestionText;
-    @Expose
-    private ResultType type;
 
     public List<ArtRef> getCompositeArtRefs() {
         return compositeArtRefs;
-    }
-
-    public void setCompositeArtRefs(List<ArtRef> compositeArtRefs) {
-        this.compositeArtRefs = compositeArtRefs;
     }
 
     public List<ArtRef> getImages() {
         return images;
     }
 
-    public void setImages(List<ArtRef> images) {
-        this.images = images;
-    }
-
     public String getSuggestionReason() {
         return suggestionReason;
     }
 
-    public void setSuggestionReason(String suggestionReason) {
-        this.suggestionReason = suggestionReason;
-    }
-
     public String getSuggestionText() {
         return suggestionText;
-    }
-
-    public void setSuggestionText(String suggestionText) {
-        this.suggestionText = suggestionText;
-    }
-
-    public ResultType getType() {
-        return type;
-    }
-
-    public void setType(ResultType type) {
-        this.type = type;
     }
 }

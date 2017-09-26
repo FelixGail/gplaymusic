@@ -1,7 +1,8 @@
-package com.github.felixgail.gplaymusic.model.shema;
+package com.github.felixgail.gplaymusic.model.shema.listennow;
 
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
+import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -22,6 +23,8 @@ public class Situation implements Result, Serializable {
     private String wideImageUrl;
     @Expose
     private List<Station> stations;
+    @Expose
+    private List<Situation> situations;
 
     public String getDescription() {
         return description;
@@ -65,6 +68,10 @@ public class Situation implements Result, Serializable {
 
     public List<Station> getStations() {
         return stations;
+    }
+
+    public List<Situation> getSituations() {
+        return situations;
     }
 
     public void setStations(List<Station> stations) {

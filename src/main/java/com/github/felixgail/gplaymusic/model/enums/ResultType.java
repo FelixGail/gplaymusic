@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model.enums;
 
 import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.listennow.Situation;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

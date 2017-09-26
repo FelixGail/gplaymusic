@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.shema.Situation;
+import com.github.felixgail.gplaymusic.model.shema.listennow.Situation;
 import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
@@ -33,18 +33,33 @@ public class TestListenNowSituation extends TestWithLogin{
     }
 
     @Test
-    public void testSituation() throws IOException {
+    public void testListenNowSituation() throws IOException {
         ListenNowSituation listenNowSituation = GPlayMusic.getApiInstance().getListenNowSituation();
         TestUtil.assume(listenNowSituation, listenNowSituation.getSituations());
         Assume.assumeTrue(listenNowSituation.getSituations().size()>0);
-        Situation situation = listenNowSituation.getSituations().get(0);
+        for (Situation s : listenNowSituation.getSituations()) {
+            testSituation(s);
+        }
+    }
+
+    private void testSituation(Situation situation) throws IOException {
         Assert.assertNotNull(situation.getDescription());
         Assert.assertNotNull(situation.getResultType());
         Assert.assertNotNull(situation.getTitle());
-        List<Station> stations = situation.getStations();
-        Assert.assertNotNull(stations);
-        Assert.assertTrue(stations.size()>0);
-        TestUtil.testStation(stations.get(0));
-
+        if (situation.getStations() != null && situation.getSituations() != null) {
+            System.out.println("Situation contains Stations and Situations");
+        }
+        if (situation.getStations() !=null) {
+            Assert.assertTrue("Situation contains empty station list", situation.getStations().size()>0);
+            for (Station station : situation.getStations()) {
+                Assert.assertNotNull("Station is null", station);
+                TestUtil.testStation(station);
+            }
+        }
+        if (situation.getSituations() != null) {
+            for (Situation s : situation.getSituations()) {
+                testSituation(s);
+            }
+        }
     }
 }
