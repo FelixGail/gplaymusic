@@ -15,7 +15,9 @@ import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.*;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
+import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
+import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
@@ -326,7 +328,8 @@ public final class GPlayMusic {
                 }
                 GsonBuilder gsonBuilder = new GsonBuilder()
                         .registerTypeAdapter(Result.class, new ResultDeserializer())
-                        .registerTypeAdapter(Config.class, new ConfigDeserializer());
+                        .registerTypeAdapter(Config.class, new ConfigDeserializer())
+                        .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
 
                 if (this.httpClientBuilder == null) {
                     this.httpClientBuilder = getDefaultHttpBuilder();

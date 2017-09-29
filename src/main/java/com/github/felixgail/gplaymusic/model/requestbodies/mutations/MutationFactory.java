@@ -9,6 +9,7 @@ import com.github.felixgail.gplaymusic.util.serializer.MutationSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -187,7 +188,7 @@ public class MutationFactory {
         return getPodcastMutation(seriesID, false, false);
     }
 
-    public static Mutation getDeleteStationMutation(Station station) {
+    public static Mutation getDeleteStationMutation(Station station) throws IOException {
         return new DeleteStationMutation(station);
     }
 
@@ -345,7 +346,7 @@ public class MutationFactory {
         @Expose
         private int numEntries = 0;
 
-        DeleteStationMutation(Station station) {
+        DeleteStationMutation(Station station) throws IOException {
             delete = station.getId();
         }
 

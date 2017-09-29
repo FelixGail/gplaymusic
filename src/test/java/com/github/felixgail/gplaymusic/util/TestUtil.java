@@ -115,8 +115,7 @@ public class TestUtil {
         List<Track> tracks = station.getTracks(null, true, false);
         assertNotNull(tracks);
         assertTracks(tracks);
-        assertTrue(String.format("Expected list length '%d', got '%d'", 25, tracks.size()),
-                tracks.size() == 25);
+        assertTrue("Empty track list returned", tracks.size() > 0);
     }
 
     public static int containsDoubledTracks(List<Track> list1, List<Track> list2) {

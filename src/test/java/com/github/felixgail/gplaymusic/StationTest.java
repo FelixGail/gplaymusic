@@ -5,11 +5,13 @@ import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.Album;
+import com.github.felixgail.gplaymusic.model.shema.Artist;
 import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
@@ -30,15 +32,18 @@ public class StationTest extends TestWithLogin {
     }
 
     @Test
+    @Ignore
     public void testStation() throws IOException {
         List<Station> stations = GPlayMusic.getApiInstance().listStations();
         assertNotNull(stations);
         assertFalse(stations.isEmpty());
         //Prefer a non Playlist station, as they can return empty lists if created on empty playlists.
         Optional<Station> stationOptional = stations.stream()
-                .filter(s -> !s.getSeed().getSeedType().equals(StationSeedType.PLAYLIST)).findFirst();
+                .filter(s -> !s.getSeed().getSeedType().equals(StationSeedType.PLAYLIST))
+                .filter(s -> !s.isDeleted()).findFirst();
         Station station;
         station = stationOptional.orElseGet(() -> stations.get(0));
+        System.out.println(station.string());
         assertNotNull(station);
         assertNotNull(station.getName());
         assertNotNull(station.getId());
@@ -60,7 +65,7 @@ public class StationTest extends TestWithLogin {
     public void createTrackStation() throws IOException {
         Track track = GPlayMusic.getApiInstance().searchTracks("Imagine", 1).get(0);
         assume(track);
-        Station station = Station.create(new StationSeed(track), "TestTrackStation", true);
+        Station station = Station.create(new StationSeed(track), "TestTrackStation", false);
         TestUtil.testStation(station);
         station.delete();
     }
@@ -70,7 +75,17 @@ public class StationTest extends TestWithLogin {
         Album album = GPlayMusic.getApiInstance()
                 .search("Imagine", 1, new SearchTypes(ResultType.ALBUM)).getAlbums().get(0);
         assume(album);
-        Station station = Station.create(new StationSeed(album), "TestAlbumStation", true);
+        Station station = Station.create(new StationSeed(album), "TestAlbumStation", false);
+        TestUtil.testStation(station);
+        station.delete();
+    }
+
+    @Test
+    public void createArtistStation() throws IOException {
+        Artist artist = GPlayMusic.getApiInstance()
+                .search("Imagine", 1, new SearchTypes(ResultType.ARTIST)).getArtists().get(0);
+        assume(artist);
+        Station station = Station.create(new StationSeed(artist), "TestArtistStation", false);
         TestUtil.testStation(station);
         station.delete();
     }

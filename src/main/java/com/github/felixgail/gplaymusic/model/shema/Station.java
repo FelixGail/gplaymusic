@@ -10,6 +10,8 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.language.Language;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,6 +22,7 @@ import java.util.*;
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
     public final static String BATCH_URL = "radio/editstation";
+    private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     @Expose
     private String name;
@@ -104,8 +107,17 @@ public class Station implements Result, Serializable {
         return stationSeeds;
     }
 
-    public String getId() {
-        return id;
+    public String getId() throws IOException {
+        if (id != null) {
+            return id;
+        }
+        if (getSeed() != null) {
+            Station createOrGet = Station.create(getSeed(), getName(), false);
+            this.id = createOrGet.id;
+            this.clientId = createOrGet.clientId;
+            return id;
+        }
+        throw new NullPointerException("Radio does not contain ID or Seeds");
     }
 
     public String getDescription() {
@@ -134,7 +146,7 @@ public class Station implements Result, Serializable {
         }
         ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
         Optional<List<Track>> trackOptional =
-                Optional.of(GPlayMusic.getApiInstance().getService().getFilledStations(request)
+                Optional.ofNullable(GPlayMusic.getApiInstance().getService().getFilledStations(request)
                         .execute().body().toList().get(0).tracks);
         List<Track> tracks = trackOptional.orElse(Collections.emptyList());
         if (forceRemoveDoubles) {
@@ -183,5 +195,9 @@ public class Station implements Result, Serializable {
     public void delete()
             throws IOException {
         GPlayMusic.getApiInstance().deleteStations(this);
+    }
+
+    public String string() {
+        return gson.toJson(this);
     }
 }

@@ -1,11 +1,10 @@
 package com.github.felixgail.gplaymusic.model.requestbodies;
 
-import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
 import com.github.felixgail.gplaymusic.model.shema.Station;
 import com.github.felixgail.gplaymusic.model.shema.Track;
-import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,7 +24,8 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
      * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this list will not be
      *                             in the result.
      */
-    public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) {
+    public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks)
+            throws IOException {
         this(station, numEntries, recentlyPlayedTracks, null, -1);
     }
 
@@ -37,7 +37,8 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
      * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this list will not be
      *                             in the result.
      */
-    public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks, String nextPageToken, int maxResults) {
+    public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks,
+                                    String nextPageToken, int maxResults) throws IOException {
         super(nextPageToken, maxResults);
         stations = Collections.singletonList(new StationRequest(station, numEntries, recentlyPlayedTracks));
     }
@@ -58,22 +59,8 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
         @Expose
         private List<RecentlyPlayedTrack> recentlyPlayed;
 
-        StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) {
-            if(station.getId() != null) {
-                this.radioId = station.getId();
-            }else {
-                if(station.getSeed() != null) {
-                    StationSeed seed = station.getSeed();
-                    if(seed.getSeedType().equals(StationSeedType.CURATED_STATION)) {
-                        this.radioId = seed.getSeed();
-                    } else {
-                        throw new IllegalArgumentException("Unable to extract radio ID");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Unable to extract radio ID");
-
-                }
-            }
+        StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) throws IOException {
+            this.radioId = station.getId();
             if (numEntries > -1 && numEntries < 79) {
                 this.numEntries = numEntries;
             } else {

@@ -2,7 +2,6 @@ package com.github.felixgail.gplaymusic.api;
 
 
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.config.Config;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
@@ -19,7 +18,6 @@ import retrofit2.Response;
 import retrofit2.http.*;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -116,7 +114,7 @@ public interface GPlayService {
     @POST
     Call<MutationResponse> batchCall(@Url String path, @Body Mutator mutator);
 
-    @POST("sj/v2.5/radio/stationfeed")
+    @POST("sj/v2.5/radio/stationfeed?")
     Call<ListResult<Station>> getFilledStations(@Body ListStationTracksRequest request);
 
     @POST("sj/v2.5/trackstats")

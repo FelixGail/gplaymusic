@@ -44,9 +44,16 @@ public class StationSeed implements Serializable {
         this.seedId = genre.getId();
     }
 
+    /**
+     * Creates a StationSeed from a Station created by a Curated Station. Use this with care, as this will only work on
+     * stations that meet the initial description.
+     * Deprecated since you should use the {@link Station#getSeed()} method to retrieve the seed from a curated station
+     * instead of creating a new one.
+     */
+    @Deprecated
     public StationSeed(Station curatedStation) {
         this.seedType = StationSeedType.CURATED_STATION;
-        this.seedId = curatedStation.getId();
+        this.seedId = curatedStation.getClientId();
     }
 
     public StationSeed(Track track) {
