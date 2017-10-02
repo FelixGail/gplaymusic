@@ -13,8 +13,6 @@ public abstract class Cache<T> {
     ;
     private boolean initialized = false;
 
-    public abstract void update() throws IOException;
-
     public Cache(boolean initialize) throws IOException {
         if (initialize) {
             initialize();
@@ -23,6 +21,8 @@ public abstract class Cache<T> {
 
     public Cache() {
     }
+
+    public abstract void update() throws IOException;
 
     protected void setCache(List<T> newCache) {
         this.cache = Collections.synchronizedList(newCache);

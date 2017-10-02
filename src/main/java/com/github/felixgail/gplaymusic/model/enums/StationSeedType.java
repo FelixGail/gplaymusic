@@ -1,6 +1,11 @@
 package com.github.felixgail.gplaymusic.model.enums;
 
-import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.Album;
+import com.github.felixgail.gplaymusic.model.shema.Artist;
+import com.github.felixgail.gplaymusic.model.shema.Genre;
+import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.model.shema.Station;
+import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.google.gson.annotations.SerializedName;
 
 import java.lang.reflect.Type;

@@ -33,6 +33,7 @@ public class StationTest extends TestWithLogin {
 
     @Test
     @Ignore
+    //Is this an error by google play? will return a broken station by 'Onlap' that contains 0 tracks
     public void testStation() throws IOException {
         List<Station> stations = GPlayMusic.getApiInstance().listStations();
         assertNotNull(stations);

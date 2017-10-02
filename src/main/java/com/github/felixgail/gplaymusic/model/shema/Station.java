@@ -17,7 +17,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 public class Station implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.STATION;
@@ -79,24 +83,24 @@ public class Station implements Result, Serializable {
         return name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
     }
 
     public boolean isDeleted() {
         return deleted;
     }
 
-    public String getLastModifiedTimestamp() {
-        return lastModifiedTimestamp;
+    public Optional<String> getLastModifiedTimestamp() {
+        return Optional.ofNullable(lastModifiedTimestamp);
     }
 
-    public String getRecentTimestamp() {
-        return recentTimestamp;
+    public Optional<String> getRecentTimestamp() {
+        return Optional.ofNullable(recentTimestamp);
     }
 
-    public String getClientId() {
-        return clientId;
+    public Optional<String> getClientId() {
+        return Optional.ofNullable(clientId);
     }
 
     public StationSeed getSeed() {
@@ -120,8 +124,8 @@ public class Station implements Result, Serializable {
         throw new NullPointerException("Radio does not contain ID or Seeds");
     }
 
-    public String getDescription() {
-        return description;
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
     /**
@@ -163,20 +167,20 @@ public class Station implements Result, Serializable {
         return tracks;
     }
 
-    public List<ArtRef> getImageArtRefs() {
-        return imageArtRefs;
+    public Optional<List<ArtRef>> getImageArtRefs() {
+        return Optional.ofNullable(imageArtRefs);
     }
 
-    public List<ArtRef> getCompositeArtRefs() {
-        return compositeArtRefs;
+    public Optional<List<ArtRef>> getCompositeArtRefs() {
+        return Optional.ofNullable(compositeArtRefs);
     }
 
-    public List<String> getContentTypes() {
-        return contentTypes;
+    public Optional<List<String>> getContentTypes() {
+        return Optional.ofNullable(contentTypes);
     }
 
-    public String getByline() {
-        return byline;
+    public Optional<String> getByline() {
+        return Optional.ofNullable(byline);
     }
 
     public String getSessionToken() {

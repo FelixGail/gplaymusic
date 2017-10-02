@@ -40,16 +40,17 @@ public class TrackTest extends TestWithLogin {
     public void incrementPlaycount() throws IOException {
         Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
         assume(track);
-        int playcount = track.getPlayCount();
+        assume(track.getPlayCount().isPresent());
+        int playcount = track.getPlayCount().getAsInt();
         int inc = 2;
         track.incrementPlaycount(inc);
         Assert.assertEquals("Playcount was not increased locally.",
-                playcount + inc, track.getPlayCount());
+                playcount + inc, track.getPlayCount().getAsInt());
         Track trackNew = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
         Assume.assumeTrue("Newly fetched track should equal original track",
                 track.getID().equals(trackNew.getID()));
         Assert.assertEquals("Playcount was not increased at remote location.",
-                playcount + inc, trackNew.getPlayCount());
+                playcount + inc, trackNew.getPlayCount().getAsInt());
     }
 
     @Test

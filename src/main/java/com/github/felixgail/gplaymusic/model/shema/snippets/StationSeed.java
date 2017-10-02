@@ -1,7 +1,12 @@
 package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
-import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.Album;
+import com.github.felixgail.gplaymusic.model.shema.Artist;
+import com.github.felixgail.gplaymusic.model.shema.Genre;
+import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.model.shema.Station;
+import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.serializer.StationSeedSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
@@ -31,7 +36,8 @@ public class StationSeed implements Serializable {
 
     public StationSeed(Artist artist) {
         this.seedType = StationSeedType.ARTIST;
-        this.seedId = artist.getArtistId();
+        this.seedId = artist.getArtistId()
+                .orElseThrow(() -> new IllegalArgumentException("ArtistID not present. Unable to create seed"));
     }
 
     public StationSeed(Playlist playlist) {
@@ -53,7 +59,8 @@ public class StationSeed implements Serializable {
     @Deprecated
     public StationSeed(Station curatedStation) {
         this.seedType = StationSeedType.CURATED_STATION;
-        this.seedId = curatedStation.getClientId();
+        this.seedId = curatedStation.getClientId()
+                .orElseThrow(() -> new IllegalArgumentException("Station does not contain a clientID"));
     }
 
     public StationSeed(Track track) {

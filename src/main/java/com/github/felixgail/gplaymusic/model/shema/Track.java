@@ -25,12 +25,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class Track extends Signable implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.TRACK;
     private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
 
-    //TODO: Not all Attributes added.
+    //TODO: Not all Attributes added (eg. PrimaryVideo, ID? where is id used).
     @Expose
     private String title;
     @Expose
@@ -51,6 +53,8 @@ public class Track extends Signable implements Result, Serializable {
     private String durationMillis;
     @Expose
     private List<ArtRef> albumArtRef;
+    @Expose
+    private List<ArtRef> artistArtRef;
     @Expose
     private int discNumber;
     @Expose
@@ -82,7 +86,21 @@ public class Track extends Signable implements Result, Serializable {
     @Expose
     private String clientId;
     @Expose
-    private String comment = "";
+    private String comment;
+    @Expose
+    private int totalTrackCount;
+    @Expose
+    private int totalDiscCount;
+    @Expose
+    private String lastRatingChangeTimestamp;
+    @Expose
+    private String lastModifiedTimestamp;
+    @Expose
+    private String contentType;
+    @Expose
+    private String creationTimestamp;
+    @Expose
+    private String recentTimestamp;
 
     //This attribute is only set when the track is retrieved from a station.
     @Expose
@@ -101,208 +119,152 @@ public class Track extends Signable implements Result, Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getArtist() {
         return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
     }
 
     public String getComposer() {
         return composer;
     }
 
-    public void setComposer(String composer) {
-        this.composer = composer;
-    }
-
     public String getAlbum() {
         return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
     }
 
     public String getAlbumArtist() {
         return albumArtist;
     }
 
-    public void setAlbumArtist(String albumArtist) {
-        this.albumArtist = albumArtist;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
+    public OptionalInt getYear() {
+        return OptionalInt.of(year);
     }
 
     public int getTrackNumber() {
         return trackNumber;
     }
 
-    public void setTrackNumber(int trackNumber) {
-        this.trackNumber = trackNumber;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
+    //TODO: Return genre instead of string
+    public Optional<String> getGenre() {
+        return Optional.ofNullable(genre);
     }
 
     public String getDurationMillis() {
         return durationMillis;
     }
 
-    public void setDurationMillis(String durationMillis) {
-        this.durationMillis = durationMillis;
+    public Optional<List<ArtRef>> getAlbumArtRef() {
+        return Optional.ofNullable(albumArtRef);
     }
 
-    public List<ArtRef> getAlbumArtRef() {
-        return albumArtRef;
-    }
-
-    public void setAlbumArtRef(List<ArtRef> albumArtRef) {
-        this.albumArtRef = albumArtRef;
+    public Optional<List<ArtRef>> getArtistArtRef() {
+        return Optional.ofNullable(artistArtRef);
     }
 
     public int getDiscNumber() {
         return discNumber;
     }
 
-    public void setDiscNumber(int discNumber) {
-        this.discNumber = discNumber;
-    }
-
     public String getEstimatedSize() {
         return estimatedSize;
     }
 
-    public void setEstimatedSize(String estimatedSize) {
-        this.estimatedSize = estimatedSize;
-    }
-
-    public String getTrackType() {
-        return trackType;
-    }
-
-    public void setTrackType(String trackType) {
-        this.trackType = trackType;
+    public Optional<String> getTrackType() {
+        return Optional.ofNullable(trackType);
     }
 
     /**
      * Returns how often the song has been played. Not valid, when song has been fetched via
      * {@link Track#getTrack(String)} as the server response does not contain this key.
      */
-    public int getPlayCount() {
-        return playCount;
+    public OptionalInt getPlayCount() {
+        return OptionalInt.of(playCount);
     }
 
-    public String getRating() {
-        return rating;
+    public Optional<String> getRating() {
+        return Optional.ofNullable(rating);
     }
 
-    public int getBeatsPerMinute() {
-        return beatsPerMinute;
+    public OptionalInt getBeatsPerMinute() {
+        return OptionalInt.of(beatsPerMinute);
     }
 
-    public String getClientId() {
-        return clientId;
+    public Optional<String> getClientId() {
+        return Optional.ofNullable(clientId);
     }
 
-    public String getComment() {
-        return comment;
+    public Optional<String> getComment() {
+        return Optional.ofNullable(comment);
     }
 
     @Override
     public String getID() {
-        if (storeId == null) {
-            return getNid();
-        }
-        return storeId;
+        return getStoreId().orElse(getNid()
+                .orElseThrow(() -> new NullPointerException("Track contains neither trackID nor NID")));
     }
 
-    public String getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(String storeId) {
-        this.storeId = storeId;
+    public Optional<String> getStoreId() {
+        return Optional.ofNullable(storeId);
     }
 
     public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
+    public Optional<List<String>> getArtistId() {
+        return Optional.ofNullable(artistId);
     }
 
-    public List<String> getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(List<String> artistId) {
-        this.artistId = artistId;
-    }
-
-    public String getNid() {
-        return nid;
-    }
-
-    public void setNid(String nid) {
-        this.nid = nid;
+    public Optional<String> getNid() {
+        return Optional.ofNullable(nid);
     }
 
     public boolean isTrackAvailableForSubscription() {
         return trackAvailableForSubscription;
     }
 
-    public void setTrackAvailableForSubscription(boolean trackAvailableForSubscription) {
-        this.trackAvailableForSubscription = trackAvailableForSubscription;
-    }
 
     public boolean isTrackAvailableForPurchase() {
         return trackAvailableForPurchase;
-    }
-
-    public void setTrackAvailableForPurchase(boolean trackAvailableForPurchase) {
-        this.trackAvailableForPurchase = trackAvailableForPurchase;
     }
 
     public boolean isAlbumAvailableForPurchase() {
         return albumAvailableForPurchase;
     }
 
-    public void setAlbumAvailableForPurchase(boolean albumAvailableForPurchase) {
-        this.albumAvailableForPurchase = albumAvailableForPurchase;
-    }
-
-    public String getExplicitType() {
-        return explicitType;
-    }
-
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
+    public Optional<String> getExplicitType() {
+        return Optional.ofNullable(explicitType);
     }
 
     public String getWentryID() {
         return wentryID;
     }
 
-    public void setWentryID(String wentryID) {
-        this.wentryID = wentryID;
+    public OptionalInt getTotalTrackCount() {
+        return OptionalInt.of(totalTrackCount);
+    }
+
+    public OptionalInt getTotalDiscCount() {
+        return OptionalInt.of(totalDiscCount);
+    }
+
+    public Optional<String> getLastRatingChangeTimestamp() {
+        return Optional.ofNullable(lastRatingChangeTimestamp);
+    }
+
+    public Optional<String> getLastModifiedTimestamp() {
+        return Optional.ofNullable(lastModifiedTimestamp);
+    }
+
+    public Optional<String> getContentType() {
+        return Optional.ofNullable(contentType);
+    }
+
+    public Optional<String> getCreationTimestamp() {
+        return Optional.ofNullable(creationTimestamp);
+    }
+
+    public Optional<String> getRecentTimestamp() {
+        return Optional.ofNullable(recentTimestamp);
     }
 
     @Override

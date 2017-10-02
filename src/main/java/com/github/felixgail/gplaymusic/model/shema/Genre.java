@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class Genre implements Serializable {
 
@@ -23,39 +24,22 @@ public class Genre implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    //TODO: return lo genres
+    public Optional<List<String>> getChildren() {
+        return Optional.ofNullable(children);
     }
 
-    public List<String> getChildren() {
-        return children;
+    //TODO: return genre
+    public Optional<String> getParentId() {
+        return Optional.ofNullable(parentId);
     }
 
-    public void setChildren(List<String> children) {
-        this.children = children;
+    public Optional<List<ArtRef>> getImages() {
+        return Optional.ofNullable(images);
     }
 
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public List<ArtRef> getImages() {
-        return images;
-    }
-
-    public void setImages(List<ArtRef> images) {
-        this.images = images;
-    }
 }

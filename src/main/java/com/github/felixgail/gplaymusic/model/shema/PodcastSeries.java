@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class PodcastSeries implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PODCAST_SERIES;
@@ -37,100 +38,52 @@ public class PodcastSeries implements Result, Serializable {
     @Expose
     private UserPreference userPreferences;
 
-    public List<ArtRef> getArt() {
-        return art;
-    }
-
-    public void setArt(List<ArtRef> art) {
-        this.art = art;
+    public Optional<List<ArtRef>> getArt() {
+        return Optional.ofNullable(art);
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public Optional<String> getContinuationToken() {
+        return Optional.ofNullable(continuationToken);
     }
 
-    public String getContinuationToken() {
-        return continuationToken;
+    public Optional<String> getCopyright() {
+        return Optional.ofNullable(continuationToken);
     }
 
-    public void setContinuationToken(String continuationToken) {
-        this.continuationToken = continuationToken;
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
-    public String getCopyright() {
-        return copyright;
-    }
-
-    public void setCopyright(String copyright) {
-        this.copyright = copyright;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<PodcastEpisode> getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(List<PodcastEpisode> episodes) {
-        this.episodes = episodes;
+    public Optional<List<PodcastEpisode>> getEpisodes() {
+        return Optional.ofNullable(episodes);
     }
 
     public String getExplicitType() {
         return explicitType;
     }
 
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
+    public Optional<String> getLink() {
+        return Optional.ofNullable(link);
     }
 
     public String getSeriesId() {
         return seriesId;
     }
 
-    public void setSeriesId(String seriesId) {
-        this.seriesId = seriesId;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public int getTotalNumEpisodes() {
         return totalNumEpisodes;
     }
 
-    public void setTotalNumEpisodes(int totalNumEpisodes) {
-        this.totalNumEpisodes = totalNumEpisodes;
-    }
-
-    public UserPreference getUserPreferences() {
-        return userPreferences;
-    }
-
-    public void setUserPreferences(UserPreference userPreferences) {
-        this.userPreferences = userPreferences;
+    public Optional<UserPreference> getUserPreferences() {
+        return Optional.ofNullable(userPreferences);
     }
 
     @Override

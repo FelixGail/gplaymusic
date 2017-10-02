@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class ListenNowStation extends ListenNowItem {
     @Expose
@@ -21,12 +22,8 @@ public class ListenNowStation extends ListenNowItem {
     @Expose
     private String title;
 
-    public String getHighlightColor() {
-        return highlightColor;
-    }
-
-    public void setHighlightColor(String highlightColor) {
-        this.highlightColor = highlightColor;
+    public Optional<String> getHighlightColor() {
+        return Optional.ofNullable(highlightColor);
     }
 
     public List<StationSeed> getSeeds() {
@@ -44,19 +41,11 @@ public class ListenNowStation extends ListenNowItem {
         seeds.add(seed);
     }
 
-    public ProfileImage getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(ProfileImage profileImage) {
-        this.profileImage = profileImage;
+    public Optional<ProfileImage> getProfileImage() {
+        return Optional.ofNullable(profileImage);
     }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

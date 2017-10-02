@@ -1,7 +1,13 @@
 package com.github.felixgail.gplaymusic.model.search;
 
 import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.Album;
+import com.github.felixgail.gplaymusic.model.shema.Artist;
+import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.model.shema.PodcastSeries;
+import com.github.felixgail.gplaymusic.model.shema.Station;
+import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.shema.Video;
 import com.github.felixgail.gplaymusic.model.shema.listennow.Situation;
 import com.google.gson.annotations.Expose;
 
@@ -10,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO: Add result scores
 public class SearchResponse implements Serializable {
 
     @Expose
@@ -55,10 +62,9 @@ public class SearchResponse implements Serializable {
         return entries.stream().filter(PodcastSeries.class::isInstance).map(PodcastSeries.class::cast).collect(Collectors.toList());
     }
 
-    @Override
-    public String toString() {
+    public String string() {
         return "SearchResults:\n\t" +
-                entries.stream().map(e -> e.toString()).collect(Collectors.joining("\n\t"));
+                entries.stream().map(Object::toString).collect(Collectors.joining("\n\t"));
     }
 
 }

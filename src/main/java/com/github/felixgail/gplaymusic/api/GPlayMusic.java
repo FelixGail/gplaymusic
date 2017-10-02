@@ -13,9 +13,17 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFac
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.*;
+import com.github.felixgail.gplaymusic.model.shema.DeviceInfo;
+import com.github.felixgail.gplaymusic.model.shema.Genre;
+import com.github.felixgail.gplaymusic.model.shema.ListResult;
+import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.shema.PodcastSeries;
+import com.github.felixgail.gplaymusic.model.shema.Station;
+import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
+import com.github.felixgail.gplaymusic.util.deserializer.ColorDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
@@ -24,13 +32,24 @@ import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
-import okhttp3.*;
+import okhttp3.CipherSuite;
+import okhttp3.ConnectionSpec;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.TlsVersion;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import svarzee.gps.gpsoauth.AuthToken;
 
+import java.awt.Color;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * The main API, wrapping calls to the service.
@@ -205,21 +224,6 @@ public final class GPlayMusic {
                 interceptorBehaviour = ErrorInterceptor.InterceptorBehaviour.THROW_EXCEPTION;
         private boolean debug = false;
 
-        public boolean isDebug() {
-            return debug;
-        }
-
-        /**
-         * If set to <em>true</em>, will log every request and response made by the Client.<br>
-         * <b>
-         * Be careful as this can easily leak personal information. Be sure to always check the output.
-         * </b>
-         */
-        public GPlayMusic.Builder setDebug(boolean debug) {
-            this.debug = debug;
-            return this;
-        }
-
         /**
          * Used while building the {@link GPlayMusic} instance. If no {@link OkHttpClient.Builder} is
          * provided via {@link #setHttpClientBuilder(OkHttpClient.Builder)} the instance returned by this method will
@@ -237,6 +241,21 @@ public final class GPlayMusic {
                     .build();
             return new OkHttpClient.Builder()
                     .connectionSpecs(Collections.singletonList(spec));
+        }
+
+        public boolean isDebug() {
+            return debug;
+        }
+
+        /**
+         * If set to <em>true</em>, will log every request and response made by the Client.<br>
+         * <b>
+         * Be careful as this can easily leak personal information. Be sure to always check the output.
+         * </b>
+         */
+        public GPlayMusic.Builder setDebug(boolean debug) {
+            this.debug = debug;
+            return this;
         }
 
         /**
@@ -329,7 +348,8 @@ public final class GPlayMusic {
                 GsonBuilder gsonBuilder = new GsonBuilder()
                         .registerTypeAdapter(Result.class, new ResultDeserializer())
                         .registerTypeAdapter(Config.class, new ConfigDeserializer())
-                        .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
+                        .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
+                        .registerTypeAdapter(Color.class, new ColorDeserializer());
 
                 if (this.httpClientBuilder == null) {
                     this.httpClientBuilder = getDefaultHttpBuilder();

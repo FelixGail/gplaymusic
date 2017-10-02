@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class Situation implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.SITUATION;
@@ -30,52 +31,28 @@ public class Situation implements Result, Serializable {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public Optional<String> getImageUrl() {
+        return Optional.ofNullable(imageUrl);
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public Optional<String> getWideImageUrl() {
+        return Optional.ofNullable(wideImageUrl);
     }
 
-    public String getWideImageUrl() {
-        return wideImageUrl;
+    public Optional<List<Station>> getStations() {
+        return Optional.ofNullable(stations);
     }
 
-    public void setWideImageUrl(String wideImageUrl) {
-        this.wideImageUrl = wideImageUrl;
-    }
-
-    public List<Station> getStations() {
-        return stations;
-    }
-
-    public List<Situation> getSituations() {
-        return situations;
-    }
-
-    public void setStations(List<Station> stations) {
-        this.stations = stations;
+    public Optional<List<Situation>> getSituations() {
+        return Optional.ofNullable(situations);
     }
 
     @Override

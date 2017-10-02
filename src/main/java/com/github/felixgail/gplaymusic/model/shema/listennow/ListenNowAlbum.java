@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class ListenNowAlbum extends ListenNowItem {
     @Expose
@@ -34,64 +35,38 @@ public class ListenNowAlbum extends ListenNowItem {
         return artistMetajamID;
     }
 
-    public void setArtistMetajamID(String artistMetajamID) {
-        this.artistMetajamID = artistMetajamID;
-    }
 
     public String getArtistName() {
         return artistName;
     }
 
-    public void setArtistName(String artistName) {
-        this.artistName = artistName;
-    }
 
     public ProfileImage getArtistProfileImage() {
         return artistProfileImage;
     }
 
-    public void setArtistProfileImage(ProfileImage artistProfileImage) {
-        this.artistProfileImage = artistProfileImage;
-    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+
+    public Optional<Attribution> getDescriptionAttribution() {
+        return Optional.ofNullable(descriptionAttribution);
     }
 
-    public Attribution getDescriptionAttribution() {
-        return descriptionAttribution;
+    public Optional<String> getExplicitType() {
+        return Optional.ofNullable(explicitType);
     }
 
-    public void setDescriptionAttribution(Attribution descriptionAttribution) {
-        this.descriptionAttribution = descriptionAttribution;
-    }
-
-    public String getExplicitType() {
-        return explicitType;
-    }
-
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
-    }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public MetajamID getId() {
         return id;
-    }
-
-    public void setId(MetajamID id) {
-        this.id = id;
     }
 
     public class MetajamID implements Serializable {
@@ -106,24 +81,12 @@ public class ListenNowAlbum extends ListenNowItem {
             return metajamCompactKey;
         }
 
-        public void setMetajamCompactKey(String metajamCompactKey) {
-            this.metajamCompactKey = metajamCompactKey;
-        }
-
         public String getArtist() {
             return artist;
         }
 
-        public void setArtist(String artist) {
-            this.artist = artist;
-        }
-
         public String getTitle() {
             return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
         }
     }
 }

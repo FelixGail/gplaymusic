@@ -8,6 +8,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class Album implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.ALBUM;
@@ -32,77 +34,53 @@ public class Album implements Result, Serializable {
     @Expose
     @SerializedName("description_attribution")
     private Attribution descriptionAttribution;
+    @Expose
+    private String description;
+    @Expose
+    private String contentType;
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAlbumArtist() {
         return albumArtist;
     }
 
-    public void setAlbumArtist(String albumArtist) {
-        this.albumArtist = albumArtist;
-    }
-
-    public String getAlbumArtUrl() {
-        return albumArtUrl;
-    }
-
-    public void setAlbumArtUrl(String albumArtUrl) {
-        this.albumArtUrl = albumArtUrl;
+    public Optional<String> getAlbumArtUrl() {
+        return Optional.ofNullable(albumArtUrl);
     }
 
     public String getAlbumId() {
         return albumId;
     }
 
-    public void setAlbumId(String albumId) {
-        this.albumId = albumId;
-    }
-
     public String getArtist() {
         return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
     }
 
     public List<String> getArtistId() {
         return artistId;
     }
 
-    public void setArtistId(List<String> artistId) {
-        this.artistId = artistId;
+    public OptionalInt getYear() {
+        return OptionalInt.of(year);
     }
 
-    public int getYear() {
-        return year;
+    public Optional<String> getExplicitType() {
+        return Optional.ofNullable(explicitType);
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public Optional<Attribution> getDescriptionAttribution() {
+        return Optional.ofNullable(descriptionAttribution);
     }
 
-    public String getExplicitType() {
-        return explicitType;
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
-    }
-
-    public Attribution getDescriptionAttribution() {
-        return descriptionAttribution;
-    }
-
-    public void setDescriptionAttribution(Attribution descriptionAttribution) {
-        this.descriptionAttribution = descriptionAttribution;
+    public Optional<String> getContentType() {
+        return Optional.ofNullable(contentType);
     }
 
     @Override

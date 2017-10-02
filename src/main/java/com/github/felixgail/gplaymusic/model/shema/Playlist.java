@@ -16,9 +16,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+//TODO: Split into Public and Private Playlist
 public class Playlist implements Result, Serializable {
     public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
     public final static String BATCH_URL = "playlistbatch";
@@ -113,6 +118,14 @@ public class Playlist implements Result, Serializable {
         String id = response.getItems().get(0).getId();
         return new Playlist(name, id, (shareState == null ? PlaylistShareState.PRIVATE : shareState),
                 description, PlaylistType.USER_GENERATED, systemTime, systemTime);
+    }
+
+    public static void updateCache() throws IOException {
+        cache.update();
+    }
+
+    public static Cache<PlaylistEntry> getCache() {
+        return cache;
     }
 
     public String getName() {
@@ -267,14 +280,6 @@ public class Playlist implements Result, Serializable {
             throws IOException {
         SharedPlaylistRequest requestBody = new SharedPlaylistRequest(this, maxResults);
         return GPlayMusic.getApiInstance().getService().listSharedPlaylistEntries(requestBody).execute().body().toList();
-    }
-
-    public static void updateCache() throws IOException {
-        cache.update();
-    }
-
-    public static Cache<PlaylistEntry> getCache() {
-        return cache;
     }
 
     public void removeEntries(List<PlaylistEntry> entries) throws IOException {

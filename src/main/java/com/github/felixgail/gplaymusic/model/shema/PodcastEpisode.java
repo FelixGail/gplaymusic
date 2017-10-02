@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class PodcastEpisode extends Signable implements Serializable {
 
@@ -40,110 +41,60 @@ public class PodcastEpisode extends Signable implements Serializable {
     @Expose
     private String title;
 
-    public List<ArtRef> getArt() {
-        return art;
+    public Optional<List<ArtRef>> getArt() {
+        return Optional.ofNullable(art);
     }
 
-    public void setArt(List<ArtRef> art) {
-        this.art = art;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public Optional<String> getAuthor() {
+        return Optional.ofNullable(author);
     }
 
     public boolean isDeleted() {
         return deleted;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public Optional<String> getDescription() {
+        return Optional.ofNullable(description);
     }
 
     public String getDurationMillis() {
         return durationMillis;
     }
 
-    public void setDurationMillis(String durationMillis) {
-        this.durationMillis = durationMillis;
-    }
-
+    @Override
     public String getID() {
         return episodeId;
-    }
-
-    public void setEpisodeId(String episodeId) {
-        this.episodeId = episodeId;
     }
 
     public String getExplicitType() {
         return explicitType;
     }
 
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
-    }
-
     public String getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
+    public Optional<String> getPlaybackPositionMillis() {
+        return Optional.ofNullable(playbackPositionMillis);
     }
 
-    public String getPlaybackPositionMillis() {
-        return playbackPositionMillis;
-    }
-
-    public void setPlaybackPositionMillis(String playbackPositionMillis) {
-        this.playbackPositionMillis = playbackPositionMillis;
-    }
-
-    public String getPublicationTimestampMillis() {
-        return publicationTimestampMillis;
-    }
-
-    public void setPublicationTimestampMillis(String publicationTimestampMillis) {
-        this.publicationTimestampMillis = publicationTimestampMillis;
+    public Optional<String> getPublicationTimestampMillis() {
+        return Optional.ofNullable(publicationTimestampMillis);
     }
 
     public String getSeriesId() {
         return seriesId;
     }
 
-    public void setSeriesId(String seriesId) {
-        this.seriesId = seriesId;
-    }
-
     public String getSeriesTitle() {
         return seriesTitle;
-    }
-
-    public void setSeriesTitle(String seriesTitle) {
-        this.seriesTitle = seriesTitle;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
+    @Override
     public Signature getSignature() {
         return super.createSignature(this.getID());
     }

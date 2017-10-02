@@ -5,6 +5,7 @@ import com.github.felixgail.gplaymusic.model.shema.Genre;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class MetadataSeed implements Serializable {
 
@@ -14,19 +15,11 @@ public class MetadataSeed implements Serializable {
     private Genre genre;
 
     //TODO: Optimize! Only one type (artist/genre) will be present.
-    public Artist getArtist() {
-        return artist;
+    public Optional<Artist> getArtist() {
+        return Optional.ofNullable(artist);
     }
 
-    public void setArtist(Artist artist) {
-        this.artist = artist;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
+    public Optional<Genre> getGenre() {
+        return Optional.ofNullable(genre);
     }
 }
