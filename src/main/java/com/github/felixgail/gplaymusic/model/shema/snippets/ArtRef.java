@@ -7,35 +7,35 @@ import com.google.gson.annotations.JsonAdapter;
 import java.util.Optional;
 
 public class ArtRef {
-    @Expose
-    private String url;
-    @Expose
-    private String aspectRatio;
-    @Expose
-    private Autogen autogen;
-    @Expose
-    private ColorStyles colorStyles;
+  @Expose
+  private String url;
+  @Expose
+  private String aspectRatio;
+  @Expose
+  private Autogen autogen;
+  @Expose
+  private ColorStyles colorStyles;
 
-    public Optional<ColorStyles> getColorStyles() {
-        return Optional.ofNullable(colorStyles);
-    }
+  public Optional<ColorStyles> getColorStyles() {
+    return Optional.ofNullable(colorStyles);
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public Optional<String> getAspectRatio() {
-        return Optional.ofNullable(aspectRatio);
-    }
+  public Optional<String> getAspectRatio() {
+    return Optional.ofNullable(aspectRatio);
+  }
 
-    public Optional<Autogen> isAutogen() {
-        return Optional.ofNullable(autogen);
-    }
+  public Optional<Autogen> isAutogen() {
+    return Optional.ofNullable(autogen);
+  }
 
-    @JsonAdapter(AutogenEnumDeserializer.class)
-    public enum Autogen {
-        TRUE,
-        FALSE
-    }
+  @JsonAdapter(AutogenEnumDeserializer.class)
+  public enum Autogen {
+    TRUE,
+    FALSE
+  }
 
 }

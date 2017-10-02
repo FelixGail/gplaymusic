@@ -9,11 +9,11 @@ import java.io.Serializable;
 import java.util.List;
 
 public class ListListenNowItemResponse implements Serializable {
-    @Expose
-    @SerializedName("listennow_items")
-    private List<ListenNowItem> listenNowItems;
+  @Expose
+  @SerializedName("listennow_items")
+  private List<ListenNowItem> listenNowItems;
 
-    public List<ListenNowItem> getListenNowItems() {
-        return listenNowItems;
-    }
+  public List<ListenNowItem> getListenNowItems() {
+    return listenNowItems;
+  }
 }

@@ -9,22 +9,22 @@ import java.util.Optional;
 
 public class PodcastGenre implements Serializable {
 
-    @Expose
-    private String id;
-    @Expose
-    private String displayName;
-    @Expose
-    private List<PodcastGenre> subgroups = new LinkedList<>();
+  @Expose
+  private String id;
+  @Expose
+  private String displayName;
+  @Expose
+  private List<PodcastGenre> subgroups = new LinkedList<>();
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getDisplayName() {
-        return displayName;
-    }
+  public String getDisplayName() {
+    return displayName;
+  }
 
-    public Optional<List<PodcastGenre>> getSubgroups() {
-        return Optional.ofNullable(subgroups);
-    }
+  public Optional<List<PodcastGenre>> getSubgroups() {
+    return Optional.ofNullable(subgroups);
+  }
 }

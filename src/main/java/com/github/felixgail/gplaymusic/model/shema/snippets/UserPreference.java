@@ -6,22 +6,22 @@ import java.io.Serializable;
 
 public class UserPreference implements Serializable {
 
-    @Expose
-    private boolean autoDownload;
-    @Expose
-    private boolean notifyOnNewEpisode;
-    @Expose
-    private boolean subscribed;
+  @Expose
+  private boolean autoDownload;
+  @Expose
+  private boolean notifyOnNewEpisode;
+  @Expose
+  private boolean subscribed;
 
-    public boolean isAutoDownload() {
-        return autoDownload;
-    }
+  public boolean isAutoDownload() {
+    return autoDownload;
+  }
 
-    public boolean isNotifyOnNewEpisode() {
-        return notifyOnNewEpisode;
-    }
+  public boolean isNotifyOnNewEpisode() {
+    return notifyOnNewEpisode;
+  }
 
-    public boolean isSubscribed() {
-        return subscribed;
-    }
+  public boolean isSubscribed() {
+    return subscribed;
+  }
 }

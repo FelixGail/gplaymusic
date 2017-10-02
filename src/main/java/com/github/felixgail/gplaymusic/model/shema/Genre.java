@@ -9,37 +9,37 @@ import java.util.Optional;
 
 public class Genre implements Serializable {
 
-    @Expose
-    private String id;
-    @Expose
-    private String name;
-    @Expose
-    private List<String> children;
-    @Expose
-    private String parentId;
-    @Expose
-    private List<ArtRef> images;
+  @Expose
+  private String id;
+  @Expose
+  private String name;
+  @Expose
+  private List<String> children;
+  @Expose
+  private String parentId;
+  @Expose
+  private List<ArtRef> images;
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    //TODO: return lo genres
-    public Optional<List<String>> getChildren() {
-        return Optional.ofNullable(children);
-    }
+  //TODO: return lo genres
+  public Optional<List<String>> getChildren() {
+    return Optional.ofNullable(children);
+  }
 
-    //TODO: return genre
-    public Optional<String> getParentId() {
-        return Optional.ofNullable(parentId);
-    }
+  //TODO: return genre
+  public Optional<String> getParentId() {
+    return Optional.ofNullable(parentId);
+  }
 
-    public Optional<List<ArtRef>> getImages() {
-        return Optional.ofNullable(images);
-    }
+  public Optional<List<ArtRef>> getImages() {
+    return Optional.ofNullable(images);
+  }
 
 }

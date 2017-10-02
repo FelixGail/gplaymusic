@@ -7,22 +7,22 @@ import java.io.Serializable;
 
 public class ColorStyles implements Serializable {
 
-    @Expose
-    private Color primary;
-    @Expose
-    private Color scrim;
-    @Expose
-    private Color accent;
+  @Expose
+  private Color primary;
+  @Expose
+  private Color scrim;
+  @Expose
+  private Color accent;
 
-    public Color getPrimary() {
-        return primary;
-    }
+  public Color getPrimary() {
+    return primary;
+  }
 
-    public Color getScrim() {
-        return scrim;
-    }
+  public Color getScrim() {
+    return scrim;
+  }
 
-    public Color getAccent() {
-        return accent;
-    }
+  public Color getAccent() {
+    return accent;
+  }
 }

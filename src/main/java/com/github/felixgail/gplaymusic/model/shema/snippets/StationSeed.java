@@ -17,70 +17,70 @@ import java.io.Serializable;
 @JsonAdapter(StationSeedSerializer.class)
 public class StationSeed implements Serializable {
 
-    @Expose
-    private StationSeedType seedType;
-    @Expose
-    @SerializedName(value = "albumId", alternate = {"artistId", "genreId", "trackId",
-            "curatedStationId", "playlistShareToken"})
-    private String seedId;
-    @Expose
-    private MetadataSeed metadataSeed;
+  @Expose
+  private StationSeedType seedType;
+  @Expose
+  @SerializedName(value = "albumId", alternate = {"artistId", "genreId", "trackId",
+      "curatedStationId", "playlistShareToken"})
+  private String seedId;
+  @Expose
+  private MetadataSeed metadataSeed;
 
-    public StationSeed() {
-    }
+  public StationSeed() {
+  }
 
-    public StationSeed(Album album) {
-        this.seedType = StationSeedType.ALBUM;
-        this.seedId = album.getAlbumId();
-    }
+  public StationSeed(Album album) {
+    this.seedType = StationSeedType.ALBUM;
+    this.seedId = album.getAlbumId();
+  }
 
-    public StationSeed(Artist artist) {
-        this.seedType = StationSeedType.ARTIST;
-        this.seedId = artist.getArtistId()
-                .orElseThrow(() -> new IllegalArgumentException("ArtistID not present. Unable to create seed"));
-    }
+  public StationSeed(Artist artist) {
+    this.seedType = StationSeedType.ARTIST;
+    this.seedId = artist.getArtistId()
+        .orElseThrow(() -> new IllegalArgumentException("ArtistID not present. Unable to create seed"));
+  }
 
-    public StationSeed(Playlist playlist) {
-        this.seedType = StationSeedType.PLAYLIST;
-        this.seedId = playlist.getShareToken();
-    }
+  public StationSeed(Playlist playlist) {
+    this.seedType = StationSeedType.PLAYLIST;
+    this.seedId = playlist.getShareToken();
+  }
 
-    public StationSeed(Genre genre) {
-        this.seedType = StationSeedType.GENRE;
-        this.seedId = genre.getId();
-    }
+  public StationSeed(Genre genre) {
+    this.seedType = StationSeedType.GENRE;
+    this.seedId = genre.getId();
+  }
 
-    /**
-     * Creates a StationSeed from a Station created by a Curated Station. Use this with care, as this will only work on
-     * stations that meet the initial description.
-     * Deprecated since you should use the {@link Station#getSeed()} method to retrieve the seed from a curated station
-     * instead of creating a new one.
-     */
-    @Deprecated
-    public StationSeed(Station curatedStation) {
-        this.seedType = StationSeedType.CURATED_STATION;
-        this.seedId = curatedStation.getClientId()
-                .orElseThrow(() -> new IllegalArgumentException("Station does not contain a clientID"));
-    }
+  /**
+   * Creates a StationSeed from a Station created by a Curated Station. Use this with care, as this will only work on
+   * stations that meet the initial description.
+   * Deprecated since you should use the {@link Station#getSeed()} method to retrieve the seed from a curated station
+   * instead of creating a new one.
+   */
+  @Deprecated
+  public StationSeed(Station curatedStation) {
+    this.seedType = StationSeedType.CURATED_STATION;
+    this.seedId = curatedStation.getClientId()
+        .orElseThrow(() -> new IllegalArgumentException("Station does not contain a clientID"));
+  }
 
-    public StationSeed(Track track) {
-        this.seedType = StationSeedType.TRACK;
-        this.seedId = track.getID();
-    }
+  public StationSeed(Track track) {
+    this.seedType = StationSeedType.TRACK;
+    this.seedId = track.getID();
+  }
 
-    public StationSeedType getSeedType() {
-        return seedType;
-    }
+  public StationSeedType getSeedType() {
+    return seedType;
+  }
 
-    public MetadataSeed getMetadataSeed() {
-        return metadataSeed;
-    }
+  public MetadataSeed getMetadataSeed() {
+    return metadataSeed;
+  }
 
-    public void setMetadataSeed(MetadataSeed metadataSeed) {
-        this.metadataSeed = metadataSeed;
-    }
+  public void setMetadataSeed(MetadataSeed metadataSeed) {
+    this.metadataSeed = metadataSeed;
+  }
 
-    public String getSeed() {
-        return seedId;
-    }
+  public String getSeed() {
+    return seedId;
+  }
 }

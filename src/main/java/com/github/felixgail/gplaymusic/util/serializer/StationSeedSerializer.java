@@ -10,14 +10,14 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 public class StationSeedSerializer implements JsonSerializer<StationSeed> {
-    private final static Gson gson = new Gson();
+  private final static Gson gson = new Gson();
 
-    @Override
-    public JsonElement serialize(StationSeed seed, Type type, JsonSerializationContext jsc) {
-        JsonObject seedJson = new JsonObject();
-        seedJson.add("seedType", gson.toJsonTree(seed.getSeedType()));
-        seedJson.add("metadataSeed", gson.toJsonTree(seed.getMetadataSeed()));
-        seedJson.addProperty(seed.getSeedType().getKey(), seed.getSeed());
-        return seedJson;
-    }
+  @Override
+  public JsonElement serialize(StationSeed seed, Type type, JsonSerializationContext jsc) {
+    JsonObject seedJson = new JsonObject();
+    seedJson.add("seedType", gson.toJsonTree(seed.getSeedType()));
+    seedJson.add("metadataSeed", gson.toJsonTree(seed.getMetadataSeed()));
+    seedJson.addProperty(seed.getSeedType().getKey(), seed.getSeed());
+    return seedJson;
+  }
 }

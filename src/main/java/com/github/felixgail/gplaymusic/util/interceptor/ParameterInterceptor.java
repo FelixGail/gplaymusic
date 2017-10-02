@@ -11,49 +11,49 @@ import java.util.Map;
 
 public class ParameterInterceptor implements Interceptor {
 
-    private Map<String, String> parameters;
+  private Map<String, String> parameters;
 
-    public ParameterInterceptor() {
-        parameters = new HashMap<>();
+  public ParameterInterceptor() {
+    parameters = new HashMap<>();
+  }
+
+  @Override
+  public Response intercept(Chain chain) throws IOException {
+    Request original = chain.request();
+    HttpUrl originalHttpUrl = original.url();
+
+    HttpUrl.Builder httpBuilder = originalHttpUrl.newBuilder();
+
+    for (Map.Entry<String, String> entry : parameters.entrySet()) {
+      httpBuilder.addQueryParameter(entry.getKey(), entry.getValue());
     }
 
-    @Override
-    public Response intercept(Chain chain) throws IOException {
-        Request original = chain.request();
-        HttpUrl originalHttpUrl = original.url();
+    HttpUrl url = httpBuilder.build();
 
-        HttpUrl.Builder httpBuilder = originalHttpUrl.newBuilder();
+    // Request customization: add request headers
+    Request.Builder requestBuilder = original.newBuilder()
+        .url(url);
 
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            httpBuilder.addQueryParameter(entry.getKey(), entry.getValue());
-        }
+    Request request = requestBuilder.build();
+    return chain.proceed(request);
+  }
 
-        HttpUrl url = httpBuilder.build();
+  public Map<String, String> getParameters() {
+    return parameters;
+  }
 
-        // Request customization: add request headers
-        Request.Builder requestBuilder = original.newBuilder()
-                .url(url);
+  public ParameterInterceptor setParameters(Map<String, String> parameters) {
+    this.parameters = parameters;
+    return this;
+  }
 
-        Request request = requestBuilder.build();
-        return chain.proceed(request);
-    }
+  public ParameterInterceptor addParameter(String key, String value) {
+    this.parameters.put(key, value);
+    return this;
+  }
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
-    public ParameterInterceptor setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
-        return this;
-    }
-
-    public ParameterInterceptor addParameter(String key, String value) {
-        this.parameters.put(key, value);
-        return this;
-    }
-
-    public ParameterInterceptor removeParameter(String key) {
-        this.parameters.remove(key);
-        return this;
-    }
+  public ParameterInterceptor removeParameter(String key) {
+    this.parameters.remove(key);
+    return this;
+  }
 }

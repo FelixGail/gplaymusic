@@ -5,18 +5,18 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public enum SubscriptionType implements Serializable {
-    @SerializedName("aa")
-    ALL_ACCESS("aa"),
-    @SerializedName("fr")
-    FREE("fr");
+  @SerializedName("aa")
+  ALL_ACCESS("aa"),
+  @SerializedName("fr")
+  FREE("fr");
 
-    private String value;
+  private String value;
 
-    SubscriptionType(String v) {
-        this.value = v;
-    }
+  SubscriptionType(String v) {
+    this.value = v;
+  }
 
-    public String getValue() {
-        return this.value;
-    }
+  public String getValue() {
+    return this.value;
+  }
 }

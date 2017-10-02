@@ -13,80 +13,80 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 public class Artist implements Result, Serializable {
-    public final static ResultType RESULT_TYPE = ResultType.ARTIST;
+  public final static ResultType RESULT_TYPE = ResultType.ARTIST;
 
-    @Expose
-    private String name;
-    @Expose
-    @SerializedName("artistArtRef")
-    private String artistArtUrl;
-    @Expose
-    private List<ArtRef> artistArtRefs;
-    @Expose
-    private String artistId;
-    @Expose
-    @SerializedName("artist_bio_attribution")
-    private Attribution artistBioAttribution;
-    @Expose
-    private String artistBio;
-    @Expose
-    @SerializedName("related_artists")
-    private List<Artist> relatedArtists;
-    @Expose
-    @SerializedName("total_albums")
-    private int totalAlbums;
-    @Expose
-    private List<Track> topTracks;
-    @Expose
-    private List<Album> albums;
+  @Expose
+  private String name;
+  @Expose
+  @SerializedName("artistArtRef")
+  private String artistArtUrl;
+  @Expose
+  private List<ArtRef> artistArtRefs;
+  @Expose
+  private String artistId;
+  @Expose
+  @SerializedName("artist_bio_attribution")
+  private Attribution artistBioAttribution;
+  @Expose
+  private String artistBio;
+  @Expose
+  @SerializedName("related_artists")
+  private List<Artist> relatedArtists;
+  @Expose
+  @SerializedName("total_albums")
+  private int totalAlbums;
+  @Expose
+  private List<Track> topTracks;
+  @Expose
+  private List<Album> albums;
 
-    public Optional<List<Artist>> getRelatedArtists() {
-        return Optional.ofNullable(relatedArtists);
-    }
+  public Optional<List<Artist>> getRelatedArtists() {
+    return Optional.ofNullable(relatedArtists);
+  }
 
-    public OptionalInt getTotalAlbums() {
-        return OptionalInt.of(totalAlbums);
-    }
+  public OptionalInt getTotalAlbums() {
+    return OptionalInt.of(totalAlbums);
+  }
 
-    public Optional<List<Track>> getTopTracks() {
-        return Optional.ofNullable(topTracks);
-    }
+  public Optional<List<Track>> getTopTracks() {
+    return Optional.ofNullable(topTracks);
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Optional<String> getArtistArtUrl() {
-        return Optional.ofNullable(artistArtUrl);
-    }
+  public Optional<String> getArtistArtUrl() {
+    return Optional.ofNullable(artistArtUrl);
+  }
 
-    public Optional<List<ArtRef>> getArtistArtRefs() {
-        return Optional.ofNullable(artistArtRefs);
-    }
+  public Optional<List<ArtRef>> getArtistArtRefs() {
+    return Optional.ofNullable(artistArtRefs);
+  }
 
-    public Optional<String> getArtistId() {
-        return Optional.ofNullable(artistId);
-    }
+  public Optional<String> getArtistId() {
+    return Optional.ofNullable(artistId);
+  }
 
-    public Optional<Attribution> getArtistBioAttribution() {
-        return Optional.ofNullable(artistBioAttribution);
-    }
+  public Optional<Attribution> getArtistBioAttribution() {
+    return Optional.ofNullable(artistBioAttribution);
+  }
 
-    public Optional<String> getArtistBio() {
-        return Optional.ofNullable(artistBio);
-    }
+  public Optional<String> getArtistBio() {
+    return Optional.ofNullable(artistBio);
+  }
 
-    public Optional<List<Album>> getAlbums() {
-        return Optional.ofNullable(albums);
-    }
+  public Optional<List<Album>> getAlbums() {
+    return Optional.ofNullable(albums);
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
-    }
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
+  }
 
-    @Override
-    public ResultType getResultType() {
-        return RESULT_TYPE;
-    }
+  @Override
+  public ResultType getResultType() {
+    return RESULT_TYPE;
+  }
 }
