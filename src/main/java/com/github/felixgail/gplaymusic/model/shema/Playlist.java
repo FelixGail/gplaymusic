@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-//TODO: Split into Public and Private Playlist
+//TODO: Split into Public and Private Playlist. What to do about magic playlists?
 public class Playlist implements Result, Serializable {
   public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
   public final static String BATCH_URL = "playlistbatch";

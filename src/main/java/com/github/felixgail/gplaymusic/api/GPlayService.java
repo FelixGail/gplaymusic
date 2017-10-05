@@ -14,6 +14,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.DeviceInfo;
+import com.github.felixgail.gplaymusic.model.shema.GenreResponse;
 import com.github.felixgail.gplaymusic.model.shema.ListResult;
 import com.github.felixgail.gplaymusic.model.shema.MutationResponse;
 import com.github.felixgail.gplaymusic.model.shema.Playlist;
@@ -138,6 +139,9 @@ public interface GPlayService {
 
   @POST("sj/v2.5/trackstats")
   Call<MutationResponse> incremetPlaycount(@Body IncrementPlaycountRequest request);
+
+  @GET("sj/v2.5/explore/genres")
+  Call<GenreResponse> getGenres(@Query("parent-genre") String parentGenre);
 
   @GET("sj/v2.5/fetchtrack")
   Call<Track> fetchTrack(@Query("nid") String trackId);
