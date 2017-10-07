@@ -124,6 +124,10 @@ public class Playlist implements Result, Serializable {
     cache.update();
   }
 
+  public static void setUseCache(boolean useCache) {
+    cache.setUseCache(useCache);
+  }
+
   public static Cache<PlaylistEntry> getCache() {
     return cache;
   }

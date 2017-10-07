@@ -13,6 +13,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
 import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
+import com.github.felixgail.gplaymusic.model.shema.Album;
 import com.github.felixgail.gplaymusic.model.shema.DeviceInfo;
 import com.github.felixgail.gplaymusic.model.shema.GenreResponse;
 import com.github.felixgail.gplaymusic.model.shema.ListResult;
@@ -142,6 +143,9 @@ public interface GPlayService {
 
   @GET("sj/v2.5/explore/genres")
   Call<GenreResponse> getGenres(@Query("parent-genre") String parentGenre);
+
+  @GET("sj/v2.5/fetchalbum")
+  Call<Album> getAlbum(@Query("nid") String albumID, @Query("include-tracks") boolean includeTracks);
 
   @GET("sj/v2.5/fetchtrack")
   Call<Track> fetchTrack(@Query("nid") String trackId);

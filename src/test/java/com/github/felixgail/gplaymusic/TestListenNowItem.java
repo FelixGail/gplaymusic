@@ -33,7 +33,7 @@ public class TestListenNowItem extends TestWithLogin {
       Assert.assertNotNull(item.getSuggestionReason());
       if (item instanceof ListenNowAlbum) {
         ListenNowAlbum album = (ListenNowAlbum) item;
-        Assert.assertNotNull(album.getArtistMetajamID());
+        Assert.assertNotNull(album.getArtistID());
         Assert.assertNotNull(album.getArtistName());
         Assert.assertNotNull(album.getArtistProfileImage());
         Assert.assertNotNull(album.getExplicitType());

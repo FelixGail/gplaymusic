@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Contains a list of Stations ({@link #getStations()}) or wraps more Situations ({@link #getSituations()}).
+ */
 public class Situation implements Result, Serializable {
   public final static ResultType RESULT_TYPE = ResultType.SITUATION;
 

@@ -153,11 +153,21 @@ public final class GPlayMusic {
     return getService().getPromotedTracks().execute().body().toList();
   }
 
+  /**
+   * Deletes playlist entries. They can be from multiple playlists.
+   *
+   * @param entries playlist entries to be deleted
+   */
   public void deletePlaylistEntries(PlaylistEntry... entries)
       throws IOException {
     deletePlaylistEntries(Arrays.asList(entries));
   }
 
+  /**
+   * Deletes playlist entries. They can be from multiple playlists.
+   *
+   * @param entries list of playlist entries to be deleted
+   */
   public void deletePlaylistEntries(Collection<PlaylistEntry> entries) throws IOException {
     Mutator mutator = new Mutator();
     entries.forEach(e -> mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(e)));
@@ -165,6 +175,11 @@ public final class GPlayMusic {
     Playlist.getCache().remove(entries);
   }
 
+  /**
+   * deletes playlists and all contained {@link PlaylistEntry}
+   *
+   * @param playlists playlists to be deleted
+   */
   public void deletePlaylists(Playlist... playlists)
       throws IOException {
     Mutator mutator = new Mutator();
@@ -185,7 +200,12 @@ public final class GPlayMusic {
 
   public List<Station> listStations()
       throws IOException {
-    return service.listStations().execute().body().toList();
+    return new PagingHandler<Station>() {
+      @Override
+      public ListResult<Station> getChunk(String nextPageToken) throws IOException {
+        return service.listStations(new PagingRequest(nextPageToken, -1)).execute().body();
+      }
+    }.getAll();
   }
 
   public List<Playlist> listPlaylists()
@@ -203,12 +223,28 @@ public final class GPlayMusic {
     return service.listBrowsePodcastSeries(genre.getId()).execute().body().toList();
   }
 
+  /**
+   * Returns a selection of {@link ListenNowItem}s consisting of {@link ListenNowStation}
+   * and {@link com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum}.
+   */
   public List<ListenNowItem> listListenNowItems() throws IOException {
     return service.listListenNowItems().execute().body().getListenNowItems();
   }
 
+  /**
+   * Returns the current {@link ListenNowStation} for your timezone.
+   */
   public ListenNowSituation getListenNowSituation() throws IOException {
     return service.getListenNowSituation(new TimeZoneOffset()).execute().body();
+  }
+
+  /**
+   * Returns the current {@link ListenNowStation} with a set offset.
+   *
+   * @param offsetInSeconds the offset in seconds to UTC.
+   */
+  public ListenNowSituation getListenNowSituation(int offsetInSeconds) throws IOException {
+    return service.getListenNowSituation(new TimeZoneOffset(String.valueOf(offsetInSeconds))).execute().body();
   }
 
   /**

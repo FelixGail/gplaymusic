@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A ListenNowItem is a listen suggestion by the Server. It considers songs rated by you and recent activity.
+ */
 @JsonAdapter(ListenNowItemDeserializer.class)
 public abstract class ListenNowItem implements Serializable {
   @Expose
@@ -22,7 +25,6 @@ public abstract class ListenNowItem implements Serializable {
   @Expose
   @SerializedName("suggestion_text")
   private String suggestionText;
-
 
   public Optional<List<ArtRef>> getCompositeArtRefs() {
     return Optional.ofNullable(compositeArtRefs);

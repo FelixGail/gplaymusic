@@ -10,8 +10,9 @@ import java.util.stream.Stream;
 
 public abstract class Cache<T> {
   private List<T> cache = Collections.emptyList();
-  ;
-  private boolean initialized = false;
+  private boolean ready = false;
+  private boolean useCache = true;
+
 
   public Cache(boolean initialize) throws IOException {
     if (initialize) {
@@ -44,6 +45,13 @@ public abstract class Cache<T> {
     this.cache.removeAll(items);
   }
 
+  public void setUseCache(boolean useCache) {
+    this.useCache = useCache;
+    if (!useCache) {
+      ready = false;
+    }
+  }
+
   public List<T> getAll() throws IOException {
     initialize();
     return cache;
@@ -60,9 +68,11 @@ public abstract class Cache<T> {
   }
 
   public void initialize() throws IOException {
-    if (!initialized) {
+    if (!ready) {
       update();
-      initialized = true;
+      if (useCache) {
+        ready = true;
+      }
     }
   }
 
