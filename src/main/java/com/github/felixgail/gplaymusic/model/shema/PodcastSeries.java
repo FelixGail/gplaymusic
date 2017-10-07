@@ -8,138 +8,91 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public class PodcastSeries implements Result, Serializable {
-    public final static ResultType RESULT_TYPE = ResultType.PODCAST_SERIES;
+  public final static ResultType RESULT_TYPE = ResultType.PODCAST_SERIES;
 
-    @Expose
-    private List<ArtRef> art;
-    @Expose
-    private String author;
-    @Expose
-    private String continuationToken;
-    @Expose
-    private String copyright;
-    @Expose
-    private String description;
-    @Expose
-    private List<PodcastEpisode> episodes;
-    @Expose
-    private String explicitType;
-    @Expose
-    private String link;
-    @Expose
-    private String seriesId;
-    @Expose
-    private String title;
-    @Expose
-    private int totalNumEpisodes;
-    @Expose
-    private UserPreference userPreferences;
+  @Expose
+  private List<ArtRef> art;
+  @Expose
+  private String author;
+  @Expose
+  private String continuationToken;
+  @Expose
+  private String copyright;
+  @Expose
+  private String description;
+  @Expose
+  private List<PodcastEpisode> episodes;
+  @Expose
+  private String explicitType;
+  @Expose
+  private String link;
+  @Expose
+  private String seriesId;
+  @Expose
+  private String title;
+  @Expose
+  private int totalNumEpisodes;
+  @Expose
+  private UserPreference userPreferences;
 
-    public List<ArtRef> getArt() {
-        return art;
-    }
+  public Optional<List<ArtRef>> getArt() {
+    return Optional.ofNullable(art);
+  }
 
-    public void setArt(List<ArtRef> art) {
-        this.art = art;
-    }
+  public String getAuthor() {
+    return author;
+  }
 
-    public String getAuthor() {
-        return author;
-    }
+  public Optional<String> getContinuationToken() {
+    return Optional.ofNullable(continuationToken);
+  }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
+  public Optional<String> getCopyright() {
+    return Optional.ofNullable(continuationToken);
+  }
 
-    public String getContinuationToken() {
-        return continuationToken;
-    }
+  public Optional<String> getDescription() {
+    return Optional.ofNullable(description);
+  }
 
-    public void setContinuationToken(String continuationToken) {
-        this.continuationToken = continuationToken;
-    }
+  public Optional<List<PodcastEpisode>> getEpisodes() {
+    return Optional.ofNullable(episodes);
+  }
 
-    public String getCopyright() {
-        return copyright;
-    }
+  public String getExplicitType() {
+    return explicitType;
+  }
 
-    public void setCopyright(String copyright) {
-        this.copyright = copyright;
-    }
+  public Optional<String> getLink() {
+    return Optional.ofNullable(link);
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getSeriesId() {
+    return seriesId;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public List<PodcastEpisode> getEpisodes() {
-        return episodes;
-    }
+  public int getTotalNumEpisodes() {
+    return totalNumEpisodes;
+  }
 
-    public void setEpisodes(List<PodcastEpisode> episodes) {
-        this.episodes = episodes;
-    }
+  public Optional<UserPreference> getUserPreferences() {
+    return Optional.ofNullable(userPreferences);
+  }
 
-    public String getExplicitType() {
-        return explicitType;
-    }
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof PodcastSeries) && ((PodcastSeries) o).getSeriesId().equals(this.seriesId);
+  }
 
-    public void setExplicitType(String explicitType) {
-        this.explicitType = explicitType;
-    }
-
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public String getSeriesId() {
-        return seriesId;
-    }
-
-    public void setSeriesId(String seriesId) {
-        this.seriesId = seriesId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getTotalNumEpisodes() {
-        return totalNumEpisodes;
-    }
-
-    public void setTotalNumEpisodes(int totalNumEpisodes) {
-        this.totalNumEpisodes = totalNumEpisodes;
-    }
-
-    public UserPreference getUserPreferences() {
-        return userPreferences;
-    }
-
-    public void setUserPreferences(UserPreference userPreferences) {
-        this.userPreferences = userPreferences;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return (o instanceof PodcastSeries) && ((PodcastSeries) o).getSeriesId().equals(this.seriesId);
-    }
-
-    @Override
-    public ResultType getResultType() {
-        return RESULT_TYPE;
-    }
+  @Override
+  public ResultType getResultType() {
+    return RESULT_TYPE;
+  }
 }

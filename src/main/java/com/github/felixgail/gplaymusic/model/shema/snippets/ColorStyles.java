@@ -2,38 +2,27 @@ package com.github.felixgail.gplaymusic.model.shema.snippets;
 
 import com.google.gson.annotations.Expose;
 
+import java.awt.Color;
 import java.io.Serializable;
 
 public class ColorStyles implements Serializable {
 
-    @Expose
-    private Color primary;
-    @Expose
-    private String scrim;
-    @Expose
-    private String accent;
+  @Expose
+  private Color primary;
+  @Expose
+  private Color scrim;
+  @Expose
+  private Color accent;
 
-    public Color getPrimary() {
-        return primary;
-    }
+  public Color getPrimary() {
+    return primary;
+  }
 
-    public void setPrimary(Color primary) {
-        this.primary = primary;
-    }
+  public Color getScrim() {
+    return scrim;
+  }
 
-    public String getScrim() {
-        return scrim;
-    }
-
-    public void setScrim(String scrim) {
-        this.scrim = scrim;
-    }
-
-    public String getAccent() {
-        return accent;
-    }
-
-    public void setAccent(String accent) {
-        this.accent = accent;
-    }
+  public Color getAccent() {
+    return accent;
+  }
 }

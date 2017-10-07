@@ -9,62 +9,62 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Cache<T> {
-    private List<T> cache = Collections.emptyList();
-    ;
-    private boolean initialized = false;
+  private List<T> cache = Collections.emptyList();
+  ;
+  private boolean initialized = false;
 
-    public abstract void update() throws IOException;
-
-    public Cache(boolean initialize) throws IOException {
-        if (initialize) {
-            initialize();
-        }
+  public Cache(boolean initialize) throws IOException {
+    if (initialize) {
+      initialize();
     }
+  }
 
-    public Cache() {
-    }
+  public Cache() {
+  }
 
-    protected void setCache(List<T> newCache) {
-        this.cache = Collections.synchronizedList(newCache);
-    }
+  public abstract void update() throws IOException;
 
-    public void add(Collection<T> items) {
-        this.cache.addAll(items);
-    }
+  protected void setCache(List<T> newCache) {
+    this.cache = Collections.synchronizedList(newCache);
+  }
 
-    public void add(T item) {
-        this.cache.add(item);
-    }
+  public void add(Collection<T> items) {
+    this.cache.addAll(items);
+  }
 
-    public void remove(T item) {
-        this.cache.remove(item);
-    }
+  public void add(T item) {
+    this.cache.add(item);
+  }
 
-    public void remove(Collection<T> items) {
-        this.cache.removeAll(items);
-    }
+  public void remove(T item) {
+    this.cache.remove(item);
+  }
 
-    public List<T> getAll() throws IOException {
-        initialize();
-        return cache;
-    }
+  public void remove(Collection<T> items) {
+    this.cache.removeAll(items);
+  }
 
-    public List<T> getFiltered(Predicate<? super T> predicate) throws IOException {
-        initialize();
-        return cache.stream().filter(predicate).collect(Collectors.toList());
-    }
+  public List<T> getAll() throws IOException {
+    initialize();
+    return cache;
+  }
 
-    public Stream<T> getStream() throws IOException {
-        initialize();
-        return cache.stream();
-    }
+  public List<T> getFiltered(Predicate<? super T> predicate) throws IOException {
+    initialize();
+    return cache.stream().filter(predicate).collect(Collectors.toList());
+  }
 
-    public void initialize() throws IOException {
-        if (!initialized) {
-            update();
-            initialized = true;
-        }
+  public Stream<T> getStream() throws IOException {
+    initialize();
+    return cache.stream();
+  }
+
+  public void initialize() throws IOException {
+    if (!initialized) {
+      update();
+      initialized = true;
     }
+  }
 
 
 }

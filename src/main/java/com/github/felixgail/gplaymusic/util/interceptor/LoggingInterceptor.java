@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 public class LoggingInterceptor implements Interceptor {
-    Logger logger = Logger.getGlobal();
+  Logger logger = Logger.getGlobal();
 
-    @Override
-    public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request();
-        Response response = chain.proceed(request);
-        logger.info(String.format("%s\n\n%s", NetworkPrettyPrinter.getRequestPrint(request),
-                NetworkPrettyPrinter.getResponsePrint(response)));
-        return response;
-    }
+  @Override
+  public Response intercept(Chain chain) throws IOException {
+    Request request = chain.request();
+    Response response = chain.proceed(request);
+    logger.info(String.format("%s\n\n%s", NetworkPrettyPrinter.getRequestPrint(request),
+        NetworkPrettyPrinter.getResponsePrint(response)));
+    return response;
+  }
 }

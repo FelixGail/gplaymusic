@@ -11,17 +11,17 @@ import java.util.List;
 
 public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
 
-    @Override
-    public void update() throws IOException {
-        List<PlaylistEntry> allEntries = new PagingHandler<PlaylistEntry>() {
+  @Override
+  public void update() throws IOException {
+    List<PlaylistEntry> allEntries = new PagingHandler<PlaylistEntry>() {
 
-            @Override
-            public ListResult<PlaylistEntry> getChunk(String nextPageToken) throws IOException {
-                return GPlayMusic.getApiInstance().getService().listPrivatePlaylistEntries(
-                        new PagingRequest(nextPageToken, -1)
-                ).execute().body();
-            }
-        }.getAll();
-        setCache(allEntries);
-    }
+      @Override
+      public ListResult<PlaylistEntry> getChunk(String nextPageToken) throws IOException {
+        return GPlayMusic.getApiInstance().getService().listPrivatePlaylistEntries(
+            new PagingRequest(nextPageToken, -1)
+        ).execute().body();
+      }
+    }.getAll();
+    setCache(allEntries);
+  }
 }

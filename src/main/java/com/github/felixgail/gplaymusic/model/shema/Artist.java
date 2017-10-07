@@ -9,102 +9,84 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 public class Artist implements Result, Serializable {
-    public final static ResultType RESULT_TYPE = ResultType.ARTIST;
+  public final static ResultType RESULT_TYPE = ResultType.ARTIST;
 
-    @Expose
-    private String name;
-    @Expose
-    @SerializedName("artistArtRef")
-    private String artistArtUrl;
-    @Expose
-    private List<ArtRef> artistArtRefs;
-    @Expose
-    private String artistId;
-    @Expose
-    @SerializedName("artist_bio_attribution")
-    private Attribution artistBioAttribution;
-    @Expose
-    @SerializedName("related_artists")
-    private List<Artist> relatedArtists;
-    @Expose
-    @SerializedName("total_albums")
-    private int totalAlbums;
-    @Expose
-    private List<Track> topTracks;
+  @Expose
+  private String name;
+  @Expose
+  @SerializedName("artistArtRef")
+  private String artistArtUrl;
+  @Expose
+  private List<ArtRef> artistArtRefs;
+  @Expose
+  private String artistId;
+  @Expose
+  @SerializedName("artist_bio_attribution")
+  private Attribution artistBioAttribution;
+  @Expose
+  private String artistBio;
+  @Expose
+  @SerializedName("related_artists")
+  private List<Artist> relatedArtists;
+  @Expose
+  @SerializedName("total_albums")
+  private int totalAlbums;
+  @Expose
+  private List<Track> topTracks;
+  @Expose
+  private List<Album> albums;
 
-    public List<Artist> getRelatedArtists() {
-        return relatedArtists;
-    }
+  public Optional<List<Artist>> getRelatedArtists() {
+    return Optional.ofNullable(relatedArtists);
+  }
 
-    public void setRelatedArtists(List<Artist> relatedArtists) {
-        this.relatedArtists = relatedArtists;
-    }
+  public OptionalInt getTotalAlbums() {
+    return OptionalInt.of(totalAlbums);
+  }
 
-    public int getTotalAlbums() {
-        return totalAlbums;
-    }
+  public Optional<List<Track>> getTopTracks() {
+    return Optional.ofNullable(topTracks);
+  }
 
-    public void setTotalAlbums(int totalAlbums) {
-        this.totalAlbums = totalAlbums;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public List<Track> getTopTracks() {
-        return topTracks;
-    }
+  public Optional<String> getArtistArtUrl() {
+    return Optional.ofNullable(artistArtUrl);
+  }
 
-    public void setTopTracks(List<Track> topTracks) {
-        this.topTracks = topTracks;
-    }
+  public Optional<List<ArtRef>> getArtistArtRefs() {
+    return Optional.ofNullable(artistArtRefs);
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Optional<String> getArtistId() {
+    return Optional.ofNullable(artistId);
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Optional<Attribution> getArtistBioAttribution() {
+    return Optional.ofNullable(artistBioAttribution);
+  }
 
-    public String getArtistArtUrl() {
-        return artistArtUrl;
-    }
+  public Optional<String> getArtistBio() {
+    return Optional.ofNullable(artistBio);
+  }
 
-    public void setArtistArtUrl(String artistArtUrl) {
-        this.artistArtUrl = artistArtUrl;
-    }
+  public Optional<List<Album>> getAlbums() {
+    return Optional.ofNullable(albums);
+  }
 
-    public List<ArtRef> getArtistArtRefs() {
-        return artistArtRefs;
-    }
+  @Override
+  public boolean equals(Object o) {
+    return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
+  }
 
-    public void setArtistArtRefs(List<ArtRef> artistArtRefs) {
-        this.artistArtRefs = artistArtRefs;
-    }
-
-    public String getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(String artistId) {
-        this.artistId = artistId;
-    }
-
-    public Attribution getArtistBioAttribution() {
-        return artistBioAttribution;
-    }
-
-    public void setArtistBioAttribution(Attribution artistBioAttribution) {
-        this.artistBioAttribution = artistBioAttribution;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return (o instanceof Artist) && ((Artist) o).getArtistId().equals(this.artistId);
-    }
-
-    @Override
-    public ResultType getResultType() {
-        return RESULT_TYPE;
-    }
+  @Override
+  public ResultType getResultType() {
+    return RESULT_TYPE;
+  }
 }

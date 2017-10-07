@@ -1,46 +1,41 @@
 package com.github.felixgail.gplaymusic.model.shema.snippets;
 
+import com.github.felixgail.gplaymusic.util.deserializer.AutogenEnumDeserializer;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
+
+import java.util.Optional;
 
 public class ArtRef {
-    @Expose
-    private String url;
-    @Expose
-    private String aspectRatio;
-    @Expose
-    private boolean autogen;
-    @Expose
-    private ColorStyles colorStyles;
+  @Expose
+  private String url;
+  @Expose
+  private String aspectRatio;
+  @Expose
+  private Autogen autogen;
+  @Expose
+  private ColorStyles colorStyles;
 
-    public ColorStyles getColorStyles() {
-        return colorStyles;
-    }
+  public Optional<ColorStyles> getColorStyles() {
+    return Optional.ofNullable(colorStyles);
+  }
 
-    public void setColorStyles(ColorStyles colorStyles) {
-        this.colorStyles = colorStyles;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public Optional<String> getAspectRatio() {
+    return Optional.ofNullable(aspectRatio);
+  }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+  public Optional<Autogen> isAutogen() {
+    return Optional.ofNullable(autogen);
+  }
 
-    public String getAspectRatio() {
-        return aspectRatio;
-    }
+  @JsonAdapter(AutogenEnumDeserializer.class)
+  public enum Autogen {
+    TRUE,
+    FALSE
+  }
 
-    public void setAspectRatio(String aspectRatio) {
-        this.aspectRatio = aspectRatio;
-    }
-
-    public boolean isAutogen() {
-        return autogen;
-    }
-
-    public void setAutogen(boolean autogen) {
-        this.autogen = autogen;
-    }
 }
