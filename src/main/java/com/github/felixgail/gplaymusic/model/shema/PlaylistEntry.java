@@ -48,9 +48,6 @@ public class PlaylistEntry implements Serializable {
     this.deleted = deleted;
   }
 
-  PlaylistEntry() {
-  }
-
   public String getId() {
     return id;
   }
@@ -91,8 +88,11 @@ public class PlaylistEntry implements Serializable {
     return source;
   }
 
-  public Track getTrack() {
-    return track;
+  public Track getTrack() throws IOException {
+    if (track != null) {
+      return track;
+    }
+    return Track.getTrack(getTrackId());
   }
 
   public void delete()

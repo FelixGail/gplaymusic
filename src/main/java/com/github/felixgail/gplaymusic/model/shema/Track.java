@@ -2,6 +2,7 @@ package com.github.felixgail.gplaymusic.model.shema;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.cache.LibraryTrackCache;
 import com.github.felixgail.gplaymusic.model.abstracts.Signable;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
@@ -31,6 +32,7 @@ import java.util.OptionalInt;
 public class Track extends Signable implements Result, Serializable {
   public final static ResultType RESULT_TYPE = ResultType.TRACK;
   private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
+  private static LibraryTrackCache libraryTrackCache = new LibraryTrackCache();
 
   //TODO: Not all Attributes added (eg. PrimaryVideo, ID? where is id used).
   @Expose
@@ -101,6 +103,9 @@ public class Track extends Signable implements Result, Serializable {
   private String creationTimestamp;
   @Expose
   private String recentTimestamp;
+  @Expose
+  @SerializedName("id")
+  private String uuid;
 
   //This attribute is only set when the track is retrieved from a station.
   @Expose
@@ -108,8 +113,14 @@ public class Track extends Signable implements Result, Serializable {
   private String wentryID;
 
   public static Track getTrack(String trackID) throws IOException {
-    Track track = GPlayMusic.getApiInstance().getService().fetchTrack(trackID).execute().body();
-    if (track.getID() == null) {
+    Track track = null;
+    if (trackID.startsWith("T")) {
+      track = GPlayMusic.getApiInstance().getService().fetchTrack(trackID).execute().body();
+    } else {
+      track = libraryTrackCache.find(trackID).orElseThrow(() ->
+          new IllegalArgumentException(String.format("No track with id '%s' found.", trackID)));
+    }
+    if (track == null || track.getID() == null) {
       throw new IOException(String.format("'%s' did not return a valid track", trackID));
     }
     return track;
@@ -198,8 +209,9 @@ public class Track extends Signable implements Result, Serializable {
 
   @Override
   public String getID() {
-    return getStoreId().orElse(getNid()
-        .orElseThrow(() -> new NullPointerException("Track contains neither trackID nor NID")));
+    return getStoreId().orElseGet(
+        () -> getUuid().orElseThrow(
+            () -> new NullPointerException("Track contains neither StoreID nor UUID.")));
   }
 
   public Optional<String> getStoreId() {
@@ -267,6 +279,10 @@ public class Track extends Signable implements Result, Serializable {
     return Optional.ofNullable(recentTimestamp);
   }
 
+  public Optional<String> getUuid() {
+    return Optional.ofNullable(uuid);
+  }
+
   @Override
   public boolean equals(Object o) {
     return (o instanceof Track) && ((Track) o).getID().equals(this.getID());
@@ -300,9 +316,6 @@ public class Track extends Signable implements Result, Serializable {
       throws IOException {
     if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
       throw new IOException(Language.get("users.free.NotAllowed"));
-    }
-    if (getID() == null || getID().isEmpty()) {
-      throw new IOException(Language.get("track.InvalidID"));
     }
     return urlFetcher(quality, Provider.STREAM, EMPTY_MAP);
   }
@@ -362,5 +375,13 @@ public class Track extends Signable implements Result, Serializable {
   public void download(StreamQuality quality, Path path) throws IOException {
     URL url = new URL(getStreamURL(quality));
     Files.copy(url.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
+  }
+
+  public static void updateCache() throws IOException {
+    libraryTrackCache.update();
+  }
+
+  public static void useCache(boolean useCache) {
+    libraryTrackCache.setUseCache(useCache);
   }
 }

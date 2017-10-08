@@ -2,6 +2,8 @@ package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
+import com.github.felixgail.gplaymusic.model.shema.Playlist;
+import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.apache.tika.Tika;
@@ -54,11 +56,28 @@ public class TrackTest extends TestWithLogin {
   }
 
   @Test
-  public void download() throws IOException {
+  public void testDownloadSearch() throws IOException {
     Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
     assume(track);
-    Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), "test.mp3");
-    track.download(StreamQuality.HIGH, path);
+    testDownload("searchedTrack.mp3", track);
+  }
+
+  @Test
+  public void testPlaylistDownload() throws IOException {
+    //PlaylistID with key test.track.playlist should be a playlist conatining both store and library tracks.
+    Playlist playlist = new Playlist(TestUtil.get("test.track.playlist").get());
+    Track track;
+    for (PlaylistEntry entry : playlist.getContents(-1)) {
+      track = entry.getTrack();
+      System.out.printf("Preparing to download '%s'\n", track.getTitle());
+      testDownload(track.getTitle(), track);
+      System.out.println("\t - Completed");
+    }
+  }
+
+  private void testDownload(String fileName, Track track) throws IOException {
+    Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), fileName);
+    track.download(StreamQuality.LOW, path);
     File file = path.toFile();
     Assert.assertTrue("File does not exist", file.exists());
     Assert.assertEquals("Is not an audio file", new Tika().detect(file), "audio/mpeg");

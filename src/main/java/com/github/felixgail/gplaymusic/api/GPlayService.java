@@ -88,6 +88,12 @@ public interface GPlayService {
   @POST("sj/v2.5/playlistfeed")
   Call<ListResult<Playlist>> listPlaylists(@Body PagingRequest body);
 
+  @POST("sj/v2.5/trackfeed")
+  Call<ListResult<Track>> listTracks();
+
+  @POST("sj/v2.5/trackfeed")
+  Call<ListResult<Track>> listTracks(@Body PagingRequest body);
+
   @GET("sj/v2.5/podcast/browse")
   Call<ListResult<PodcastSeries>> listBrowsePodcastSeries(@Query("id") String genre);
 

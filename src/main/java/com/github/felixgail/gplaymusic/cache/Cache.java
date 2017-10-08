@@ -3,13 +3,14 @@ package com.github.felixgail.gplaymusic.cache;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Cache<T> {
-  private List<T> cache = Collections.emptyList();
+  private List<T> cache = Collections.synchronizedList(new LinkedList<>());
   private boolean ready = false;
   private boolean useCache = true;
 
@@ -45,11 +46,19 @@ public abstract class Cache<T> {
     this.cache.removeAll(items);
   }
 
+  protected List<T> getCurrentCache() {
+    return cache;
+  }
+
   public void setUseCache(boolean useCache) {
     this.useCache = useCache;
     if (!useCache) {
       ready = false;
     }
+  }
+
+  public boolean isUseCache() {
+    return useCache;
   }
 
   public List<T> getAll() throws IOException {

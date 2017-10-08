@@ -88,7 +88,7 @@ public class TestUtil {
     }
   }
 
-  public static void testPlaylistEntries(List<PlaylistEntry> entries) {
+  public static void testPlaylistEntries(List<PlaylistEntry> entries) throws IOException {
     for (PlaylistEntry entry : entries) {
       assertNotNull(entry);
       assertNotNull(entry.getAbsolutePosition());

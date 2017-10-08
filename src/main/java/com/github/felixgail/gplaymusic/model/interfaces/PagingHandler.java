@@ -36,4 +36,9 @@ public abstract class PagingHandler<T> {
     }
     return completeList;
   }
+
+  public void reset() {
+    current = null;
+    hasNext = true;
+  }
 }
