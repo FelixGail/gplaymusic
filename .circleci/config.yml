@@ -24,7 +24,7 @@ jobs:
               printf "auth.password=${auth_password}\n" >> gplaymusic.properties
               printf "auth.android_id=${auth_android_id}\n" >> gplaymusic.properties
               printf "auth.token=${auth_token}\n" >> gplaymusic.properties
-              printf "test.track.playlist=6936321f-6ab9-44a9-9aec-30239466b02e" >> gplaymusic.properties
+              printf "test.track.playlist=${test_track_playlist}\n" >> gplaymusic.properties
           fi
 
     - run:
