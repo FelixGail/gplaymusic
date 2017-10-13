@@ -14,6 +14,7 @@ import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.search.SearchResponse;
 import com.github.felixgail.gplaymusic.model.search.SearchTypes;
 import com.github.felixgail.gplaymusic.model.shema.Album;
+import com.github.felixgail.gplaymusic.model.shema.Artist;
 import com.github.felixgail.gplaymusic.model.shema.DeviceInfo;
 import com.github.felixgail.gplaymusic.model.shema.GenreResponse;
 import com.github.felixgail.gplaymusic.model.shema.ListResult;
@@ -155,6 +156,20 @@ public interface GPlayService {
 
   @GET("sj/v2.5/fetchtrack")
   Call<Track> fetchTrack(@Query("nid") String trackId);
+
+  /**
+   * Fetches for an artist by {@code artistID}.
+   *
+   * @param artistID      {@link Artist#getArtistId()} of the artist searched for.
+   * @param includeAlbums whether albums of the artist shall be included in the response.
+   * @param numTopTracks  response includes up to provided number of most heard songs in response
+   * @param numRelArtist  response includes up to provided number of similar artist in response
+   * @return An executable call which returns an artist on execution.
+   */
+  @GET("sj/v2.5/fetchartist")
+  Call<Artist> getArtist(@Query("nid") String artistID, @Query("include-albums") boolean includeAlbums,
+                         @Query("num-top-tracks") int numTopTracks,
+                         @Query("num-related-artist") int numRelArtist);
 
   default MutationResponse makeBatchCall(String path, Mutator body)
       throws IOException {
