@@ -28,10 +28,10 @@ Getting Started
 ----------------
 ##### Collecting your credentials:
 To use the api you will need to provide the following information:
-- USERNAME: The email or username to your google account.
-- PASSWORD: The password to your google account or, if you are using 2-factor-authorization,
+- `USERNAME`: The email or username to your google account.
+- `PASSWORD`: The password to your google account or, if you are using 2-factor-authorization,
 an app password created [here](https://support.google.com/accounts/answer/185833).
-- ANDROID_ID: The IMEI of an android device that had GooglePlayMusic installed.
+- `ANDROID_ID`: The IMEI of an android device that had GooglePlayMusic installed.
 
 Provided information will never be saved by this project.
 ##### Fetching an authorization token:
