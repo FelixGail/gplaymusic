@@ -67,8 +67,9 @@ public class NetworkException extends IOException implements Serializable {
 
   @Override
   public String toString() {
-    return String.format("%s:\nError Code: %d \nMessage: %s \n\n%s\n\n%s\n", Language.get("network.GenericError"),
-        getCode(), getMessage(), getRequestInformation(), NetworkPrettyPrinter.getResponsePrint(response));
+    return String.format("%s:\nError Code: %d \nMessage: %s \n\n%s\n\n%s\n\n%s\n",
+        Language.get("network.GenericError"), getCode(), getMessage(), getRequestInformation(),
+        NetworkPrettyPrinter.getResponsePrint(response), super.toString());
   }
 
   private class ErrorHelper implements Serializable {
