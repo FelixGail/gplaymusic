@@ -65,6 +65,7 @@ public class TrackTest extends TestWithLogin {
   @Test
   public void testPlaylistDownload() throws IOException {
     //PlaylistID with key test.track.playlist should be a playlist conatining both store and library tracks.
+    //To find it use printAllPlaylists();
     Playlist playlist = new Playlist(TestUtil.get("test.track.playlist").get());
     Track track;
     for (PlaylistEntry entry : playlist.getContents(-1)) {
@@ -73,6 +74,10 @@ public class TrackTest extends TestWithLogin {
       testDownload(track.getTitle(), track);
       System.out.println("\t - Completed");
     }
+  }
+
+  private void printAllPlaylists() throws IOException {
+    GPlayMusic.getApiInstance().listPlaylists().forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
   }
 
   private void testDownload(String fileName, Track track) throws IOException {

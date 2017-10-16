@@ -63,8 +63,8 @@ public class Playlist implements Result, Serializable {
   @Expose
   private PlaylistShareState shareState;
 
-  Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
-           String lastModifiedTimestamp, String creationTimestamp) {
+  private Playlist(String name, String id, PlaylistShareState shareState, String description, PlaylistType type,
+                   String lastModifiedTimestamp, String creationTimestamp) {
     this.name = name;
     this.id = id;
     this.shareState = shareState;
