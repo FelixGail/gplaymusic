@@ -4,10 +4,12 @@ import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.api.TokenProvider;
 import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import okhttp3.OkHttpClient;
 import svarzee.gps.gpsoauth.AuthToken;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class TestWithLogin {
 
@@ -28,9 +30,13 @@ public class TestWithLogin {
       TestUtil.set(token.getKey(), authToken.getToken());
     }
     try {
+      //Investigate: While cleanly running on pc. CircleCI will throw TimeOutExceptions. Increase readTimeout for now.
+      OkHttpClient.Builder builder =
+          GPlayMusic.Builder.getDefaultHttpBuilder().readTimeout(30, TimeUnit.SECONDS);
       new GPlayMusic.Builder()
           .setAuthToken(authToken)
           .setDebug(false)
+          .setHttpClientBuilder(builder)
           .build();
     } catch (InitializationException e) {
       if (usingExistingToken) {
