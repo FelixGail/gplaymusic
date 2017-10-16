@@ -68,6 +68,15 @@ public class Station implements Result, Serializable {
     this.tracks = tracks;
   }
 
+  /**
+   * Creates a new Station.
+   *
+   * @param seed          a seed to build the station upon.
+   * @param name          name of the new station
+   * @param includeTracks whether the response should
+   * @return Returns the newly created station
+   * @throws IOException
+   */
   public static Station create(final StationSeed seed, final String name, final boolean includeTracks)
       throws IOException {
     final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks));

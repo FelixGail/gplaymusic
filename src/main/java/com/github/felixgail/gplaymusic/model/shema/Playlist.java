@@ -120,10 +120,22 @@ public class Playlist implements Result, Serializable {
         description, PlaylistType.USER_GENERATED, systemTime, systemTime);
   }
 
+  /**
+   * {@link PlaylistEntry}s from private Playlists can only be fetched as whole.
+   * To shorten wait times, collected entries are cached.
+   * Please consider updating the cache (asynchronously) when using the api over a long period of time, or when
+   * new entries could be added to the playlists during runtime.
+   * <br>
+   * If outside access to the library is expected during runtime, disabling caching via {@link #setUseCache(boolean)}
+   * should also be considered.
+   */
   public static void updateCache() throws IOException {
     cache.update();
   }
 
+  /**
+   * Enables/Disables caching of {@link PlaylistEntry}s from private playlists.
+   */
   public static void setUseCache(boolean useCache) {
     cache.setUseCache(useCache);
   }

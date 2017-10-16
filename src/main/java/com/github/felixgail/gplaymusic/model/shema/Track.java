@@ -306,7 +306,7 @@ public class Track extends Signable implements Result, Serializable {
    * You will likely need to handle redirects.
    * <br>
    * <b>Please note that this function is available for Subscribers only.
-   * On free accounts use getStationTrackURL.</b>
+   * On free accounts use {@link #getStationTrackURL(StreamQuality)}.</b>
    *
    * @param quality quality of the stream
    * @return temporary url to the title
@@ -379,6 +379,14 @@ public class Track extends Signable implements Result, Serializable {
     Files.copy(url.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
   }
 
+  /**
+   * Library tracks can only be fetched as whole. To shorten wait times, collected songs are cached.
+   * Please consider updating the cache (asynchronously) when using the library over a long period of time, or when
+   * new songs could be added to the library during runtime.
+   * <br>
+   * If outside access to the library is expected during runtime, disabling caching via {@link #useCache(boolean)}
+   * should also be considered.
+   */
   public static void updateCache() throws IOException {
     libraryTrackCache.update();
   }
