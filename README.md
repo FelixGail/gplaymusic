@@ -48,5 +48,10 @@ GPlayMusic api = new GPlayMusic.Builder()
                   .build();
 ```
 
-And you are ready to go. Feel free to create an [issue](https://github.com/FelixGail/gplaymusic/issues) if you have
+And you are ready to go. <br>
+A full documentation should come sometime in the future.
+For now use the Javadoc to help yourself. It can be found
+[here](https://FelixGail.github.io/CircleCIArtifactProvider/index.html?vcs-type=github&user=felixgail&project=gplaymusic&build=latest&token=ad2a969e7620106dc21efae732b4f3916744554e&branch=master&filter=successful&path=/root/app/target/site/apidocs/index.html).
+
+Feel free to create an [issue](https://github.com/FelixGail/gplaymusic/issues) if you have
 questions or problems.
