@@ -149,10 +149,12 @@ public class Station implements Result, Serializable {
       return Optional.of(tracks).orElse(Collections.emptyList());
     }
     ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
-    Optional<List<Track>> trackOptional =
-        Optional.ofNullable(GPlayMusic.getApiInstance().getService().getFilledStations(request)
-            .execute().body().toList().get(0).tracks);
+    Station returnedStation = GPlayMusic.getApiInstance().getService().getFilledStations(request)
+        .execute().body().toList().get(0);
+    Optional<List<Track>> trackOptional = Optional.ofNullable(returnedStation.tracks);
+    sessionToken = returnedStation.sessionToken;
     List<Track> tracks = trackOptional.orElse(Collections.emptyList());
+    tracks.forEach(t -> t.setSessionToken(sessionToken));
     if (forceRemoveDoubles) {
       Iterator<Track> iter = tracks.iterator();
       while (iter.hasNext()) {
@@ -183,12 +185,8 @@ public class Station implements Result, Serializable {
     return Optional.ofNullable(byline);
   }
 
-  public String getSessionToken() {
-    return sessionToken;
-  }
-
-  public void setSessionToken(final String sessionToken) {
-    this.sessionToken = sessionToken;
+  public Optional<String> getSessionToken() {
+    return Optional.ofNullable(sessionToken);
   }
 
   @Override

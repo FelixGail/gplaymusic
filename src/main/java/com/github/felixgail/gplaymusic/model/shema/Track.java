@@ -107,6 +107,8 @@ public class Track extends Signable implements Result, Serializable {
   @SerializedName("id")
   private String uuid;
 
+  private String sessionToken;
+
   //This attribute is only set when the track is retrieved from a station.
   @Expose
   @SerializedName("wentryid")
@@ -321,34 +323,31 @@ public class Track extends Signable implements Result, Serializable {
   }
 
   /**
-   * Fetch the URL from a free Station.
-   * Make sure the provided {@link Station} does not return Null on {@link Station#getSessionToken()}.
+   * Fetch the URL for a track from a free Station.
+   * Make sure this Track was returned by a {@link Station}. Otherwise an {@link IOException} will be thrown.
    * <br>
-   * <b>Subscribers should use the {@link #getStreamURL(StreamQuality)}</b> method, which is easier to handle.
-   * TODO: provide way to get session token.
+   * <b>Subscribers will be redirected to {@link #getStreamURL(StreamQuality)}</b>
    *
-   * @param station A station created by TODO.
-   *                that contains the song queried for.
    * @param quality - quality of the stream
    * @return a url to download songs from.
    * @throws IOException on severe failures (no internet connection...)
    *                     or a {@link NetworkException} on request failures.
    */
-  public String getStationTrackURL(Station station, StreamQuality quality)
+  public String getStationTrackURL(StreamQuality quality)
       throws IOException {
-    if (getWentryID() == null || getWentryID().isEmpty()) {
-      throw new IOException(Language.get("track.InvalidWentryID"));
-    }
     if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
       return getStreamURL(quality);
     }
-    if (station.getSessionToken() == null || station.getSessionToken().isEmpty()) {
+    if (getWentryID() == null || getWentryID().isEmpty()) {
+      throw new IOException(Language.get("track.InvalidWentryID"));
+    }
+    if (!getSessionToken().isPresent()) {
       throw new IOException(Language.get("station.InvalidSessionToken"));
     }
     Map<String, String> map = new HashMap<>();
     map.putAll(STATION_MAP);
     map.put("wentryid", getWentryID());
-    map.put("sesstok", station.getSessionToken());
+    map.put("sesstok", getSessionToken().get());
     return urlFetcher(quality, Provider.STATION, map);
   }
 
@@ -372,8 +371,11 @@ public class Track extends Signable implements Result, Serializable {
     return gsonPrettyPrinter.toJson(this);
   }
 
+  /**
+   * Downloads the song to the provided path. Existing files will be replaced.
+   */
   public void download(StreamQuality quality, Path path) throws IOException {
-    URL url = new URL(getStreamURL(quality));
+    URL url = new URL(getStationTrackURL(quality));
     Files.copy(url.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
   }
 
@@ -381,7 +383,18 @@ public class Track extends Signable implements Result, Serializable {
     libraryTrackCache.update();
   }
 
+  /**
+   * Enables/Disables caching of library tracks.
+   */
   public static void useCache(boolean useCache) {
     libraryTrackCache.setUseCache(useCache);
+  }
+
+  void setSessionToken(String token) {
+    this.sessionToken = token;
+  }
+
+  private Optional<String> getSessionToken() {
+    return Optional.ofNullable(sessionToken);
   }
 }
