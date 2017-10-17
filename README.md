@@ -13,7 +13,7 @@ Installation
 ---------------
 
 #### Maven:
-To use this library, simply add the following lines to your pom.xml: **NOT YET SETUP**
+To use this library, simply add the following lines to your pom.xml:
 ```xml
 <dependency>
     <groupId>com.github.felixgail</groupId>
