@@ -7,6 +7,7 @@ import com.github.felixgail.gplaymusic.model.shema.snippets.Attribution;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -42,6 +43,15 @@ public class Album implements Result, Serializable {
   private String contentType;
   @Expose
   private List<Track> tracks;
+
+  public Album(@NotNull String name, @NotNull String albumArtist, @NotNull String albumId, @NotNull String artist,
+               @NotNull List<String> artistId) {
+    this.name = name;
+    this.albumArtist = albumArtist;
+    this.albumId = albumId;
+    this.artist = artist;
+    this.artistId = artistId;
+  }
 
   public String getName() {
     return name;

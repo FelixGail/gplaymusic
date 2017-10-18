@@ -8,6 +8,7 @@ import com.github.felixgail.gplaymusic.model.shema.snippets.Attribution;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -41,6 +42,10 @@ public class Artist implements Result, Serializable {
   private List<Track> topTracks;
   @Expose
   private List<Album> albums;
+
+  public Artist(@NotNull String name) {
+    this.name = name;
+  }
 
   public Optional<List<Artist>> getRelatedArtists() {
     return Optional.ofNullable(relatedArtists);

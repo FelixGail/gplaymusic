@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -62,10 +63,14 @@ public class Station implements Result, Serializable {
   @Expose
   private String byline;
 
-  Station(final String name, final StationSeed seed, final List<Track> tracks) {
+  public Station(@NotNull final String name, @NotNull final StationSeed seed, final List<Track> tracks) {
     this.name = name;
     this.seed = seed;
     this.tracks = tracks;
+  }
+
+  public Station(@NotNull final String name, @NotNull final StationSeed seed) {
+    this(name, seed, null);
   }
 
   /**
