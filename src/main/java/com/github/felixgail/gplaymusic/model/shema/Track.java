@@ -34,7 +34,6 @@ public class Track extends Signable implements Result, Serializable {
   public final static ResultType RESULT_TYPE = ResultType.TRACK;
   private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
   private static LibraryTrackCache libraryTrackCache = new LibraryTrackCache();
-  private final static String UNKNOWN_VALUE = "UNKNOWN";
 
   //TODO: Not all Attributes added (eg. PrimaryVideo, ID? where is id used).
   @Expose
@@ -130,12 +129,6 @@ public class Track extends Signable implements Result, Serializable {
     this.albumId = albumId;
     this.storeId = id;
     this.contentType = contentType;
-  }
-
-
-  public Track(@NotNull String id) {
-    this(id, UNKNOWN_VALUE, UNKNOWN_VALUE, UNKNOWN_VALUE, 0, 0, 0,
-        0, UNKNOWN_VALUE, UNKNOWN_VALUE);
   }
 
   public static Track getTrack(String trackID) throws IOException {
