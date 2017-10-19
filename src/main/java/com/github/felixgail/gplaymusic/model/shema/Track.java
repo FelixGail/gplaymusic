@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -114,6 +115,22 @@ public class Track extends Signable implements Result, Serializable {
   @SerializedName("wentryid")
   private String wentryID;
 
+  public Track(@NotNull String id, @NotNull String title, @NotNull String artist, @NotNull String album,
+               int trackNumber, long durationMillis, int discNumber, long estimatedSize, @NotNull String albumId,
+               @NotNull String contentType) {
+    this.title = title;
+    this.artist = artist;
+    this.album = album;
+    this.albumArtist = "";
+    this.durationMillis = String.valueOf(durationMillis);
+    this.trackNumber = trackNumber;
+    this.discNumber = discNumber;
+    this.estimatedSize = String.valueOf(estimatedSize);
+    this.albumId = albumId;
+    this.storeId = id;
+    this.contentType = contentType;
+  }
+
   public static Track getTrack(String trackID) throws IOException {
     Track track = null;
     if (trackID.startsWith("T")) {
@@ -161,8 +178,8 @@ public class Track extends Signable implements Result, Serializable {
     return Optional.ofNullable(genre);
   }
 
-  public String getDurationMillis() {
-    return durationMillis;
+  public Long getDurationMillis() {
+    return Long.parseLong(durationMillis);
   }
 
   public Optional<List<ArtRef>> getAlbumArtRef() {
@@ -177,8 +194,8 @@ public class Track extends Signable implements Result, Serializable {
     return discNumber;
   }
 
-  public String getEstimatedSize() {
-    return estimatedSize;
+  public long getEstimatedSize() {
+    return Long.parseLong(estimatedSize);
   }
 
   public Optional<String> getTrackType() {
