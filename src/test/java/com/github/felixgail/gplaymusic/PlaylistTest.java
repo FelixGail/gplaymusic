@@ -5,7 +5,6 @@ import com.github.felixgail.gplaymusic.model.shema.Playlist;
 import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
-import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -97,8 +96,6 @@ public class PlaylistTest extends TestWithLogin {
       Playlist.updateCache();
       containsEntry(newPlaylist.getContents(-1), entry0, entry2);
       System.out.printf("[%ds] 2 entries removal verified after refresh.\n", timeDifferenceinSeconds(testStartTime));
-    } catch (IOException e) {
-      Assert.fail("An Error occurred while testing:\n" + e);
     } finally {
       if (newPlaylist != null) {
         newPlaylist.delete();
@@ -164,8 +161,6 @@ public class PlaylistTest extends TestWithLogin {
         assertEquals("Different PlaylistEntry expected at position " + i,
             newOrder.get(i).getId(), playlistContent.get(i).getId());
       }
-    } catch (IOException e) {
-      Assert.fail("An error occured while testing: \n" + e);
     } finally {
       if (playlist != null) {
         playlist.delete();
