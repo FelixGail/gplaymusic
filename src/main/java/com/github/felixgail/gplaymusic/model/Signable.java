@@ -9,6 +9,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public abstract class Signable {
 
   public abstract Signature getSignature();
 
-  public abstract String getStreamURL(StreamQuality quality) throws IOException;
+  public abstract URL getStreamURL(StreamQuality quality) throws IOException;
 
   protected Signature createSignature(String id) {
     try {
@@ -76,19 +77,19 @@ public abstract class Signable {
    * @throws IOException - on severe failures (no internet connection...)
    *                     or a {@link NetworkException} on request failures.
    */
-  protected String urlFetcher(StreamQuality quality,
-                              Provider provider, Map<String, String> kwargs)
+  protected URL urlFetcher(StreamQuality quality,
+                           Provider provider, Map<String, String> kwargs)
       throws IOException {
     Signature sig = getSignature();
     GPlayMusic api = GPlayMusic.getApiInstance();
     if (getID().matches("^[TD]\\S*$")) {
-      return api.getService().getTrackLocationMJCK(api.getConfig().getAndroidID(), provider,
+      return new URL(api.getService().getTrackLocationMJCK(api.getConfig().getAndroidID(), provider,
           quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
-      ).execute().headers().get("Location");
+      ).execute().headers().get("Location"));
     } else {
-      return api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
+      return new URL(api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
           quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
-      ).execute().headers().get("Location");
+      ).execute().headers().get("Location"));
     }
   }
 

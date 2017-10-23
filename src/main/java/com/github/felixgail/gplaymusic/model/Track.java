@@ -106,6 +106,9 @@ public class Track extends Signable implements Result, Serializable {
   @Expose
   @SerializedName("id")
   private String uuid;
+  @Expose
+  @SerializedName("primaryVideo")
+  private Video video;
 
   private String sessionToken;
 
@@ -330,7 +333,7 @@ public class Track extends Signable implements Result, Serializable {
    *                     or a {@link NetworkException} on request failures.
    */
   @Override
-  public String getStreamURL(StreamQuality quality)
+  public URL getStreamURL(StreamQuality quality)
       throws IOException {
     if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
       throw new IOException(Language.get("users.free.NotAllowed"));
@@ -349,7 +352,7 @@ public class Track extends Signable implements Result, Serializable {
    * @throws IOException on severe failures (no internet connection...)
    *                     or a {@link NetworkException} on request failures.
    */
-  public String getStationTrackURL(StreamQuality quality)
+  public URL getStationTrackURL(StreamQuality quality)
       throws IOException {
     if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
       return getStreamURL(quality);
@@ -391,8 +394,7 @@ public class Track extends Signable implements Result, Serializable {
    * Downloads the song to the provided path. Existing files will be replaced.
    */
   public void download(StreamQuality quality, Path path) throws IOException {
-    URL url = new URL(getStationTrackURL(quality));
-    Files.copy(url.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(getStationTrackURL(quality).openStream(), path, StandardCopyOption.REPLACE_EXISTING);
   }
 
   /**
@@ -420,5 +422,9 @@ public class Track extends Signable implements Result, Serializable {
 
   private Optional<String> getSessionToken() {
     return Optional.ofNullable(sessionToken);
+  }
+
+  public Optional<Video> getVideo() {
+    return Optional.ofNullable(video);
   }
 }

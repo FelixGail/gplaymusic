@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,7 +112,7 @@ public class PodcastEpisode extends Signable implements Serializable {
    *                     or a {@link NetworkException} on request failures.
    */
   @Override
-  public String getStreamURL(StreamQuality quality)
+  public URL getStreamURL(StreamQuality quality)
       throws IOException {
     return urlFetcher(quality, Provider.PODCAST, EMPTY_MAP);
   }

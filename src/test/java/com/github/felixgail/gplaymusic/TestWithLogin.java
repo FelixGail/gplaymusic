@@ -35,7 +35,7 @@ public class TestWithLogin {
           GPlayMusic.Builder.getDefaultHttpBuilder().readTimeout(30, TimeUnit.SECONDS);
       new GPlayMusic.Builder()
           .setAuthToken(authToken)
-          .setDebug(true)
+          .setDebug(false)
           .setHttpClientBuilder(builder)
           .build();
     } catch (InitializationException e) {
