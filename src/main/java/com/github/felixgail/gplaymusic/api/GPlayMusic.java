@@ -1,28 +1,29 @@
 package com.github.felixgail.gplaymusic.api;
 
-import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
-import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.abstracts.ListenNowItem;
-import com.github.felixgail.gplaymusic.model.config.Config;
+import com.github.felixgail.gplaymusic.exceptions.InitializationException;
+import com.github.felixgail.gplaymusic.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.Config;
+import com.github.felixgail.gplaymusic.model.DeviceInfo;
+import com.github.felixgail.gplaymusic.model.Genre;
+import com.github.felixgail.gplaymusic.model.PagingHandler;
+import com.github.felixgail.gplaymusic.model.Playlist;
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.PodcastSeries;
+import com.github.felixgail.gplaymusic.model.Station;
+import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
-import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
-import com.github.felixgail.gplaymusic.model.interfaces.Result;
-import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
-import com.github.felixgail.gplaymusic.model.requestbodies.TimeZoneOffset;
-import com.github.felixgail.gplaymusic.model.requestbodies.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requestbodies.mutations.Mutator;
-import com.github.felixgail.gplaymusic.model.search.SearchResponse;
-import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.DeviceInfo;
-import com.github.felixgail.gplaymusic.model.shema.Genre;
-import com.github.felixgail.gplaymusic.model.shema.ListResult;
-import com.github.felixgail.gplaymusic.model.shema.Playlist;
-import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.shema.PodcastSeries;
-import com.github.felixgail.gplaymusic.model.shema.Station;
-import com.github.felixgail.gplaymusic.model.shema.Track;
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
+import com.github.felixgail.gplaymusic.model.listennow.ListenNowItem;
+import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
+import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
+import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
+import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
+import com.github.felixgail.gplaymusic.model.requests.TimeZoneOffset;
+import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
+import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
+import com.github.felixgail.gplaymusic.model.responses.ListResult;
+import com.github.felixgail.gplaymusic.model.responses.Result;
+import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
+import com.github.felixgail.gplaymusic.util.TokenProvider;
 import com.github.felixgail.gplaymusic.util.deserializer.ColorDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
@@ -226,7 +227,7 @@ public final class GPlayMusic {
 
   /**
    * Returns a selection of {@link ListenNowItem}s consisting of {@link ListenNowStation}
-   * and {@link com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowAlbum}.
+   * and {@link com.github.felixgail.gplaymusic.model.listennow.ListenNowAlbum}.
    */
   public List<ListenNowItem> listListenNowItems() throws IOException {
     return service.listListenNowItems().execute().body().getListenNowItems();

@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic.util;
 
-import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.shema.Station;
-import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Station;
+import com.github.felixgail.gplaymusic.model.Track;
 import org.junit.Assume;
 
 import java.io.IOException;

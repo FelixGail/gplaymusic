@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.Video;
+import com.github.felixgail.gplaymusic.model.Video;
+import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -24,7 +24,7 @@ public class VideoTest extends TestWithLogin {
   @Test
   public void testVideo() throws IOException {
     List<Video> videos = GPlayMusic.getApiInstance()
-        .search("känguru", new SearchTypes(Video.RESULT_TYPE)).getVideos();
+        .search("", new SearchTypes(Video.RESULT_TYPE)).getVideos();
     TestUtil.assume(videos);
     Assume.assumeTrue("List of videos is empty.", videos.size() > 0);
     videos.forEach(v -> {
