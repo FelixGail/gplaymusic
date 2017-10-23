@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.util.interceptor;
 
-import com.github.felixgail.gplaymusic.api.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.google.gson.Gson;
 import okhttp3.Interceptor;
 import okhttp3.Request;

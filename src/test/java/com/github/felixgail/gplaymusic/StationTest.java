@@ -1,14 +1,14 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.Album;
+import com.github.felixgail.gplaymusic.model.Artist;
+import com.github.felixgail.gplaymusic.model.Station;
+import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.enums.StationSeedType;
-import com.github.felixgail.gplaymusic.model.search.SearchTypes;
-import com.github.felixgail.gplaymusic.model.shema.Album;
-import com.github.felixgail.gplaymusic.model.shema.Artist;
-import com.github.felixgail.gplaymusic.model.shema.Station;
-import com.github.felixgail.gplaymusic.model.shema.Track;
-import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
+import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
+import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

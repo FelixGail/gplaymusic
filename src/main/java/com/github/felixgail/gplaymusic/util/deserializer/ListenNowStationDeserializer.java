@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.util.deserializer;
 
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowStation;
-import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
+import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
+import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;

@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.util.deserializer;
 
-import com.github.felixgail.gplaymusic.model.config.Config;
+import com.github.felixgail.gplaymusic.model.Config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

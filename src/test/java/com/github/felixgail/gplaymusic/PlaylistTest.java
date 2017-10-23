@@ -1,9 +1,9 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.shema.Playlist;
-import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.Playlist;
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assume;
 import org.junit.BeforeClass;

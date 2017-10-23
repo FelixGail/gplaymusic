@@ -1,10 +1,10 @@
 package com.github.felixgail.gplaymusic.cache;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.interfaces.PagingHandler;
-import com.github.felixgail.gplaymusic.model.requestbodies.PagingRequest;
-import com.github.felixgail.gplaymusic.model.shema.ListResult;
-import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.PagingHandler;
+import com.github.felixgail.gplaymusic.model.Track;
+import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
+import com.github.felixgail.gplaymusic.model.responses.ListResult;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.TokenProvider;
-import com.github.felixgail.gplaymusic.api.exceptions.InitializationException;
+import com.github.felixgail.gplaymusic.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import com.github.felixgail.gplaymusic.util.TokenProvider;
 import okhttp3.OkHttpClient;
 import svarzee.gps.gpsoauth.AuthToken;
 import svarzee.gps.gpsoauth.Gpsoauth;
@@ -35,7 +35,7 @@ public class TestWithLogin {
           GPlayMusic.Builder.getDefaultHttpBuilder().readTimeout(30, TimeUnit.SECONDS);
       new GPlayMusic.Builder()
           .setAuthToken(authToken)
-          .setDebug(false)
+          .setDebug(true)
           .setHttpClientBuilder(builder)
           .build();
     } catch (InitializationException e) {
