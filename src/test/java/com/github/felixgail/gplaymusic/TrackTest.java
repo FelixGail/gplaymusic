@@ -1,10 +1,11 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.Playlist;
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Track;
+import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
-import com.github.felixgail.gplaymusic.model.shema.Playlist;
-import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.shema.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.apache.tika.Tika;
 import org.junit.Assert;
@@ -15,8 +16,10 @@ import svarzee.gps.gpsoauth.Gpsoauth;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.List;
 
 import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
 import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
@@ -31,11 +34,17 @@ public class TrackTest extends TestWithLogin {
 
   @Test
   public void getTrackUrl() throws IOException {
-    Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
-    assertTracks(track);
-    String url = track.getStreamURL(StreamQuality.HIGH);
-    assertNotNull(url);
-    Assert.assertTrue(url.startsWith("http"));
+    List<Track> tracks = GPlayMusic.getApiInstance().searchTracks("Sound", 10);
+    assertTracks(tracks);
+    for (Track track : tracks) {
+      URL url = track.getStreamURL(StreamQuality.HIGH);
+      assertNotNull(url);
+      if (track.getVideo().isPresent()) {
+        Video video = track.getVideo().get();
+        assertNotNull(video.getId());
+        assertNotNull(video.getURL());
+      }
+    }
   }
 
   @Test

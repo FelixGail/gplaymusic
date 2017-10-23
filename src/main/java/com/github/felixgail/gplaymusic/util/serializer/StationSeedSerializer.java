@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.util.serializer;
 
-import com.github.felixgail.gplaymusic.model.shema.snippets.StationSeed;
+import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

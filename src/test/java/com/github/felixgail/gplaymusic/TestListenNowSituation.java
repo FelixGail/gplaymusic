@@ -1,9 +1,9 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.shema.Station;
-import com.github.felixgail.gplaymusic.model.shema.listennow.ListenNowSituation;
-import com.github.felixgail.gplaymusic.model.shema.listennow.Situation;
+import com.github.felixgail.gplaymusic.model.Station;
+import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
+import com.github.felixgail.gplaymusic.model.listennow.Situation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Assume;

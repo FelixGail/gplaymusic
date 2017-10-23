@@ -1,9 +1,9 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.shema.Playlist;
-import com.github.felixgail.gplaymusic.model.shema.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.shema.Track;
+import com.github.felixgail.gplaymusic.model.Playlist;
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -73,33 +73,40 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   @Test
-  public void testMutatePlaylist() throws IOException, InterruptedException {
+  public void testMutatePlaylist() throws IOException {
     long testStartTime = System.currentTimeMillis();
-    Playlist newPlaylist = createPlaylist();
-    System.out.printf("[%ds] new playlist created: %s\n",
-        timeDifferenceinSeconds(testStartTime), newPlaylist.getId());
-    addTracksToPlaylist(newPlaylist, 4);
-    System.out.printf("[%ds] 4 tracks added.\n", timeDifferenceinSeconds(testStartTime));
-    List<PlaylistEntry> playlistContent = newPlaylist.getContents(-1);
-    assertEquals("Playlist should now have 4 entries but has " + playlistContent.size(),
-        4, playlistContent.size());
-    TestUtil.testPlaylistEntries(playlistContent);
-    System.out.printf("[%ds] playlist length verified.\n", timeDifferenceinSeconds(testStartTime));
-    PlaylistEntry entry2 = playlistContent.remove(2);
-    PlaylistEntry entry0 = playlistContent.remove(0);
-    newPlaylist.removeEntries(entry0, entry2);
-    playlistContent = newPlaylist.getContents(-1);
-    containsEntry(playlistContent, entry2, entry0);
-    System.out.printf("[%ds] 2 entries removal verified from cache.\n", timeDifferenceinSeconds(testStartTime));
-    Playlist.updateCache();
-    containsEntry(newPlaylist.getContents(-1), entry0, entry2);
-    System.out.printf("[%ds] 2 entries removal verified after refresh.\n", timeDifferenceinSeconds(testStartTime));
-    newPlaylist.delete();
-    System.out.printf("[%ds] playlist deleted.\n", timeDifferenceinSeconds(testStartTime));
-    List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();
-    allPlaylists.forEach(p -> assertFalse("PlaylistFeed should not contain created playlist anymore.",
-        p.getId().equals(newPlaylist.getId())));
-    System.out.printf("[%ds] playlist deletion tested\n", timeDifferenceinSeconds(testStartTime));
+    Playlist newPlaylist = null;
+    try {
+      newPlaylist = createPlaylist();
+      System.out.printf("[%ds] new playlist created: %s\n",
+          timeDifferenceinSeconds(testStartTime), newPlaylist.getId());
+      addTracksToPlaylist(newPlaylist, 4);
+      System.out.printf("[%ds] 4 tracks added.\n", timeDifferenceinSeconds(testStartTime));
+      List<PlaylistEntry> playlistContent = newPlaylist.getContents(-1);
+      assertEquals("Playlist should now have 4 entries but has " + playlistContent.size(),
+          4, playlistContent.size());
+      TestUtil.testPlaylistEntries(playlistContent);
+      System.out.printf("[%ds] playlist length verified.\n", timeDifferenceinSeconds(testStartTime));
+      PlaylistEntry entry2 = playlistContent.remove(2);
+      PlaylistEntry entry0 = playlistContent.remove(0);
+      newPlaylist.removeEntries(entry0, entry2);
+      playlistContent = newPlaylist.getContents(-1);
+      containsEntry(playlistContent, entry2, entry0);
+      System.out.printf("[%ds] 2 entries removal verified from cache.\n", timeDifferenceinSeconds(testStartTime));
+      Playlist.updateCache();
+      containsEntry(newPlaylist.getContents(-1), entry0, entry2);
+      System.out.printf("[%ds] 2 entries removal verified after refresh.\n", timeDifferenceinSeconds(testStartTime));
+    } finally {
+      if (newPlaylist != null) {
+        newPlaylist.delete();
+        System.out.printf("[%ds] playlist deleted.\n", timeDifferenceinSeconds(testStartTime));
+        List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();
+        Playlist finalNewPlaylist = newPlaylist;
+        allPlaylists.forEach(p -> assertFalse("PlaylistFeed should not contain created playlist anymore.",
+            p.getId().equals(finalNewPlaylist.getId())));
+        System.out.printf("[%ds] playlist deletion tested\n", timeDifferenceinSeconds(testStartTime));
+      }
+    }
   }
 
   private void addTracksToPlaylist(Playlist playlist, int count) throws IOException {
@@ -129,30 +136,36 @@ public class PlaylistTest extends TestWithLogin {
 
   @Test
   public void testMoveEntries() throws IOException {
-    Playlist playlist = createPlaylist();
-    addTracksToPlaylist(playlist, 4);
-    List<PlaylistEntry> playlistContent = playlist.getContents(-1);
-    PlaylistEntry entry3 = playlistContent.get(3);
-    PlaylistEntry entry2 = playlistContent.get(2);
-    PlaylistEntry entry1 = playlistContent.get(1);
-    PlaylistEntry entry0 = playlistContent.get(0);
-    entry1.move(entry3, null);
-    assertEquals("Entry1 has not been moved to last position in playlist", 3,
-        playlist.getContents(-1).indexOf(entry1));
-    entry3.move(null, entry0);
-    assertEquals("Entry3 has not been moved to first position in playlist", 0,
-        playlist.getContents(-1).indexOf(entry3));
-    entry2.move(entry3, entry0);
-    assertEquals("Entry1 has not been moved to second position in playlist", 1,
-        playlist.getContents(-1).indexOf(entry2));
-    List<PlaylistEntry> newOrder = Arrays.asList(entry3, entry2, entry0, entry1);
-    Playlist.updateCache();
-    playlistContent = playlist.getContents(-1);
-    for (int i = 0; i < 4; i++) {
-      assertEquals("Different PlaylistEntry expected at position " + i,
-          newOrder.get(i).getId(), playlistContent.get(i).getId());
+    Playlist playlist = null;
+    try {
+      playlist = createPlaylist();
+      addTracksToPlaylist(playlist, 4);
+      List<PlaylistEntry> playlistContent = playlist.getContents(-1);
+      PlaylistEntry entry3 = playlistContent.get(3);
+      PlaylistEntry entry2 = playlistContent.get(2);
+      PlaylistEntry entry1 = playlistContent.get(1);
+      PlaylistEntry entry0 = playlistContent.get(0);
+      entry1.move(entry3, null);
+      assertEquals("Entry1 has not been moved to last position in playlist", 3,
+          playlist.getContents(-1).indexOf(entry1));
+      entry3.move(null, entry0);
+      assertEquals("Entry3 has not been moved to first position in playlist", 0,
+          playlist.getContents(-1).indexOf(entry3));
+      entry2.move(entry3, entry0);
+      assertEquals("Entry1 has not been moved to second position in playlist", 1,
+          playlist.getContents(-1).indexOf(entry2));
+      List<PlaylistEntry> newOrder = Arrays.asList(entry3, entry2, entry0, entry1);
+      Playlist.updateCache();
+      playlistContent = playlist.getContents(-1);
+      for (int i = 0; i < 4; i++) {
+        assertEquals("Different PlaylistEntry expected at position " + i,
+            newOrder.get(i).getId(), playlistContent.get(i).getId());
+      }
+    } finally {
+      if (playlist != null) {
+        playlist.delete();
+      }
     }
-    playlist.delete();
   }
 
   private void containsEntry(List<PlaylistEntry> playlistContent, PlaylistEntry... entries) {

@@ -1,6 +1,6 @@
 package com.github.felixgail.gplaymusic.util.deserializer;
 
-import com.github.felixgail.gplaymusic.model.shema.snippets.ArtRef;
+import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
