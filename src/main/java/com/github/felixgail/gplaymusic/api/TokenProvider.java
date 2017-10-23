@@ -7,6 +7,7 @@ import svarzee.gps.gpsoauth.Gpsoauth;
 import java.io.IOException;
 
 public class TokenProvider {
+  private static long lastTokenFetched;
 
   /**
    * Provides a token to access <b>Google Play Music</b>
@@ -24,6 +25,7 @@ public class TokenProvider {
   public static AuthToken provideToken(final String user, final String password,
                                        final String androidID)
       throws IOException, Gpsoauth.TokenRequestFailed {
+    lastTokenFetched = System.currentTimeMillis();
     OkHttpClient client = new OkHttpClient();
     Gpsoauth auth = new Gpsoauth(client);
     // clientSig taken from https://github.com/simon-weber/gmusicapi/blob/develop/gmusicapi/session.py#L199
@@ -42,5 +44,10 @@ public class TokenProvider {
     return new AuthToken(token);
   }
 
-
+  /**
+   * Returns the time of the last {@link #provideToken(String, String, String)} call in Milliseconds.
+   */
+  public static long getLastTokenFetched() {
+    return lastTokenFetched;
+  }
 }
