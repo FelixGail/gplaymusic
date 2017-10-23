@@ -4,17 +4,21 @@ import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import svarzee.gps.gpsoauth.AuthToken;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParameterInterceptor implements Interceptor {
+public class RequestInterceptor implements Interceptor {
 
-  private Map<String, String> parameters;
+  private final Map<String, String> parameters;
+  private AuthToken token;
 
-  public ParameterInterceptor() {
+  public RequestInterceptor(@NotNull AuthToken token) {
     parameters = new HashMap<>();
+    this.token = token;
   }
 
   @Override
@@ -31,10 +35,12 @@ public class ParameterInterceptor implements Interceptor {
     HttpUrl url = httpBuilder.build();
 
     // Request customization: add request headers
-    Request.Builder requestBuilder = original.newBuilder()
-        .url(url);
+    Request request = original.newBuilder()
+        .url(url)
+        .addHeader("Authorization", "GoogleLogin auth=" + this.token.getToken())
+        .addHeader("Content-Type", "application/json")
+        .build();
 
-    Request request = requestBuilder.build();
     return chain.proceed(request);
   }
 
@@ -42,18 +48,18 @@ public class ParameterInterceptor implements Interceptor {
     return parameters;
   }
 
-  public ParameterInterceptor setParameters(Map<String, String> parameters) {
-    this.parameters = parameters;
-    return this;
-  }
-
-  public ParameterInterceptor addParameter(String key, String value) {
+  public RequestInterceptor addParameter(String key, String value) {
     this.parameters.put(key, value);
     return this;
   }
 
-  public ParameterInterceptor removeParameter(String key) {
+  public RequestInterceptor removeParameter(String key) {
     this.parameters.remove(key);
+    return this;
+  }
+
+  public RequestInterceptor setToken(@NotNull AuthToken token) {
+    this.token = token;
     return this;
   }
 }

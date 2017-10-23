@@ -29,19 +29,18 @@ import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeseria
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
-import com.github.felixgail.gplaymusic.util.interceptor.ParameterInterceptor;
+import com.github.felixgail.gplaymusic.util.interceptor.RequestInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.TlsVersion;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import svarzee.gps.gpsoauth.AuthToken;
 
+import javax.validation.constraints.NotNull;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,9 +58,11 @@ public final class GPlayMusic {
   private static GPlayMusic instance;
   private GPlayService service;
   private Config config;
+  private RequestInterceptor interceptor;
 
-  private GPlayMusic(GPlayService service) {
+  private GPlayMusic(GPlayService service, RequestInterceptor interceptor) {
     this.service = service;
+    this.interceptor = interceptor;
     instance = this;
   }
 
@@ -248,6 +249,15 @@ public final class GPlayMusic {
   }
 
   /**
+   * Changes the token used to authenticate the client.
+   *
+   * @param token a new valid token to access the google service
+   */
+  public void changeToken(@NotNull AuthToken token) {
+    interceptor.setToken(token);
+  }
+
+  /**
    * Use this class to create a {@link GPlayMusic} instance.
    */
   public final static class Builder {
@@ -356,21 +366,6 @@ public final class GPlayMusic {
     }
 
     /**
-     * @return Returns an Interceptor adding headers needed for communication with the
-     * Google Play Service
-     */
-    private Interceptor getHeaderInterceptor() {
-      return chain -> {
-        final Request request = chain.request().newBuilder()
-            .addHeader("Authorization", "GoogleLogin auth=" + this.authToken.getToken())
-            .addHeader("Content-Type", "application/json")
-            .build();
-
-        return chain.proceed(request);
-      };
-    }
-
-    /**
      * Builds a new {@link GPlayMusic} instance with the customizations set to this builder.
      * Make sure to call {@link #setAuthToken(AuthToken)} before building with this method.
      *
@@ -391,10 +386,9 @@ public final class GPlayMusic {
           this.httpClientBuilder = getDefaultHttpBuilder();
         }
 
-        ParameterInterceptor parameterInterceptor = new ParameterInterceptor();
+        RequestInterceptor parameterInterceptor = new RequestInterceptor(authToken);
 
         this.httpClientBuilder
-            .addInterceptor(getHeaderInterceptor())
             .addInterceptor(parameterInterceptor)
             .addInterceptor(new ErrorInterceptor(this.interceptorBehaviour))
             .followRedirects(false);
@@ -410,7 +404,7 @@ public final class GPlayMusic {
             .client(httpClient)
             .build();
 
-        GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class));
+        GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class), parameterInterceptor);
         retrofit2.Response<Config> configResponse = null;
         configResponse = gPlay.getService().config(this.locale).execute();
         if (!configResponse.isSuccessful()) {
