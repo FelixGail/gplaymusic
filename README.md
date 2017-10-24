@@ -2,7 +2,7 @@
 
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
 It can search for songs/artists/albums, modify and create playlists and stations and even
-download tracks. For most activities a valid subscription to _GooglePlay All Access_ is needed.
+download tracks. For most activities an active subscription to _GooglePlay All Access_ is needed.
 
 **This project is neither supported nor endorsed by Google.**
 
