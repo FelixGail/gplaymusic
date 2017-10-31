@@ -96,19 +96,4 @@ public class Artist implements Result, Serializable {
   public ResultType getResultType() {
     return RESULT_TYPE;
   }
-
-  /**
-   * Fetches for an artist by {@code artistID}.
-   *
-   * @param artistID      {@link Artist#getArtistId()} of the artist searched for.
-   * @param includeAlbums whether albums of the artist shall be included in the response.
-   * @param numTopTracks  response includes up to provided number of most heard songs in response
-   * @param numRelArtist  response includes up to provided number of similar artist in response
-   * @return An executable call which returns an artist on execution.
-   */
-  public static Artist getArtist(String artistID, boolean includeAlbums, int numTopTracks, int numRelArtist)
-      throws IOException {
-    return GPlayMusic.getApiInstance().getService().getArtist(artistID, includeAlbums, numTopTracks, numRelArtist)
-        .execute().body();
-  }
 }

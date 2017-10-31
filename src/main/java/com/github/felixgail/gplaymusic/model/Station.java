@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.StationApi;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.requests.ListStationTracksRequest;
@@ -63,35 +64,7 @@ public class Station implements Result, Serializable {
   @Expose
   private String byline;
 
-  public Station(@NotNull final String name, @NotNull final StationSeed seed, final List<Track> tracks) {
-    this.name = name;
-    this.seed = seed;
-    this.tracks = tracks;
-  }
-
-  public Station(@NotNull final String name, @NotNull final StationSeed seed) {
-    this(name, seed, null);
-  }
-
-  /**
-   * Creates a new Station.
-   *
-   * @param seed          a seed to build the station upon.
-   * @param name          name of the new station
-   * @param includeTracks whether the response should
-   * @return Returns the newly created station
-   * @throws IOException
-   */
-  public static Station create(final StationSeed seed, final String name, final boolean includeTracks)
-      throws IOException {
-    final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks));
-    final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
-    MutationResponse.Item item = response.getItems().get(0);
-    if (item.hasStationKey()) {
-      return item.getStation();
-    }
-    throw new NetworkException(400, Language.get("station.create.NetworkException"));
-  }
+  private StationApi api;
 
   public String getName() {
     return name;
@@ -130,7 +103,7 @@ public class Station implements Result, Serializable {
       return id;
     }
     if (getSeed() != null) {
-      Station createOrGet = Station.create(getSeed(), getName(), false);
+      Station createOrGet = api.create(getSeed(), getName(), false);
       this.id = createOrGet.id;
       this.clientId = createOrGet.clientId;
       return id;
@@ -163,8 +136,7 @@ public class Station implements Result, Serializable {
       return Optional.of(tracks).orElse(Collections.emptyList());
     }
     ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
-    Station returnedStation = GPlayMusic.getApiInstance().getService().getFilledStations(request)
-        .execute().body().toList().get(0);
+    Station returnedStation = api.getFilledStations(request).get(0);
     Optional<List<Track>> trackOptional = Optional.ofNullable(returnedStation.tracks);
     sessionToken = returnedStation.sessionToken;
     List<Track> tracks = trackOptional.orElse(Collections.emptyList());
@@ -210,10 +182,18 @@ public class Station implements Result, Serializable {
 
   public void delete()
       throws IOException {
-    GPlayMusic.getApiInstance().deleteStations(this);
+    api.deleteStations(this);
   }
 
   public String string() {
     return gson.toJson(this);
+  }
+
+  public StationApi getApi() {
+    return api;
+  }
+
+  public void setApi(StationApi api) {
+    this.api = api;
   }
 }

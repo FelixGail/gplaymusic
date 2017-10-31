@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.cache;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.PlaylistEntryApi;
 import com.github.felixgail.gplaymusic.model.PagingHandler;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
@@ -10,6 +11,11 @@ import java.io.IOException;
 import java.util.List;
 
 public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
+  private GPlayMusic mainAPI;
+
+  public PrivatePlaylistEntriesCache(GPlayMusic api){
+    this.mainAPI = api;
+  }
 
   @Override
   public void update() throws IOException {
@@ -17,11 +23,13 @@ public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
 
       @Override
       public ListResult<PlaylistEntry> getChunk(String nextPageToken) throws IOException {
-        return GPlayMusic.getApiInstance().getService().listPrivatePlaylistEntries(
+        return mainAPI.getService().listPrivatePlaylistEntries(
             new PagingRequest(nextPageToken, -1)
         ).execute().body();
       }
     }.getAll();
+    PlaylistEntryApi playlistEntryApi = mainAPI.getPlaylistEntryApi();
+    allEntries.forEach(e -> e.setApi(playlistEntryApi));
     setCache(allEntries);
   }
 }

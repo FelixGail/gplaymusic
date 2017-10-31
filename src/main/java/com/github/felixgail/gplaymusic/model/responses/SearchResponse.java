@@ -1,12 +1,7 @@
 package com.github.felixgail.gplaymusic.model.responses;
 
-import com.github.felixgail.gplaymusic.model.Album;
-import com.github.felixgail.gplaymusic.model.Artist;
-import com.github.felixgail.gplaymusic.model.Playlist;
-import com.github.felixgail.gplaymusic.model.PodcastSeries;
-import com.github.felixgail.gplaymusic.model.Station;
-import com.github.felixgail.gplaymusic.model.Track;
-import com.github.felixgail.gplaymusic.model.Video;
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.*;
 import com.github.felixgail.gplaymusic.model.listennow.Situation;
 import com.google.gson.annotations.Expose;
 
@@ -59,6 +54,25 @@ public class SearchResponse implements Serializable {
 
   public List<PodcastSeries> getPodcastSeries() {
     return entries.stream().filter(PodcastSeries.class::isInstance).map(PodcastSeries.class::cast).collect(Collectors.toList());
+  }
+
+  public void addApis(GPlayMusic mainApi) {
+    for (Result entry : entries) {
+      if(entry instanceof Track){
+        ((Track)entry).setApi(mainApi.getTrackApi());
+      }else if(entry instanceof Station) {
+        ((Station)entry).setApi(mainApi.getStationApi());
+      }else if(entry instanceof PlaylistEntry){
+        ((PlaylistEntry)entry).setApi(mainApi.getPlaylistEntryApi());
+      }else if(entry instanceof Playlist){
+        ((Playlist)entry).setApi(mainApi.getPlaylistApi());
+      }else if(entry instanceof Genre){
+        ((Genre)entry).setApi(mainApi.getGenreApi());
+      }else if(entry instanceof PodcastSeries) {
+        ((PodcastSeries)entry).getEpisodes()
+                .ifPresent(l -> l.forEach(e -> e.setApi(mainApi)));
+      }
+    }
   }
 
   public String string() {

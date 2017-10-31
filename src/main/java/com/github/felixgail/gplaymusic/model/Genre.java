@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.GenreApi;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 
@@ -23,24 +24,9 @@ public class Genre implements Serializable {
   @Expose
   private List<ArtRef> images;
 
-  /**
-   * Returns a list of the base genres
-   */
-  public static List<Genre> get() throws IOException {
-    return get(null);
-  }
+  private GenreApi genreApi;
 
-  /**
-   * @param parent a parent genre, for a list of the base genres.
-   */
-  public static List<Genre> get(Genre parent) throws IOException {
-    String id = "";
-    if (parent != null) {
-      id = parent.getId();
-    }
-    return GPlayMusic.getApiInstance().getService()
-        .getGenres(id).execute().body().getGenres().orElse(Collections.emptyList());
-  }
+  private Genre(){}
 
   /**
    * Returns the identification of this genre. Genre ids readable and uppercase, e.g. "ROCK".
@@ -63,7 +49,7 @@ public class Genre implements Serializable {
 
   public Optional<List<Genre>> getChildren() throws IOException {
     if (children != null) {
-      return Optional.of(get(this));
+      return Optional.of(genreApi.get(this));
     }
     return Optional.empty();
   }
@@ -77,6 +63,14 @@ public class Genre implements Serializable {
 
   public Optional<List<ArtRef>> getImages() {
     return Optional.ofNullable(images);
+  }
+
+  public GenreApi getApi() {
+    return genreApi;
+  }
+
+  public void setApi(GenreApi genreApi) {
+    this.genreApi = genreApi;
   }
 
 }

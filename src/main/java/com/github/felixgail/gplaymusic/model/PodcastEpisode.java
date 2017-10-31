@@ -1,5 +1,6 @@
 package com.github.felixgail.gplaymusic.model;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
@@ -40,6 +41,8 @@ public class PodcastEpisode extends Signable implements Serializable {
   private String seriesTitle;
   @Expose
   private String title;
+
+  private GPlayMusic api;
 
   public Optional<List<ArtRef>> getArt() {
     return Optional.ofNullable(art);
@@ -114,6 +117,14 @@ public class PodcastEpisode extends Signable implements Serializable {
   @Override
   public URL getStreamURL(StreamQuality quality)
       throws IOException {
-    return urlFetcher(quality, Provider.PODCAST, EMPTY_MAP);
+    return urlFetcher(api, quality, Provider.PODCAST, EMPTY_MAP);
+  }
+
+  public GPlayMusic getApi() {
+    return api;
+  }
+
+  public void setApi(GPlayMusic api) {
+    this.api = api;
   }
 }

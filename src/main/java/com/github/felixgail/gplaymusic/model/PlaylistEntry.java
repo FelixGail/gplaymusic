@@ -1,6 +1,7 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.api.PlaylistEntryApi;
 import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 public class PlaylistEntry implements Serializable {
   public final static String BATCH_URL = "plentriesbatch";
   private final static Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+  private PlaylistEntryApi api;
 
   @Expose
   private String id;
@@ -64,7 +66,7 @@ public class PlaylistEntry implements Serializable {
     return absolutePosition;
   }
 
-  private void setAbsolutePosition(String position) {
+  public void setAbsolutePosition(String position) {
     this.absolutePosition = position;
   }
 
@@ -97,7 +99,7 @@ public class PlaylistEntry implements Serializable {
 
   public void delete()
       throws IOException {
-    GPlayMusic.getApiInstance().deletePlaylistEntries(this);
+    api.deletePlaylistEntries(this);
   }
 
   /**
@@ -112,18 +114,7 @@ public class PlaylistEntry implements Serializable {
    */
   public void move(PlaylistEntry preceding, PlaylistEntry following)
       throws IOException {
-    Mutator mutator = new Mutator(MutationFactory.
-        getReorderPlaylistEntryMutation(this, preceding, following));
-    GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
-    String tmp = getAbsolutePosition();
-    if (preceding != null && compareTo(preceding) < 0) {
-      setAbsolutePosition(preceding.getAbsolutePosition());
-      preceding.setAbsolutePosition(tmp);
-    }
-    if (following != null && compareTo(following) > 0) {
-      setAbsolutePosition(following.getAbsolutePosition());
-      following.setAbsolutePosition(tmp);
-    }
+    api.move(this, preceding, following);
   }
 
   public int compareTo(PlaylistEntry entry) {
@@ -132,5 +123,13 @@ public class PlaylistEntry implements Serializable {
 
   public String string() {
     return prettyGson.toJson(this) + System.lineSeparator();
+  }
+
+  public PlaylistEntryApi getApi() {
+    return api;
+  }
+
+  public void setApi(PlaylistEntryApi api) {
+    this.api = api;
   }
 }

@@ -110,8 +110,4 @@ public class Album implements Result, Serializable {
   public ResultType getResultType() {
     return RESULT_TYPE;
   }
-
-  public static Album getAlbum(String albumID, boolean includeTracks) throws IOException {
-    return GPlayMusic.getApiInstance().getService().getAlbum(albumID, includeTracks).execute().body();
-  }
 }
