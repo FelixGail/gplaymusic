@@ -15,7 +15,9 @@ Installation
 ---------------
 
 #### Maven:
-To use this library, simply add the following lines to your pom.xml:
+To use this library, simply add the following lines to your pom.xml:<br><br>
+[![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Current%20Version)](https://mvnrepository.com/artifact/com.github.felixgail/gplaymusic)<br>
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Snapshot%20Version)](https://oss.sonatype.org/content/repositories/snapshots/com/github/felixgail/gplaymusic/)
 ```xml
 <dependency>
     <groupId>com.github.felixgail</groupId>
