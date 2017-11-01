@@ -1,4 +1,6 @@
 # Unofficial GPlayMusic API in JAVA
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
 It can search for songs/artists/albums, modify and create playlists and stations and even
