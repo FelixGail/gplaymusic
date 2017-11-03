@@ -1,8 +1,6 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -10,9 +8,10 @@ import com.google.gson.annotations.Expose;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class PlaylistEntry implements Serializable {
+public class PlaylistEntry implements Serializable, Model {
   public final static String BATCH_URL = "plentriesbatch";
   private final static Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
+  private GPlayMusic mainApi;
 
   @Expose
   private String id;
@@ -64,7 +63,7 @@ public class PlaylistEntry implements Serializable {
     return absolutePosition;
   }
 
-  private void setAbsolutePosition(String position) {
+  public void setAbsolutePosition(String position) {
     this.absolutePosition = position;
   }
 
@@ -92,12 +91,12 @@ public class PlaylistEntry implements Serializable {
     if (track != null) {
       return track;
     }
-    return Track.getTrack(getTrackId());
+    return mainApi.getTrackApi().getTrack(getTrackId());
   }
 
   public void delete()
       throws IOException {
-    GPlayMusic.getApiInstance().deletePlaylistEntries(this);
+    mainApi.getPlaylistEntryApi().deletePlaylistEntries(this);
   }
 
   /**
@@ -112,18 +111,7 @@ public class PlaylistEntry implements Serializable {
    */
   public void move(PlaylistEntry preceding, PlaylistEntry following)
       throws IOException {
-    Mutator mutator = new Mutator(MutationFactory.
-        getReorderPlaylistEntryMutation(this, preceding, following));
-    GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
-    String tmp = getAbsolutePosition();
-    if (preceding != null && compareTo(preceding) < 0) {
-      setAbsolutePosition(preceding.getAbsolutePosition());
-      preceding.setAbsolutePosition(tmp);
-    }
-    if (following != null && compareTo(following) > 0) {
-      setAbsolutePosition(following.getAbsolutePosition());
-      following.setAbsolutePosition(tmp);
-    }
+    mainApi.getPlaylistEntryApi().move(this, preceding, following);
   }
 
   public int compareTo(PlaylistEntry entry) {
@@ -132,5 +120,15 @@ public class PlaylistEntry implements Serializable {
 
   public String string() {
     return prettyGson.toJson(this) + System.lineSeparator();
+  }
+
+  @Override
+  public GPlayMusic getApi() {
+    return mainApi;
+  }
+
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }

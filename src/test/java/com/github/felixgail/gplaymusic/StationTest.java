@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.Album;
 import com.github.felixgail.gplaymusic.model.Artist;
 import com.github.felixgail.gplaymusic.model.Station;
@@ -35,7 +34,7 @@ public class StationTest extends TestWithLogin {
   @Ignore
   //Is this an error by google play? will return a broken station by 'Onlap' that contains 0 tracks
   public void testStation() throws IOException {
-    List<Station> stations = GPlayMusic.getApiInstance().listStations();
+    List<Station> stations = getApi().getStationApi().listStations();
     assertNotNull(stations);
     assertFalse(stations.isEmpty());
     //Prefer a non Playlist station, as they can return empty lists if created on empty playlists.
@@ -64,29 +63,29 @@ public class StationTest extends TestWithLogin {
 
   @Test
   public void createTrackStation() throws IOException {
-    Track track = GPlayMusic.getApiInstance().searchTracks("Imagine", 1).get(0);
+    Track track = getApi().getTrackApi().search("Imagine", 1).get(0);
     assume(track);
-    Station station = Station.create(new StationSeed(track), "TestTrackStation", false);
+    Station station = getApi().getStationApi().create(new StationSeed(track), "TestTrackStation", false);
     TestUtil.testStation(station);
     station.delete();
   }
 
   @Test
   public void createAlbumStation() throws IOException {
-    Album album = GPlayMusic.getApiInstance()
+    Album album = getApi()
         .search("Imagine", 1, new SearchTypes(ResultType.ALBUM)).getAlbums().get(0);
     assume(album);
-    Station station = Station.create(new StationSeed(album), "TestAlbumStation", false);
+    Station station = getApi().getStationApi().create(new StationSeed(album), "TestAlbumStation", false);
     TestUtil.testStation(station);
     station.delete();
   }
 
   @Test
   public void createArtistStation() throws IOException {
-    Artist artist = GPlayMusic.getApiInstance()
+    Artist artist = getApi()
         .search("Imagine", 1, new SearchTypes(ResultType.ARTIST)).getArtists().get(0);
     assume(artist);
-    Station station = Station.create(new StationSeed(artist), "TestArtistStation", false);
+    Station station = getApi().getStationApi().create(new StationSeed(artist), "TestArtistStation", false);
     TestUtil.testStation(station);
     station.delete();
   }

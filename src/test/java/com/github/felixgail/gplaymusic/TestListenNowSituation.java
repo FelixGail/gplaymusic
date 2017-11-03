@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.model.listennow.Situation;
@@ -22,7 +21,7 @@ public class TestListenNowSituation extends TestWithLogin {
 
   @Test
   public void testGetListenNowSituation() throws IOException {
-    ListenNowSituation situation = GPlayMusic.getApiInstance().getListenNowSituation();
+    ListenNowSituation situation = getApi().getListenNowSituation();
     Assert.assertNotNull("Situation should not be null", situation);
     Assert.assertNotNull("Header should not be empty", situation.getPrimaryHeader());
     Assert.assertNotNull("Sub header should not be empty", situation.getSubHeader());
@@ -33,7 +32,7 @@ public class TestListenNowSituation extends TestWithLogin {
 
   @Test
   public void testListenNowSituation() throws IOException {
-    ListenNowSituation listenNowSituation = GPlayMusic.getApiInstance().getListenNowSituation();
+    ListenNowSituation listenNowSituation = getApi().getListenNowSituation();
     TestUtil.assume(listenNowSituation, listenNowSituation.getSituations());
     Assume.assumeTrue(listenNowSituation.getSituations().size() > 0);
     for (Situation s : listenNowSituation.getSituations()) {

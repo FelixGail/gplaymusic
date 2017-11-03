@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic.model;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.Attribution;
@@ -8,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -109,9 +107,5 @@ public class Album implements Result, Serializable {
   @Override
   public ResultType getResultType() {
     return RESULT_TYPE;
-  }
-
-  public static Album getAlbum(String albumID, boolean includeTracks) throws IOException {
-    return GPlayMusic.getApiInstance().getService().getAlbum(albumID, includeTracks).execute().body();
   }
 }

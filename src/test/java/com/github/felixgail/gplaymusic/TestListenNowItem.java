@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowAlbum;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
@@ -22,7 +21,7 @@ public class TestListenNowItem extends TestWithLogin {
 
   @Test
   public void testListItems() throws IOException {
-    List<ListenNowItem> items = GPlayMusic.getApiInstance().listListenNowItems();
+    List<ListenNowItem> items = getApi().listListenNowItems();
     Assert.assertNotNull("ListenNowItem list is null", items);
     Assert.assertTrue("ListenNowItem list is empty", items.size() > 0);
     items.forEach(item -> {

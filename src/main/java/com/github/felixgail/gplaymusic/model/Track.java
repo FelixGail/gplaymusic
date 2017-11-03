@@ -1,7 +1,7 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.cache.LibraryTrackCache;
+import com.github.felixgail.gplaymusic.api.TrackApi;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
@@ -16,7 +16,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -29,10 +28,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public class Track extends Signable implements Result, Serializable {
+public class Track extends Signable implements Result, Serializable, Model {
   public final static ResultType RESULT_TYPE = ResultType.TRACK;
   private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
-  private static LibraryTrackCache libraryTrackCache = new LibraryTrackCache();
 
   //TODO: Not all Attributes added (eg. PrimaryVideo, ID? where is id used).
   @Expose
@@ -111,40 +109,14 @@ public class Track extends Signable implements Result, Serializable {
   private Video video;
 
   private String sessionToken;
+  private GPlayMusic mainApi;
 
   //This attribute is only set when the track is retrieved from a station.
   @Expose
   @SerializedName("wentryid")
   private String wentryID;
 
-  public Track(@NotNull String id, @NotNull String title, @NotNull String artist, @NotNull String album,
-               int trackNumber, long durationMillis, int discNumber, long estimatedSize, @NotNull String albumId,
-               @NotNull String contentType) {
-    this.title = title;
-    this.artist = artist;
-    this.album = album;
-    this.albumArtist = "";
-    this.durationMillis = String.valueOf(durationMillis);
-    this.trackNumber = trackNumber;
-    this.discNumber = discNumber;
-    this.estimatedSize = String.valueOf(estimatedSize);
-    this.albumId = albumId;
-    this.storeId = id;
-    this.contentType = contentType;
-  }
-
-  public static Track getTrack(String trackID) throws IOException {
-    Track track = null;
-    if (trackID.startsWith("T")) {
-      track = GPlayMusic.getApiInstance().getService().fetchTrack(trackID).execute().body();
-    } else {
-      track = libraryTrackCache.find(trackID).orElseThrow(() ->
-          new IllegalArgumentException(String.format("No track with id '%s' found.", trackID)));
-    }
-    if (track == null || track.getID() == null) {
-      throw new IOException(String.format("'%s' did not return a valid track", trackID));
-    }
-    return track;
+  private Track() {
   }
 
   public String getTitle() {
@@ -206,7 +178,7 @@ public class Track extends Signable implements Result, Serializable {
 
   /**
    * Returns how often the song has been played. Not valid, when song has been fetched via
-   * {@link Track#getTrack(String)} as the server response does not contain this key.
+   * {@link TrackApi#getTrack(String)} as the server response does not contain this key.
    */
   public OptionalInt getPlayCount() {
     return OptionalInt.of(playCount);
@@ -335,10 +307,10 @@ public class Track extends Signable implements Result, Serializable {
   @Override
   public URL getStreamURL(StreamQuality quality)
       throws IOException {
-    if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.FREE) {
+    if (mainApi.getConfig().getSubscription() == SubscriptionType.FREE) {
       throw new IOException(Language.get("users.free.NotAllowed"));
     }
-    return urlFetcher(quality, Provider.STREAM, EMPTY_MAP);
+    return urlFetcher(mainApi, quality, Provider.STREAM, EMPTY_MAP);
   }
 
   /**
@@ -354,7 +326,7 @@ public class Track extends Signable implements Result, Serializable {
    */
   public URL getStationTrackURL(StreamQuality quality)
       throws IOException {
-    if (GPlayMusic.getApiInstance().getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
+    if (mainApi.getConfig().getSubscription() == SubscriptionType.ALL_ACCESS) {
       return getStreamURL(quality);
     }
     if (getWentryID() == null || getWentryID().isEmpty()) {
@@ -367,7 +339,7 @@ public class Track extends Signable implements Result, Serializable {
     map.putAll(STATION_MAP);
     map.put("wentryid", getWentryID());
     map.put("sesstok", getSessionToken().get());
-    return urlFetcher(quality, Provider.STATION, map);
+    return urlFetcher(mainApi, quality, Provider.STATION, map);
   }
 
   /**
@@ -377,7 +349,7 @@ public class Track extends Signable implements Result, Serializable {
    * @return whether the incrementation was successful.
    */
   public boolean incrementPlaycount(int count) throws IOException {
-    MutationResponse response = GPlayMusic.getApiInstance().getService().incremetPlaycount(
+    MutationResponse response = mainApi.getService().incremetPlaycount(
         new IncrementPlaycountRequest(count, this)).execute().body();
     if (response.checkSuccess()) {
       playCount += count;
@@ -397,34 +369,25 @@ public class Track extends Signable implements Result, Serializable {
     Files.copy(getStationTrackURL(quality).openStream(), path, StandardCopyOption.REPLACE_EXISTING);
   }
 
-  /**
-   * Library tracks can only be fetched as whole. To shorten wait times, collected songs are cached.
-   * Please consider updating the cache (asynchronously) when using the library over a long period of time, or when
-   * new songs could be added to the library during runtime.
-   * <br>
-   * If outside access to the library is expected during runtime, disabling caching via {@link #useCache(boolean)}
-   * should also be considered.
-   */
-  public static void updateCache() throws IOException {
-    libraryTrackCache.update();
-  }
-
-  /**
-   * Enables/Disables caching of library tracks.
-   */
-  public static void useCache(boolean useCache) {
-    libraryTrackCache.setUseCache(useCache);
+  private Optional<String> getSessionToken() {
+    return Optional.ofNullable(sessionToken);
   }
 
   void setSessionToken(String token) {
     this.sessionToken = token;
   }
 
-  private Optional<String> getSessionToken() {
-    return Optional.ofNullable(sessionToken);
-  }
-
   public Optional<Video> getVideo() {
     return Optional.ofNullable(video);
+  }
+
+  @Override
+  public GPlayMusic getApi() {
+    return mainApi;
+  }
+
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }
