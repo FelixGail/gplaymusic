@@ -1,4 +1,6 @@
 # Unofficial GPlayMusic API in JAVA
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
 It can search for songs/artists/albums, modify and create playlists and stations and even
@@ -13,7 +15,9 @@ Installation
 ---------------
 
 #### Maven:
-To use this library, simply add the following lines to your pom.xml:
+To use this library, simply add the following lines to your pom.xml:<br><br>
+[![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Latest%20Stable%20Version)](https://mvnrepository.com/artifact/com.github.felixgail/gplaymusic)<br>
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Latest%20Snapshot%20Version)](https://oss.sonatype.org/content/repositories/snapshots/com/github/felixgail/gplaymusic/)
 ```xml
 <dependency>
     <groupId>com.github.felixgail</groupId>
