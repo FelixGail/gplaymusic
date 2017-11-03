@@ -1,9 +1,6 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.PlaylistEntryApi;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
@@ -11,10 +8,10 @@ import com.google.gson.annotations.Expose;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class PlaylistEntry implements Serializable {
+public class PlaylistEntry implements Serializable, Model {
   public final static String BATCH_URL = "plentriesbatch";
   private final static Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
-  private PlaylistEntryApi api;
+  private GPlayMusic mainApi;
 
   @Expose
   private String id;
@@ -94,12 +91,12 @@ public class PlaylistEntry implements Serializable {
     if (track != null) {
       return track;
     }
-    return Track.getTrack(getTrackId());
+    return mainApi.getTrackApi().getTrack(getTrackId());
   }
 
   public void delete()
       throws IOException {
-    api.deletePlaylistEntries(this);
+    mainApi.getPlaylistEntryApi().deletePlaylistEntries(this);
   }
 
   /**
@@ -114,7 +111,7 @@ public class PlaylistEntry implements Serializable {
    */
   public void move(PlaylistEntry preceding, PlaylistEntry following)
       throws IOException {
-    api.move(this, preceding, following);
+    mainApi.getPlaylistEntryApi().move(this, preceding, following);
   }
 
   public int compareTo(PlaylistEntry entry) {
@@ -125,11 +122,13 @@ public class PlaylistEntry implements Serializable {
     return prettyGson.toJson(this) + System.lineSeparator();
   }
 
-  public PlaylistEntryApi getApi() {
-    return api;
+  @Override
+  public GPlayMusic getApi() {
+    return mainApi;
   }
 
-  public void setApi(PlaylistEntryApi api) {
-    this.api = api;
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }

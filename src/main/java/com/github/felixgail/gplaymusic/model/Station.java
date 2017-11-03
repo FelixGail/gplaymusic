@@ -1,22 +1,16 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.StationApi;
-import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.requests.ListStationTracksRequest;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
-import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -25,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class Station implements Result, Serializable {
+public class Station implements Result, Serializable, Model {
   public final static ResultType RESULT_TYPE = ResultType.STATION;
   public final static String BATCH_URL = "radio/editstation";
   private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -64,7 +58,7 @@ public class Station implements Result, Serializable {
   @Expose
   private String byline;
 
-  private StationApi api;
+  private GPlayMusic mainApi;
 
   public String getName() {
     return name;
@@ -103,7 +97,7 @@ public class Station implements Result, Serializable {
       return id;
     }
     if (getSeed() != null) {
-      Station createOrGet = api.create(getSeed(), getName(), false);
+      Station createOrGet = mainApi.getStationApi().create(getSeed(), getName(), false);
       this.id = createOrGet.id;
       this.clientId = createOrGet.clientId;
       return id;
@@ -136,7 +130,7 @@ public class Station implements Result, Serializable {
       return Optional.of(tracks).orElse(Collections.emptyList());
     }
     ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
-    Station returnedStation = api.getFilledStations(request).get(0);
+    Station returnedStation = mainApi.getStationApi().getFilledStations(request).get(0);
     Optional<List<Track>> trackOptional = Optional.ofNullable(returnedStation.tracks);
     sessionToken = returnedStation.sessionToken;
     List<Track> tracks = trackOptional.orElse(Collections.emptyList());
@@ -182,18 +176,20 @@ public class Station implements Result, Serializable {
 
   public void delete()
       throws IOException {
-    api.deleteStations(this);
+    mainApi.getStationApi().deleteStations(this);
   }
 
   public String string() {
     return gson.toJson(this);
   }
 
-  public StationApi getApi() {
-    return api;
+  @Override
+  public GPlayMusic getApi() {
+    return this.mainApi;
   }
 
-  public void setApi(StationApi api) {
-    this.api = api;
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }

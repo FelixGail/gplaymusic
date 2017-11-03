@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Track;
@@ -34,7 +33,7 @@ public class TrackTest extends TestWithLogin {
 
   @Test
   public void getTrackUrl() throws IOException {
-    List<Track> tracks = GPlayMusic.getApiInstance().searchTracks("Sound", 10);
+    List<Track> tracks = getApi().getTrackApi().search("Sound", 10);
     assertTracks(tracks);
     for (Track track : tracks) {
       URL url = track.getStreamURL(StreamQuality.HIGH);
@@ -49,7 +48,7 @@ public class TrackTest extends TestWithLogin {
 
   @Test
   public void incrementPlaycount() throws IOException {
-    Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
+    Track track = getApi().getTrackApi().search("Sound", 10).get(0);
     assume(track);
     assume(track.getPlayCount().isPresent());
     int playcount = track.getPlayCount().getAsInt();
@@ -57,7 +56,7 @@ public class TrackTest extends TestWithLogin {
     track.incrementPlaycount(inc);
     Assert.assertEquals("Playcount was not increased locally.",
         playcount + inc, track.getPlayCount().getAsInt());
-    Track trackNew = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
+    Track trackNew = getApi().getTrackApi().search("Sound", 10).get(0);
     Assume.assumeTrue("Newly fetched track should equal original track",
         track.getID().equals(trackNew.getID()));
     Assert.assertEquals("Playcount was not increased at remote location.",
@@ -66,7 +65,7 @@ public class TrackTest extends TestWithLogin {
 
   @Test
   public void testDownloadSearch() throws IOException {
-    Track track = GPlayMusic.getApiInstance().searchTracks("Sound", 10).get(0);
+    Track track = getApi().getTrackApi().search("Sound", 10).get(0);
     assume(track);
     testDownload("searchedTrack.mp3", track);
   }
@@ -75,7 +74,7 @@ public class TrackTest extends TestWithLogin {
   public void testPlaylistDownload() throws IOException {
     //PlaylistID with key test.track.playlist should be a playlist conatining both store and library tracks.
     //To find it use printAllPlaylists();
-    Playlist playlist = new Playlist(TestUtil.get("test.track.playlist").get());
+    Playlist playlist = getApi().getPlaylistApi().getPlaylist(TestUtil.get("test.track.playlist").get());
     Track track;
     for (PlaylistEntry entry : playlist.getContents(-1)) {
       track = entry.getTrack();
@@ -86,7 +85,7 @@ public class TrackTest extends TestWithLogin {
   }
 
   private void printAllPlaylists() throws IOException {
-    GPlayMusic.getApiInstance().listPlaylists().forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
+    getApi().getPlaylistApi().listPlaylists().forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
   }
 
   private void testDownload(String fileName, Track track) throws IOException {

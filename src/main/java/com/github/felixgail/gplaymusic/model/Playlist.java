@@ -1,15 +1,7 @@
 package com.github.felixgail.gplaymusic.model;
 
-import com.fasterxml.uuid.Generators;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.PlaylistApi;
-import com.github.felixgail.gplaymusic.cache.Cache;
-import com.github.felixgail.gplaymusic.cache.PrivatePlaylistEntriesCache;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
-import com.github.felixgail.gplaymusic.model.requests.SharedPlaylistRequest;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutation;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
@@ -18,17 +10,13 @@ import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 //TODO: Split into Public and Private Playlist. What to do about magic playlists?
-public class Playlist implements Result, Serializable {
+public class Playlist implements Result, Serializable, Model {
   public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
   public final static String BATCH_URL = "playlistbatch";
-  private PlaylistApi api;
+  private GPlayMusic mainApi;
 
   @Expose
   private String name;
@@ -63,10 +51,6 @@ public class Playlist implements Result, Serializable {
   private String contentType;
   @Expose
   private PlaylistShareState shareState;
-
-  public PlaylistApi getPlaylistAPI() {
-    return api;
-  }
 
   public String getName() {
     return name;
@@ -154,7 +138,7 @@ public class Playlist implements Result, Serializable {
   }
 
   public void delete() throws IOException {
-    api.deletePlaylists(this);
+    mainApi.getPlaylistApi().deletePlaylists(this);
   }
 
   /**
@@ -165,7 +149,7 @@ public class Playlist implements Result, Serializable {
    */
   public void addTracks(List<Track> tracks)
       throws IOException {
-    api.addTracksToPlaylist(this, tracks);
+    mainApi.getPlaylistApi().addTracksToPlaylist(this, tracks);
   }
 
   /**
@@ -185,23 +169,25 @@ public class Playlist implements Result, Serializable {
    */
   public List<PlaylistEntry> getContents(int maxResults)
       throws IOException {
-    return api.getContents(this, maxResults);
+    return mainApi.getPlaylistApi().getContents(this, maxResults);
   }
 
   public void removeEntries(List<PlaylistEntry> entries) throws IOException {
-    api.getPlaylistEntryApi().deletePlaylistEntries(entries);
+    mainApi.getPlaylistApi().getPlaylistEntryApi().deletePlaylistEntries(entries);
   }
 
   public void removeEntries(PlaylistEntry... entries) throws IOException {
     removeEntries(Arrays.asList(entries));
   }
 
-  public PlaylistApi getApi() {
-    return api;
+  @Override
+  public GPlayMusic getApi() {
+    return mainApi;
   }
 
-  public void setApi(PlaylistApi api) {
-    this.api = api;
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 
   public enum PlaylistType implements Serializable {

@@ -2,16 +2,19 @@ package com.github.felixgail.gplaymusic.api;
 
 import com.github.felixgail.gplaymusic.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
-import com.github.felixgail.gplaymusic.model.*;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
+import com.github.felixgail.gplaymusic.model.Album;
+import com.github.felixgail.gplaymusic.model.Artist;
+import com.github.felixgail.gplaymusic.model.Config;
+import com.github.felixgail.gplaymusic.model.DeviceInfo;
+import com.github.felixgail.gplaymusic.model.Genre;
+import com.github.felixgail.gplaymusic.model.Model;
+import com.github.felixgail.gplaymusic.model.PodcastSeries;
+import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
-import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import com.github.felixgail.gplaymusic.model.requests.TimeZoneOffset;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
@@ -19,12 +22,14 @@ import com.github.felixgail.gplaymusic.util.TokenProvider;
 import com.github.felixgail.gplaymusic.util.deserializer.ColorDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
+import com.github.felixgail.gplaymusic.util.deserializer.ModelPostProcessor;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.RequestInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -87,9 +92,9 @@ public final class GPlayMusic {
    * @return An executable call which returns an artist on execution.
    */
   public Artist getArtist(String artistID, boolean includeAlbums, int numTopTracks, int numRelArtist)
-          throws IOException {
+      throws IOException {
     return getService().getArtist(artistID, includeAlbums, numTopTracks, numRelArtist)
-            .execute().body();
+        .execute().body();
   }
 
   /**
@@ -115,9 +120,7 @@ public final class GPlayMusic {
    */
   public SearchResponse search(String query, int maxResults, SearchTypes types)
       throws IOException {
-    SearchResponse response = getService().search(query, maxResults, types).execute().body();
-    response.addApis(this);
-    return response;
+    return getService().search(query, maxResults, types).execute().body();
   }
 
   /**
@@ -331,11 +334,6 @@ public final class GPlayMusic {
         if (this.authToken == null) {
           throw new InitializationException(Language.get("api.init.EmptyToken"));
         }
-        GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeAdapter(Result.class, new ResultDeserializer())
-            .registerTypeAdapter(Config.class, new ConfigDeserializer())
-            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
-            .registerTypeAdapter(Color.class, new ColorDeserializer());
 
         if (this.httpClientBuilder == null) {
           this.httpClientBuilder = getDefaultHttpBuilder();
@@ -353,14 +351,24 @@ public final class GPlayMusic {
 
         OkHttpClient httpClient = this.httpClientBuilder.build();
 
+        ModelPostProcessor postProcessor = new ModelPostProcessor();
+        GsonBuilder builder = new GsonFireBuilder()
+            .registerPostProcessor(Model.class, postProcessor)
+            .createGsonBuilder()
+            .registerTypeAdapter(Result.class, new ResultDeserializer())
+            .registerTypeAdapter(Config.class, new ConfigDeserializer())
+            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
+            .registerTypeAdapter(Color.class, new ColorDeserializer());
+
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://mclients.googleapis.com/")
-            .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
+            .addConverterFactory(GsonConverterFactory.create(builder.create()))
             .client(httpClient)
             .build();
 
         GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class), parameterInterceptor);
-        retrofit2.Response<Config> configResponse = null;
+        postProcessor.setApi(gPlay);
+        retrofit2.Response<Config> configResponse;
         configResponse = gPlay.getService().config(this.locale).execute();
         if (!configResponse.isSuccessful()) {
           throw new InitializationException(Language.get("network.GenericError"), NetworkException.parse(configResponse.raw()));

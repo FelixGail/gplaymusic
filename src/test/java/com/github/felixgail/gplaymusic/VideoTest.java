@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import com.github.felixgail.gplaymusic.util.TestUtil;
@@ -23,7 +22,7 @@ public class VideoTest extends TestWithLogin {
   //Feature seems to be desabled at the moment.
   @Test
   public void testVideo() throws IOException {
-    List<Video> videos = GPlayMusic.getApiInstance()
+    List<Video> videos = getApi()
         .search("", new SearchTypes(Video.RESULT_TYPE)).getVideos();
     TestUtil.assume(videos);
     Assume.assumeTrue("List of videos is empty.", videos.size() > 0);

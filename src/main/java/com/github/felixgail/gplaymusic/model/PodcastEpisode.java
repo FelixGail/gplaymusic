@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
-public class PodcastEpisode extends Signable implements Serializable {
+public class PodcastEpisode extends Signable implements Serializable, Model {
 
   @Expose
   private List<ArtRef> art;
@@ -120,10 +120,12 @@ public class PodcastEpisode extends Signable implements Serializable {
     return urlFetcher(api, quality, Provider.PODCAST, EMPTY_MAP);
   }
 
+  @Override
   public GPlayMusic getApi() {
     return api;
   }
 
+  @Override
   public void setApi(GPlayMusic api) {
     this.api = api;
   }

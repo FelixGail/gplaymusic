@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class TestWithLogin {
+  private static GPlayMusic api;
 
   static void loginToService(TestUtil.Property username, TestUtil.Property password,
                              TestUtil.Property androidID, TestUtil.Property token)
@@ -33,7 +34,7 @@ public class TestWithLogin {
       //Investigate: While cleanly running on pc. CircleCI will throw TimeOutExceptions. Increase readTimeout for now.
       OkHttpClient.Builder builder =
           GPlayMusic.Builder.getDefaultHttpBuilder().readTimeout(30, TimeUnit.SECONDS);
-      new GPlayMusic.Builder()
+      api = new GPlayMusic.Builder()
           .setAuthToken(authToken)
           .setDebug(false)
           .setHttpClientBuilder(builder)
@@ -49,4 +50,7 @@ public class TestWithLogin {
     }
   }
 
+  public static GPlayMusic getApi() {
+    return api;
+  }
 }

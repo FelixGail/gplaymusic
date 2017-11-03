@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.cache;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.api.PlaylistEntryApi;
 import com.github.felixgail.gplaymusic.model.PagingHandler;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
@@ -13,7 +12,7 @@ import java.util.List;
 public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
   private GPlayMusic mainAPI;
 
-  public PrivatePlaylistEntriesCache(GPlayMusic api){
+  public PrivatePlaylistEntriesCache(GPlayMusic api) {
     this.mainAPI = api;
   }
 
@@ -28,8 +27,6 @@ public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
         ).execute().body();
       }
     }.getAll();
-    PlaylistEntryApi playlistEntryApi = mainAPI.getPlaylistEntryApi();
-    allEntries.forEach(e -> e.setApi(playlistEntryApi));
     setCache(allEntries);
   }
 }
