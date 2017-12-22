@@ -6,7 +6,7 @@
 
     <groupId>com.github.felixgail</groupId>
     <artifactId>gplaymusic</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3.0</version>
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/felixgail/gplaymusic</url>
