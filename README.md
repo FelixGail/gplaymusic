@@ -22,7 +22,7 @@ To use this library, simply add the following lines to your pom.xml:<br><br>
 <dependency>
     <groupId>com.github.felixgail</groupId>
     <artifactId>gplaymusic</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
