@@ -1,6 +1,5 @@
 package com.github.felixgail.gplaymusic;
 
-import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Track;
@@ -28,8 +27,8 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   @Test
-  public void listPlaylists() throws IOException {
-    List<Playlist> playlists = GPlayMusic.getApiInstance().listPlaylists();
+  public void getPlaylistApi() throws IOException {
+    List<Playlist> playlists = getApi().getPlaylistApi().listPlaylists();
     assertNotNull(playlists);
     assertFalse(playlists.isEmpty());
     for (Playlist playlist : playlists) {
@@ -42,7 +41,7 @@ public class PlaylistTest extends TestWithLogin {
 
   @Test
   public void getPrivatePlaylistContent() throws IOException {
-    List<Playlist> playlists = GPlayMusic.getApiInstance().listPlaylists();
+    List<Playlist> playlists = getApi().getPlaylistApi().listPlaylists();
     assume(playlists);
     Optional<Playlist> privatePlaylistOptional =
         playlists.stream()
@@ -59,7 +58,7 @@ public class PlaylistTest extends TestWithLogin {
 
   @Test
   public void getSharedPlaylistContent() throws IOException {
-    List<Playlist> playlists = GPlayMusic.getApiInstance().listPlaylists();
+    List<Playlist> playlists = getApi().getPlaylistApi().listPlaylists();
     assume(playlists);
     Optional<Playlist> sharedPlaylistOptional =
         playlists.stream().filter(p -> p.getType().equals(Playlist.PlaylistType.SHARED)).findFirst();
@@ -93,14 +92,14 @@ public class PlaylistTest extends TestWithLogin {
       playlistContent = newPlaylist.getContents(-1);
       containsEntry(playlistContent, entry2, entry0);
       System.out.printf("[%ds] 2 entries removal verified from cache.\n", timeDifferenceinSeconds(testStartTime));
-      Playlist.updateCache();
+      getApi().getPlaylistEntryApi().updateCache();
       containsEntry(newPlaylist.getContents(-1), entry0, entry2);
       System.out.printf("[%ds] 2 entries removal verified after refresh.\n", timeDifferenceinSeconds(testStartTime));
     } finally {
       if (newPlaylist != null) {
         newPlaylist.delete();
         System.out.printf("[%ds] playlist deleted.\n", timeDifferenceinSeconds(testStartTime));
-        List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();
+        List<Playlist> allPlaylists = getApi().getPlaylistApi().listPlaylists();
         Playlist finalNewPlaylist = newPlaylist;
         allPlaylists.forEach(p -> assertFalse("PlaylistFeed should not contain created playlist anymore.",
             p.getId().equals(finalNewPlaylist.getId())));
@@ -110,19 +109,19 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   private void addTracksToPlaylist(Playlist playlist, int count) throws IOException {
-    List<Track> tracksToAdd = GPlayMusic.getApiInstance().searchTracks("Imagine", count);
+    List<Track> tracksToAdd = getApi().getTrackApi().search("Imagine", count);
     Assume.assumeTrue("List with exactly 4 songs needed.", tracksToAdd.size() == count);
     TestUtil.assertTracks(tracksToAdd);
     playlist.addTracks(tracksToAdd);
   }
 
   private Playlist createPlaylist() throws IOException {
-    Playlist newPlaylist = Playlist.create("TestPlaylist_" + System.currentTimeMillis(),
+    Playlist newPlaylist = getApi().getPlaylistApi().create("TestPlaylist_" + System.currentTimeMillis(),
         "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
     assertNotNull(newPlaylist);
     assertTrue("Newly created Playlist should be empty.",
         newPlaylist.getContents(100).size() == 0);
-    List<Playlist> allPlaylists = GPlayMusic.getApiInstance().listPlaylists();
+    List<Playlist> allPlaylists = getApi().getPlaylistApi().listPlaylists();
     boolean contains = false;
     for (Playlist fromList : allPlaylists) {
       if (fromList.getId().equals(newPlaylist.getId())) {
@@ -155,7 +154,7 @@ public class PlaylistTest extends TestWithLogin {
       assertEquals("Entry1 has not been moved to second position in playlist", 1,
           playlist.getContents(-1).indexOf(entry2));
       List<PlaylistEntry> newOrder = Arrays.asList(entry3, entry2, entry0, entry1);
-      Playlist.updateCache();
+      getApi().getPlaylistEntryApi().updateCache();
       playlistContent = playlist.getContents(-1);
       for (int i = 0; i < 4; i++) {
         assertEquals("Different PlaylistEntry expected at position " + i,

@@ -77,11 +77,10 @@ public abstract class Signable {
    * @throws IOException - on severe failures (no internet connection...)
    *                     or a {@link NetworkException} on request failures.
    */
-  protected URL urlFetcher(StreamQuality quality,
+  protected URL urlFetcher(GPlayMusic api, StreamQuality quality,
                            Provider provider, Map<String, String> kwargs)
       throws IOException {
     Signature sig = getSignature();
-    GPlayMusic api = GPlayMusic.getApiInstance();
     if (getID().matches("^[TD]\\S*$")) {
       return new URL(api.getService().getTrackLocationMJCK(api.getConfig().getAndroidID(), provider,
           quality, sig.getSalt(), sig.getSignature(), getID(), kwargs

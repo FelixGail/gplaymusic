@@ -1,21 +1,16 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
-import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.requests.ListStationTracksRequest;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
-import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -24,7 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class Station implements Result, Serializable {
+public class Station implements Result, Serializable, Model {
   public final static ResultType RESULT_TYPE = ResultType.STATION;
   public final static String BATCH_URL = "radio/editstation";
   private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -63,35 +58,7 @@ public class Station implements Result, Serializable {
   @Expose
   private String byline;
 
-  public Station(@NotNull final String name, @NotNull final StationSeed seed, final List<Track> tracks) {
-    this.name = name;
-    this.seed = seed;
-    this.tracks = tracks;
-  }
-
-  public Station(@NotNull final String name, @NotNull final StationSeed seed) {
-    this(name, seed, null);
-  }
-
-  /**
-   * Creates a new Station.
-   *
-   * @param seed          a seed to build the station upon.
-   * @param name          name of the new station
-   * @param includeTracks whether the response should
-   * @return Returns the newly created station
-   * @throws IOException
-   */
-  public static Station create(final StationSeed seed, final String name, final boolean includeTracks)
-      throws IOException {
-    final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks));
-    final MutationResponse response = GPlayMusic.getApiInstance().getService().makeBatchCall(BATCH_URL, mutator);
-    MutationResponse.Item item = response.getItems().get(0);
-    if (item.hasStationKey()) {
-      return item.getStation();
-    }
-    throw new NetworkException(400, Language.get("station.create.NetworkException"));
-  }
+  private GPlayMusic mainApi;
 
   public String getName() {
     return name;
@@ -130,7 +97,7 @@ public class Station implements Result, Serializable {
       return id;
     }
     if (getSeed() != null) {
-      Station createOrGet = Station.create(getSeed(), getName(), false);
+      Station createOrGet = mainApi.getStationApi().create(getSeed(), getName(), false);
       this.id = createOrGet.id;
       this.clientId = createOrGet.clientId;
       return id;
@@ -163,8 +130,7 @@ public class Station implements Result, Serializable {
       return Optional.of(tracks).orElse(Collections.emptyList());
     }
     ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
-    Station returnedStation = GPlayMusic.getApiInstance().getService().getFilledStations(request)
-        .execute().body().toList().get(0);
+    Station returnedStation = mainApi.getStationApi().getFilledStations(request).get(0);
     Optional<List<Track>> trackOptional = Optional.ofNullable(returnedStation.tracks);
     sessionToken = returnedStation.sessionToken;
     List<Track> tracks = trackOptional.orElse(Collections.emptyList());
@@ -210,10 +176,20 @@ public class Station implements Result, Serializable {
 
   public void delete()
       throws IOException {
-    GPlayMusic.getApiInstance().deleteStations(this);
+    mainApi.getStationApi().deleteStations(this);
   }
 
   public String string() {
     return gson.toJson(this);
+  }
+
+  @Override
+  public GPlayMusic getApi() {
+    return this.mainApi;
+  }
+
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }

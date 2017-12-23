@@ -2,24 +2,19 @@ package com.github.felixgail.gplaymusic.api;
 
 import com.github.felixgail.gplaymusic.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
+import com.github.felixgail.gplaymusic.model.Album;
+import com.github.felixgail.gplaymusic.model.Artist;
 import com.github.felixgail.gplaymusic.model.Config;
 import com.github.felixgail.gplaymusic.model.DeviceInfo;
 import com.github.felixgail.gplaymusic.model.Genre;
-import com.github.felixgail.gplaymusic.model.PagingHandler;
-import com.github.felixgail.gplaymusic.model.Playlist;
-import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Model;
 import com.github.felixgail.gplaymusic.model.PodcastSeries;
-import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.Track;
-import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
-import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import com.github.felixgail.gplaymusic.model.requests.TimeZoneOffset;
-import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
-import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
@@ -27,12 +22,14 @@ import com.github.felixgail.gplaymusic.util.TokenProvider;
 import com.github.felixgail.gplaymusic.util.deserializer.ColorDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
+import com.github.felixgail.gplaymusic.util.deserializer.ModelPostProcessor;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
 import com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.LoggingInterceptor;
 import com.github.felixgail.gplaymusic.util.interceptor.RequestInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
+import io.gsonfire.GsonFireBuilder;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -44,8 +41,6 @@ import svarzee.gps.gpsoauth.AuthToken;
 import javax.validation.constraints.NotNull;
 import java.awt.Color;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -56,25 +51,23 @@ import java.util.Optional;
  * Use the {@link GPlayMusic.Builder} to create a new instance.
  */
 public final class GPlayMusic {
-  private static GPlayMusic instance;
   private GPlayService service;
   private Config config;
   private RequestInterceptor interceptor;
+  private GenreApi genreApi;
+  private PlaylistApi playlistApi;
+  private PlaylistEntryApi playlistEntryApi;
+  private StationApi stationApi;
+  private TrackApi trackApi;
 
   private GPlayMusic(GPlayService service, RequestInterceptor interceptor) {
     this.service = service;
     this.interceptor = interceptor;
-    instance = this;
-  }
-
-  /**
-   * @return Returns the last initiated api instance or a {@link InitializationException} if none was initialized.
-   */
-  public static GPlayMusic getApiInstance() {
-    if (instance == null) {
-      throw new InitializationException(Language.get("api.NotInitialized"));
-    }
-    return instance;
+    this.genreApi = new GenreApi(this);
+    this.playlistEntryApi = new PlaylistEntryApi(this);
+    this.playlistApi = new PlaylistApi(this, playlistEntryApi);
+    this.stationApi = new StationApi(this);
+    this.trackApi = new TrackApi(this);
   }
 
   public Config getConfig() {
@@ -83,6 +76,25 @@ public final class GPlayMusic {
 
   private void setConfig(Config config) {
     this.config = config;
+  }
+
+  public Album getAlbum(String albumID, boolean includeTracks) throws IOException {
+    return getService().getAlbum(albumID, includeTracks).execute().body();
+  }
+
+  /**
+   * Fetches for an artist by {@code artistID}.
+   *
+   * @param artistID      {@link Artist#getArtistId()} of the artist searched for.
+   * @param includeAlbums whether albums of the artist shall be included in the response.
+   * @param numTopTracks  response includes up to provided number of most heard songs in response
+   * @param numRelArtist  response includes up to provided number of similar artist in response
+   * @return An executable call which returns an artist on execution.
+   */
+  public Artist getArtist(String artistID, boolean includeAlbums, int numTopTracks, int numRelArtist)
+      throws IOException {
+    return getService().getArtist(artistID, includeAlbums, numTopTracks, numRelArtist)
+        .execute().body();
   }
 
   /**
@@ -121,17 +133,6 @@ public final class GPlayMusic {
   }
 
   /**
-   * Provides convenience by wrapping the {@link #search(String, int, SearchTypes)} method and limiting
-   * the content types to Tracks only.
-   *
-   * @return Returns a list of tracks returned by the google play service.
-   */
-  public List<Track> searchTracks(String query, int maxResults)
-      throws IOException {
-    return search(query, maxResults, new SearchTypes(ResultType.TRACK)).getTracks();
-  }
-
-  /**
    * Fetches a list of all devices connected with the current google play account.
    *
    * @return A DeviceList instance containing all devices connected to the current Google Play account.
@@ -153,71 +154,7 @@ public final class GPlayMusic {
   public List<Track> getPromotedTracks()
       throws IOException {
     return getService().getPromotedTracks().execute().body().toList();
-  }
-
-  /**
-   * Deletes playlist entries. They can be from multiple playlists.
-   *
-   * @param entries playlist entries to be deleted
-   */
-  public void deletePlaylistEntries(PlaylistEntry... entries)
-      throws IOException {
-    deletePlaylistEntries(Arrays.asList(entries));
-  }
-
-  /**
-   * Deletes playlist entries. They can be from multiple playlists.
-   *
-   * @param entries list of playlist entries to be deleted
-   */
-  public void deletePlaylistEntries(Collection<PlaylistEntry> entries) throws IOException {
-    Mutator mutator = new Mutator();
-    entries.forEach(e -> mutator.addMutation(MutationFactory.getDeletePlaylistEntryMutation(e)));
-    service.makeBatchCall(PlaylistEntry.BATCH_URL, mutator);
-    Playlist.getCache().remove(entries);
-  }
-
-  /**
-   * deletes playlists and all contained {@link PlaylistEntry}
-   *
-   * @param playlists playlists to be deleted
-   */
-  public void deletePlaylists(Playlist... playlists)
-      throws IOException {
-    Mutator mutator = new Mutator();
-    for (Playlist playlist : playlists) {
-      mutator.addMutation(MutationFactory.getDeletePlaylistMutation(playlist));
-    }
-    service.makeBatchCall(Playlist.BATCH_URL, mutator);
-  }
-
-  public void deleteStations(Station... stations)
-      throws IOException {
-    Mutator mutator = new Mutator();
-    for (Station station : stations) {
-      mutator.addMutation(MutationFactory.getDeleteStationMutation(station));
-    }
-    service.makeBatchCall(Station.BATCH_URL, mutator);
-  }
-
-  public List<Station> listStations()
-      throws IOException {
-    return new PagingHandler<Station>() {
-      @Override
-      public ListResult<Station> getChunk(String nextPageToken) throws IOException {
-        return service.listStations(new PagingRequest(nextPageToken, -1)).execute().body();
-      }
-    }.getAll();
-  }
-
-  public List<Playlist> listPlaylists()
-      throws IOException {
-    return new PagingHandler<Playlist>() {
-      @Override
-      public ListResult<Playlist> getChunk(String nextPageToken) throws IOException {
-        return service.listPlaylists(new PagingRequest(nextPageToken, -1)).execute().body();
-      }
-    }.getAll();
+    //TODO: set api
   }
 
   public List<PodcastSeries> listPodcastSeries(Genre genre)
@@ -247,6 +184,26 @@ public final class GPlayMusic {
    */
   public ListenNowSituation getListenNowSituation(int offsetInSeconds) throws IOException {
     return service.getListenNowSituation(new TimeZoneOffset(String.valueOf(offsetInSeconds))).execute().body();
+  }
+
+  public GenreApi getGenreApi() {
+    return genreApi;
+  }
+
+  public PlaylistApi getPlaylistApi() {
+    return playlistApi;
+  }
+
+  public PlaylistEntryApi getPlaylistEntryApi() {
+    return playlistEntryApi;
+  }
+
+  public StationApi getStationApi() {
+    return stationApi;
+  }
+
+  public TrackApi getTrackApi() {
+    return trackApi;
   }
 
   /**
@@ -377,11 +334,6 @@ public final class GPlayMusic {
         if (this.authToken == null) {
           throw new InitializationException(Language.get("api.init.EmptyToken"));
         }
-        GsonBuilder gsonBuilder = new GsonBuilder()
-            .registerTypeAdapter(Result.class, new ResultDeserializer())
-            .registerTypeAdapter(Config.class, new ConfigDeserializer())
-            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
-            .registerTypeAdapter(Color.class, new ColorDeserializer());
 
         if (this.httpClientBuilder == null) {
           this.httpClientBuilder = getDefaultHttpBuilder();
@@ -399,14 +351,24 @@ public final class GPlayMusic {
 
         OkHttpClient httpClient = this.httpClientBuilder.build();
 
+        ModelPostProcessor postProcessor = new ModelPostProcessor();
+        GsonBuilder builder = new GsonFireBuilder()
+            .registerPostProcessor(Model.class, postProcessor)
+            .createGsonBuilder()
+            .registerTypeAdapter(Result.class, new ResultDeserializer())
+            .registerTypeAdapter(Config.class, new ConfigDeserializer())
+            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
+            .registerTypeAdapter(Color.class, new ColorDeserializer());
+
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://mclients.googleapis.com/")
-            .addConverterFactory(GsonConverterFactory.create(gsonBuilder.create()))
+            .addConverterFactory(GsonConverterFactory.create(builder.create()))
             .client(httpClient)
             .build();
 
         GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class), parameterInterceptor);
-        retrofit2.Response<Config> configResponse = null;
+        postProcessor.setApi(gPlay);
+        retrofit2.Response<Config> configResponse;
         configResponse = gPlay.getService().config(this.locale).execute();
         if (!configResponse.isSuccessful()) {
           throw new InitializationException(Language.get("network.GenericError"), NetworkException.parse(configResponse.raw()));

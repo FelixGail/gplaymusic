@@ -50,15 +50,15 @@ public abstract class Cache<T> {
     return cache;
   }
 
+  public boolean isUseCache() {
+    return useCache;
+  }
+
   public void setUseCache(boolean useCache) {
     this.useCache = useCache;
     if (!useCache) {
       ready = false;
     }
-  }
-
-  public boolean isUseCache() {
-    return useCache;
   }
 
   public List<T> getAll() throws IOException {

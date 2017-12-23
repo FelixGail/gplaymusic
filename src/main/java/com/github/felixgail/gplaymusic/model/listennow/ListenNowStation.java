@@ -1,5 +1,7 @@
 package com.github.felixgail.gplaymusic.model.listennow;
 
+import com.github.felixgail.gplaymusic.api.GPlayMusic;
+import com.github.felixgail.gplaymusic.model.Model;
 import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.snippets.ProfileImage;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
@@ -11,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class ListenNowStation extends ListenNowItem {
+public class ListenNowStation extends ListenNowItem implements Model {
   @Expose
   @SerializedName("highlight_color")
   private String highlightColor;
@@ -22,6 +24,8 @@ public class ListenNowStation extends ListenNowItem {
   private ProfileImage profileImage;
   @Expose
   private String title;
+
+  private GPlayMusic mainApi;
 
   public Optional<String> getHighlightColor() {
     return Optional.ofNullable(highlightColor);
@@ -51,6 +55,16 @@ public class ListenNowStation extends ListenNowItem {
   }
 
   public Station getStation(boolean includeTracks) throws IOException {
-    return Station.create(getSeeds().get(0), getTitle(), includeTracks);
+    return mainApi.getStationApi().create(getSeeds().get(0), getTitle(), includeTracks);
+  }
+
+  @Override
+  public GPlayMusic getApi() {
+    return mainApi;
+  }
+
+  @Override
+  public void setApi(GPlayMusic api) {
+    this.mainApi = api;
   }
 }

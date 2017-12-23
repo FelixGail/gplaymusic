@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 public class LibraryTrackCache extends Cache<Track> {
   private PagingHandler<Track> pagingHandler;
 
-  public LibraryTrackCache() {
+  public LibraryTrackCache(GPlayMusic mainApi) {
     pagingHandler = new PagingHandler<Track>() {
       @Override
       public ListResult<Track> getChunk(String nextPageToken) throws IOException {
-        return GPlayMusic.getApiInstance().getService()
+        return mainApi.getService()
             .listTracks(new PagingRequest(nextPageToken, -1)).execute().body();
       }
 
