@@ -169,7 +169,7 @@ public interface GPlayService {
   @GET("sj/v2.5/fetchartist")
   Call<Artist> getArtist(@Query("nid") String artistID, @Query("include-albums") boolean includeAlbums,
                          @Query("num-top-tracks") int numTopTracks,
-                         @Query("num-related-artist") int numRelArtist);
+                         @Query("num-related-artists") int numRelArtist);
 
   default MutationResponse makeBatchCall(String path, Mutator body)
       throws IOException {
