@@ -1,15 +1,14 @@
 package com.github.felixgail.gplaymusic.util.interceptor;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 import svarzee.gps.gpsoauth.AuthToken;
-
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RequestInterceptor implements Interceptor {
 

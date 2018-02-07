@@ -1,18 +1,18 @@
 package com.github.felixgail.gplaymusic.api;
 
+import static com.github.felixgail.gplaymusic.model.PlaylistEntry.BATCH_URL;
+
 import com.github.felixgail.gplaymusic.cache.Cache;
 import com.github.felixgail.gplaymusic.cache.PrivatePlaylistEntriesCache;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static com.github.felixgail.gplaymusic.model.PlaylistEntry.BATCH_URL;
-
 public class PlaylistEntryApi implements SubApi {
+
   private GPlayMusic mainAPI;
   private PrivatePlaylistEntriesCache cache;
 
@@ -44,14 +44,16 @@ public class PlaylistEntryApi implements SubApi {
   }
 
   /**
-   * Moves the position of this entry in the playlist.
-   * Leaving preceding/following empty, implies that the element will be this first/last entry.
-   * Leaving a parameter empty, while not aiming for the first/last element of the playlist is undefined - as well as
-   * using entries not present in the playlist.
+   * Moves the position of this entry in the playlist. Leaving preceding/following empty, implies
+   * that the element will be this first/last entry. Leaving a parameter empty, while not aiming for
+   * the first/last element of the playlist is undefined - as well as using entries not present in
+   * the playlist.
    *
-   * @param entry     entry in question
-   * @param preceding the entry that will be before the moved entry, or null if moved entry will be first
-   * @param following the entry that will be after the moved entry, or null if moved entry will be the last
+   * @param entry entry in question
+   * @param preceding the entry that will be before the moved entry, or null if moved entry will be
+   * first
+   * @param following the entry that will be after the moved entry, or null if moved entry will be
+   * the last
    */
   public void move(PlaylistEntry entry, PlaylistEntry preceding, PlaylistEntry following)
       throws IOException {
@@ -70,13 +72,11 @@ public class PlaylistEntryApi implements SubApi {
   }
 
   /**
-   * {@link PlaylistEntry}s from private Playlists can only be fetched as whole.
-   * To shorten wait times, collected entries are cached.
-   * Please consider updating the cache (asynchronously) when using the api over a long period of time, or when
-   * new entries could be added to the playlists during runtime.
-   * <br>
-   * If outside access to the library is expected during runtime, disabling caching via {@link #setUseCache(boolean)}
-   * should also be considered.
+   * {@link PlaylistEntry}s from private Playlists can only be fetched as whole. To shorten wait
+   * times, collected entries are cached. Please consider updating the cache (asynchronously) when
+   * using the api over a long period of time, or when new entries could be added to the playlists
+   * during runtime. <br> If outside access to the library is expected during runtime, disabling
+   * caching via {@link #setUseCache(boolean)} should also be considered.
    */
   public void updateCache() throws IOException {
     cache.update();

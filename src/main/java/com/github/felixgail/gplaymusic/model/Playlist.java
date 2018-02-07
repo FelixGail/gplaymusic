@@ -6,7 +6,6 @@ import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -14,6 +13,7 @@ import java.util.List;
 
 //TODO: Split into Public and Private Playlist. What to do about magic playlists?
 public class Playlist implements Result, Serializable, Model {
+
   public final static ResultType RESULT_TYPE = ResultType.PLAYLIST;
   public final static String BATCH_URL = "playlistbatch";
   private GPlayMusic mainApi;
@@ -145,7 +145,6 @@ public class Playlist implements Result, Serializable, Model {
    * Adds {@link Track}s to this playlist.
    *
    * @param tracks Array of tracks to be added
-   * @throws IOException
    */
   public void addTracks(List<Track> tracks)
       throws IOException {
@@ -162,10 +161,9 @@ public class Playlist implements Result, Serializable, Model {
   /**
    * Returns the contents (as a list of PlaylistEntries) for this playlist.
    *
-   * @param maxResults only applicable for shared playlist, otherwise ignored.
-   *                   Sets the amount of entries that should be returned.
-   *                   Valid range between 0 and 1000. Invalid values will default to 1000.
-   * @throws IOException
+   * @param maxResults only applicable for shared playlist, otherwise ignored. Sets the amount of
+   * entries that should be returned. Valid range between 0 and 1000. Invalid values will default to
+   * 1000.
    */
   public List<PlaylistEntry> getContents(int maxResults)
       throws IOException {

@@ -28,6 +28,9 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
 import com.github.felixgail.gplaymusic.model.responses.SharedPlaylistEntryListResult;
 import com.github.felixgail.gplaymusic.util.language.Language;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -39,37 +42,33 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
-import java.io.IOException;
-import java.util.Locale;
-import java.util.Map;
-
 public interface GPlayService {
 
   @GET("sj/v2.5/query")
   Call<SearchResponse> search(@Query("q") String query,
-                              @Query("max-results") int maxResults,
-                              @Query("ct") SearchTypes searchTypes);
+      @Query("max-results") int maxResults,
+      @Query("ct") SearchTypes searchTypes);
 
   @GET("sj/v2.5/config?dv=0&tier=ff")
   Call<Config> config(@Query("hl") Locale locale);
 
   @GET("music/{provider}?net=mob&pt=e")
   Call<Void> getTrackLocationMJCK(@Header("X-Device-ID") String androidID,
-                                  @Path("provider") Provider provider,
-                                  @Query("opt") StreamQuality quality,
-                                  @Query("slt") String salt,
-                                  @Query("sig") String signature,
-                                  @Query("mjck") String trackID,
-                                  @QueryMap Map<String, String> kwargs);
+      @Path("provider") Provider provider,
+      @Query("opt") StreamQuality quality,
+      @Query("slt") String salt,
+      @Query("sig") String signature,
+      @Query("mjck") String trackID,
+      @QueryMap Map<String, String> kwargs);
 
   @GET("music/{provider}?net=mob&pt=e")
   Call<Void> getTrackLocationSongId(@Header("X-Device-ID") String androidID,
-                                    @Path("provider") Provider provider,
-                                    @Query("opt") StreamQuality quality,
-                                    @Query("slt") String salt,
-                                    @Query("sig") String signature,
-                                    @Query("songid") String trackID,
-                                    @QueryMap Map<String, String> kwargs);
+      @Path("provider") Provider provider,
+      @Query("opt") StreamQuality quality,
+      @Query("slt") String salt,
+      @Query("sig") String signature,
+      @Query("songid") String trackID,
+      @QueryMap Map<String, String> kwargs);
 
   @GET("sj/v2.5/devicemanagementinfo")
   Call<ListResult<DeviceInfo>> getDevices();
@@ -105,15 +104,12 @@ public interface GPlayService {
   Call<ListenNowSituation> getListenNowSituation(@Body TimeZoneOffset offset);
 
   /**
-   * As far as my understanding goes, this simply returns a list containing
-   * every {@link PlaylistEntry} from every {@link Playlist}
-   * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
-   * <p>
-   * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
-   * the user is subscribed to are <b>not</b> included. To fetch contents from such a playlist use
-   * {@link #listSharedPlaylistEntries(SharedPlaylistRequest)}.
-   * <p>
-   * The Server has no option to return the contents of a single private Playlist.
+   * As far as my understanding goes, this simply returns a list containing every {@link
+   * PlaylistEntry} from every {@link Playlist} that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
+   * <p> Entries from {@link Playlist.PlaylistType#SHARED} playlists that the user is subscribed to
+   * are <b>not</b> included. To fetch contents from such a playlist use {@link
+   * #listSharedPlaylistEntries(SharedPlaylistRequest)}. <p> The Server has no option to return the
+   * contents of a single private Playlist.
    *
    * @return the {@link Call} to request a list of {@link PlaylistEntry}
    */
@@ -121,15 +117,12 @@ public interface GPlayService {
   Call<ListResult<PlaylistEntry>> listPrivatePlaylistEntries();
 
   /**
-   * As far as my understanding goes, this simply returns a list containing
-   * every {@link PlaylistEntry} from every {@link Playlist}
-   * that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
-   * <p>
-   * Entries from {@link Playlist.PlaylistType#SHARED} playlists that
-   * the user is subscribed to are <b>not</b> included. To fetch contents from such a playlist use
-   * {@link #listSharedPlaylistEntries(SharedPlaylistRequest)}.
-   * <p>
-   * The Server has no option to return the contents of a single private Playlist.
+   * As far as my understanding goes, this simply returns a list containing every {@link
+   * PlaylistEntry} from every {@link Playlist} that is {@link Playlist.PlaylistType#USER_GENERATED}.<br>
+   * <p> Entries from {@link Playlist.PlaylistType#SHARED} playlists that the user is subscribed to
+   * are <b>not</b> included. To fetch contents from such a playlist use {@link
+   * #listSharedPlaylistEntries(SharedPlaylistRequest)}. <p> The Server has no option to return the
+   * contents of a single private Playlist.
    *
    * @return the {@link Call} to request a list of {@link PlaylistEntry}
    */
@@ -137,7 +130,8 @@ public interface GPlayService {
   Call<ListResult<PlaylistEntry>> listPrivatePlaylistEntries(@Body PagingRequest body);
 
   @POST("sj/v2.5/plentries/shared")
-  Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(@Body SharedPlaylistRequest request);
+  Call<SharedPlaylistEntryListResult> listSharedPlaylistEntries(
+      @Body SharedPlaylistRequest request);
 
   @POST
   Call<MutationResponse> batchCall(@Url String path, @Body Mutator mutator);
@@ -152,7 +146,8 @@ public interface GPlayService {
   Call<GenreResponse> getGenres(@Query("parent-genre") String parentGenre);
 
   @GET("sj/v2.5/fetchalbum")
-  Call<Album> getAlbum(@Query("nid") String albumID, @Query("include-tracks") boolean includeTracks);
+  Call<Album> getAlbum(@Query("nid") String albumID,
+      @Query("include-tracks") boolean includeTracks);
 
   @GET("sj/v2.5/fetchtrack")
   Call<Track> fetchTrack(@Query("nid") String trackId);
@@ -160,16 +155,17 @@ public interface GPlayService {
   /**
    * Fetches for an artist by {@code artistID}.
    *
-   * @param artistID      {@link Artist#getArtistId()} of the artist searched for.
+   * @param artistID {@link Artist#getArtistId()} of the artist searched for.
    * @param includeAlbums whether albums of the artist shall be included in the response.
-   * @param numTopTracks  response includes up to provided number of most heard songs in response
-   * @param numRelArtist  response includes up to provided number of similar artist in response
+   * @param numTopTracks response includes up to provided number of most heard songs in response
+   * @param numRelArtist response includes up to provided number of similar artist in response
    * @return An executable call which returns an artist on execution.
    */
   @GET("sj/v2.5/fetchartist")
-  Call<Artist> getArtist(@Query("nid") String artistID, @Query("include-albums") boolean includeAlbums,
-                         @Query("num-top-tracks") int numTopTracks,
-                         @Query("num-related-artists") int numRelArtist);
+  Call<Artist> getArtist(@Query("nid") String artistID,
+      @Query("include-albums") boolean includeAlbums,
+      @Query("num-top-tracks") int numTopTracks,
+      @Query("num-related-artists") int numRelArtist);
 
   default MutationResponse makeBatchCall(String path, Mutator body)
       throws IOException {

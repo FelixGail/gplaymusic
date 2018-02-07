@@ -3,7 +3,6 @@ package com.github.felixgail.gplaymusic.model;
 import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
@@ -39,8 +38,8 @@ public class Genre implements Serializable, Model {
   }
 
   /**
-   * Returns a list of IDs of the child genres (if present) as {@link Optional}. For details see {@link #getId()}.
-   * To get the child genres directly use {@link #getChildren()}.
+   * Returns a list of IDs of the child genres (if present) as {@link Optional}. For details see
+   * {@link #getId()}. To get the child genres directly use {@link #getChildren()}.
    */
   public Optional<List<String>> getChildrenIDs() {
     return Optional.ofNullable(children);
@@ -54,7 +53,8 @@ public class Genre implements Serializable, Model {
   }
 
   /**
-   * Returns the ID of the parent genre (if present) as {@link Optional}. For details see {@link #getId()}.
+   * Returns the ID of the parent genre (if present) as {@link Optional}. For details see {@link
+   * #getId()}.
    */
   public Optional<String> getParentID() {
     return Optional.ofNullable(parentId);

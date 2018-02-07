@@ -9,13 +9,14 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
 import java.lang.reflect.Type;
 import java.util.Map;
 
 public class ListenNowItemDeserializer implements JsonDeserializer<ListenNowItem> {
+
   @Override
-  public ListenNowItem deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
+  public ListenNowItem deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
+      throws JsonParseException {
     JsonObject content = je.getAsJsonObject();
     if (content.has("album")) {
       addSubEntries(content, content.getAsJsonObject("album"));

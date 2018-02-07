@@ -2,7 +2,6 @@ package com.github.felixgail.gplaymusic.model.snippets;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.Optional;
 
 public class Attribution {

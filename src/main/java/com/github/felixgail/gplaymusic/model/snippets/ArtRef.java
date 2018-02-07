@@ -3,10 +3,10 @@ package com.github.felixgail.gplaymusic.model.snippets;
 import com.github.felixgail.gplaymusic.util.deserializer.AutogenEnumDeserializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
-
 import java.util.Optional;
 
 public class ArtRef {
+
   @Expose
   private String url;
   @Expose

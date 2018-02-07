@@ -7,15 +7,16 @@ import com.github.felixgail.gplaymusic.model.snippets.Attribution;
 import com.github.felixgail.gplaymusic.model.snippets.ProfileImage;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * A {@link ListenNowItem} suggestion. Retrieve the described {@link Album} via {@link #getAlbum(boolean)}.
+ * A {@link ListenNowItem} suggestion. Retrieve the described {@link Album} via {@link
+ * #getAlbum(boolean)}.
  */
 public class ListenNowAlbum extends ListenNowItem implements Model {
+
   @Expose
   @SerializedName("artist_metajam_id")
   private String artistMetajamID;
@@ -91,6 +92,7 @@ public class ListenNowAlbum extends ListenNowItem implements Model {
   }
 
   public class MetajamID implements Serializable {
+
     @Expose
     private String metajamCompactKey;
     @Expose

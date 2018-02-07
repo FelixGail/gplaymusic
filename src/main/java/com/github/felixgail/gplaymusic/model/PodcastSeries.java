@@ -5,12 +5,12 @@ import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.snippets.UserPreference;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 public class PodcastSeries implements Result, Serializable {
+
   public final static ResultType RESULT_TYPE = ResultType.PODCAST_SERIES;
 
   @Expose

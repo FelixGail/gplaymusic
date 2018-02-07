@@ -5,13 +5,13 @@ import com.github.felixgail.gplaymusic.model.PagingHandler;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LibraryTrackCache extends Cache<Track> {
+
   private PagingHandler<Track> pagingHandler;
 
   public LibraryTrackCache(GPlayMusic mainApi) {
@@ -25,7 +25,8 @@ public class LibraryTrackCache extends Cache<Track> {
       @Override
       public List<Track> next() throws IOException {
         return super.next().stream()
-            .filter(t -> !t.getStoreId().isPresent() && t.getUuid().isPresent()).collect(Collectors.toList());
+            .filter(t -> !t.getStoreId().isPresent() && t.getUuid().isPresent())
+            .collect(Collectors.toList());
       }
     };
   }

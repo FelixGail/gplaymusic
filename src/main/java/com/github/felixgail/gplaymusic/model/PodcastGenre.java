@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;

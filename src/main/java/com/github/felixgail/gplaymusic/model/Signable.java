@@ -4,9 +4,6 @@ import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -15,8 +12,11 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public abstract class Signable {
+
   protected static final Map<String, String> EMPTY_MAP = new HashMap<>();
   protected static final Map<String, String> STATION_MAP = new HashMap<>();
   private final static byte[] s1 = Base64.getDecoder()
@@ -67,18 +67,18 @@ public abstract class Signable {
   }
 
   /**
-   * Determines which {@link com.github.felixgail.gplaymusic.api.GPlayService} url call
-   * to use and which parameters to add.
+   * Determines which {@link com.github.felixgail.gplaymusic.api.GPlayService} url call to use and
+   * which parameters to add.
    *
-   * @param quality  Quality of the stream
+   * @param quality Quality of the stream
    * @param provider Provider of the Signable. Determines wich url path to use (mplay,wplay,fplay)
-   * @param kwargs   Map for additional query arguments. E.g. session token for stations
+   * @param kwargs Map for additional query arguments. E.g. session token for stations
    * @return the url to the signable. expires after 1 minute.
-   * @throws IOException - on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException - on severe failures (no internet connection...) or a {@link
+   * NetworkException} on request failures.
    */
   protected URL urlFetcher(GPlayMusic api, StreamQuality quality,
-                           Provider provider, Map<String, String> kwargs)
+      Provider provider, Map<String, String> kwargs)
       throws IOException {
     Signature sig = getSignature();
     if (getID().matches("^[TD]\\S*$")) {
@@ -86,13 +86,15 @@ public abstract class Signable {
           quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
       ).execute().headers().get("Location"));
     } else {
-      return new URL(api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
-          quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
-      ).execute().headers().get("Location"));
+      return new URL(
+          api.getService().getTrackLocationSongId(api.getConfig().getAndroidID(), provider,
+              quality, sig.getSalt(), sig.getSignature(), getID(), kwargs
+          ).execute().headers().get("Location"));
     }
   }
 
   public class Signature {
+
     private String sig;
     private String slt;
 

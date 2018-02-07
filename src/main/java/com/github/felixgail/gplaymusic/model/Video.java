@@ -4,7 +4,6 @@ import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.Thumbnail;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Video implements Result, Serializable {
+
   public final static ResultType RESULT_TYPE = ResultType.VIDEO;
 
   @Expose

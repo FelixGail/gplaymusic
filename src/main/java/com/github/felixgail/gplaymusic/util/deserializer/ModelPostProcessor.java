@@ -8,6 +8,7 @@ import io.gsonfire.PostProcessor;
 
 
 public class ModelPostProcessor implements PostProcessor<Model> {
+
   private GPlayMusic mainApi;
 
   @Override

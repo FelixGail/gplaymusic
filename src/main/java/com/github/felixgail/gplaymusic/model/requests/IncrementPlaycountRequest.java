@@ -3,14 +3,14 @@ package com.github.felixgail.gplaymusic.model.requests;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 
 public class IncrementPlaycountRequest implements Serializable {
+
   @Expose
   @SerializedName("track_stats")
   private List<Inner> trackStats;
@@ -20,6 +20,7 @@ public class IncrementPlaycountRequest implements Serializable {
   }
 
   private class Inner {
+
     @Expose
     private String id;
     @Expose
@@ -51,6 +52,7 @@ public class IncrementPlaycountRequest implements Serializable {
   }
 
   private class Event {
+
     @Expose
     @SerializedName("context_type")
     private int contextType = 1;
