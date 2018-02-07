@@ -15,6 +15,7 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,7 +63,7 @@ public class PlaylistApi implements SubApi {
    *
    * @param playlists playlists to be deleted
    */
-  public void deletePlaylists(Playlist... playlists)
+  public void deletePlaylists(@NotNull Playlist... playlists)
       throws IOException {
     Mutator mutator = new Mutator();
     for (Playlist playlist : playlists) {
@@ -71,12 +72,32 @@ public class PlaylistApi implements SubApi {
     mainApi.getService().makeBatchCall(Playlist.BATCH_URL, mutator);
   }
 
-  public void addTracksToPlaylist(Playlist playlist, List<Track> tracks) throws IOException {
+  /**
+   * Adds tracks to an existing playlist
+   *
+   * @param playlist playlist to add tracks too
+   * @param tracks A Collection of {@link Track}s that will be added.
+   * @throws IOException
+   */
+  public void addTracksToPlaylist(@NotNull Playlist playlist, @NotNull Collection<Track> tracks) throws IOException {
+    addTracksToPlaylistById(playlist, tracks.stream().map(Track::getID).collect(Collectors.toList()));
+  }
+
+  /**
+   * Adds tracks to an existing playlist
+   *
+   * @param playlist playlist to add tracks too
+   * @param trackIds A Collection of {@link Track}-IDs (derived from {@link Track#getID()}) that will be added.<br>
+   *                 <b>Track Ids will not be checked. Make sure all ids are valid!</b>
+   * @throws IOException
+   */
+  public void addTracksToPlaylistById(@NotNull Playlist playlist, @NotNull Collection<String> trackIds)
+      throws IOException {
     Mutator mutator = new Mutator();
     UUID last = null;
     UUID current = UUID.randomUUID();
     UUID next = UUID.randomUUID();
-    for (Track track : tracks) {
+    for (String track : trackIds) {
       Mutation currentMutation = MutationFactory.
           getAddPlaylistEntryMutation(playlist, track, last, current, next);
       mutator.addMutation(currentMutation);

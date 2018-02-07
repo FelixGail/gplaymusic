@@ -46,14 +46,14 @@ public class MutationFactory {
    * IDs will be the ClientIDs of the entries.
    *
    * @param playlist     A playlist the track will be added to.
-   * @param track        The track to add.
+   * @param trackId      ID of the track to add.
    * @param preceedingID clientID of the preceeding {@link PlaylistEntry} or null if this is the first to add.
    * @param currentID    clientID of the track to add. Can be crated arbitrary, but should be saved if multiple Mutations
    *                     will be added.
    * @param followingID  clientID of the following {@link PlaylistEntry} or null if this is the last entry to add.
    */
   public static Mutation<Map<String, Object>> getAddPlaylistEntryMutation(Playlist playlist,
-                                                                          Track track, UUID preceedingID,
+                                                                          String trackId, UUID preceedingID,
                                                                           UUID currentID, UUID followingID) {
     if (currentID == null) {
       throw new NullPointerException("currentID is not allowed to be null.");
@@ -65,9 +65,9 @@ public class MutationFactory {
     create.put("lastModifiedTimestamp", "0");
     create.put("playlistId", playlist.getId());
     create.put("source", 1);
-    create.put("trackId", track.getID());
+    create.put("trackId", trackId);
 
-    if (track.getID().startsWith("T")) {
+    if (trackId.startsWith("T")) {
       create.put("source", 2);
     }
 
