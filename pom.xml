@@ -34,6 +34,17 @@
       <url>https://github.com/FelixGail</url>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Jens Kristian Villadsen</name>
+      <email>jenskristianvilladsen@gmail.com</email>
+      <url>https://github.com/jkiddo</url>
+    </contributor>
+    <contributor>
+      <name>vadimshilov</name>
+      <url>https://github.com/vadimshilov</url>
+    </contributor>
+  </contributors>
   <scm>
     <connection>scm:git:https://github.com/FelixGail/gplaymusic.git</connection>
     <developerConnection>scm:git:git@github.com:FelixGail/gplaymusic.git</developerConnection>
