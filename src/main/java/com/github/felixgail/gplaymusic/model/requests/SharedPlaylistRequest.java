@@ -3,7 +3,6 @@ package com.github.felixgail.gplaymusic.model.requests;
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SharedPlaylistRequest implements Serializable {
+
   @Expose
   private List<Map<String, String>> entries;
 

@@ -1,8 +1,8 @@
 package com.github.felixgail.gplaymusic.exceptions;
 
 /**
- * Will be thrown during initialization of {@link com.github.felixgail.gplaymusic.api.GPlayMusic}
- * if an error occurs.
+ * Will be thrown during initialization of {@link com.github.felixgail.gplaymusic.api.GPlayMusic} if
+ * an error occurs.
  */
 public class InitializationException extends RuntimeException {
 

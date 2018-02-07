@@ -4,13 +4,12 @@ import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowSituation;
 import com.github.felixgail.gplaymusic.model.listennow.Situation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
-
-import java.io.IOException;
 
 public class TestListenNowSituation extends TestWithLogin {
 
@@ -48,7 +47,8 @@ public class TestListenNowSituation extends TestWithLogin {
       System.out.println("Situation contains Stations and Situations");
     }
     if (situation.getStations().isPresent()) {
-      Assert.assertTrue("Situation contains empty station list", situation.getStations().get().size() > 0);
+      Assert.assertTrue("Situation contains empty station list",
+          situation.getStations().get().size() > 0);
       for (Station station : situation.getStations().get()) {
         Assert.assertNotNull("Station is null", station);
         TestUtil.testStation(station);

@@ -6,14 +6,14 @@ import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.github.felixgail.gplaymusic.model.snippets.Attribution;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
+import javax.validation.constraints.NotNull;
 
 public class Artist implements Result, Serializable {
+
   public final static ResultType RESULT_TYPE = ResultType.ARTIST;
 
   @Expose

@@ -1,5 +1,7 @@
 package com.github.felixgail.gplaymusic.api;
 
+import static com.github.felixgail.gplaymusic.model.Station.BATCH_URL;
+
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.MutationResponse;
 import com.github.felixgail.gplaymusic.model.PagingHandler;
@@ -11,14 +13,12 @@ import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.language.Language;
-
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
-
-import static com.github.felixgail.gplaymusic.model.Station.BATCH_URL;
+import javax.validation.constraints.NotNull;
 
 public class StationApi implements SubApi {
+
   private GPlayMusic mainApi;
 
   StationApi(GPlayMusic api) {
@@ -28,15 +28,15 @@ public class StationApi implements SubApi {
   /**
    * Creates a new Station.
    *
-   * @param seed          a seed to build the station upon.
-   * @param name          name of the new station
+   * @param seed a seed to build the station upon.
+   * @param name name of the new station
    * @param includeTracks whether the response should
    * @return Returns the newly created station
-   * @throws IOException
    */
   public Station create(final StationSeed seed, final String name, final boolean includeTracks)
       throws IOException {
-    final Mutator mutator = new Mutator(MutationFactory.getAddStationMutation(name, seed, includeTracks));
+    final Mutator mutator = new Mutator(
+        MutationFactory.getAddStationMutation(name, seed, includeTracks));
     final MutationResponse response = mainApi.getService().makeBatchCall(BATCH_URL, mutator);
     MutationResponse.Item item = response.getItems().get(0);
     if (item.hasStationKey()) {

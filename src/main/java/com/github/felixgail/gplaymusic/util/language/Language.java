@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class Language {
+
   private final static Locale defaultLocale = Locale.US;
   private final static Properties defaultLang;
 

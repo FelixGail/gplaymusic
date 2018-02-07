@@ -7,7 +7,6 @@ import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.google.gson.annotations.SerializedName;
-
 import java.lang.reflect.Type;
 
 public enum StationSeedType {

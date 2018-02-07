@@ -11,7 +11,6 @@ import com.github.felixgail.gplaymusic.util.serializer.StationSeedSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 
 @JsonAdapter(StationSeedSerializer.class)
@@ -37,7 +36,8 @@ public class StationSeed implements Serializable {
   public StationSeed(Artist artist) {
     this.seedType = StationSeedType.ARTIST;
     this.seedId = artist.getArtistId()
-        .orElseThrow(() -> new IllegalArgumentException("ArtistID not present. Unable to create seed"));
+        .orElseThrow(
+            () -> new IllegalArgumentException("ArtistID not present. Unable to create seed"));
   }
 
   public StationSeed(Playlist playlist) {
@@ -51,10 +51,10 @@ public class StationSeed implements Serializable {
   }
 
   /**
-   * Creates a StationSeed from a Station created by a Curated Station. Use this with care, as this will only work on
-   * stations that meet the initial description.
-   * Deprecated since you should use the {@link Station#getSeed()} method to retrieve the seed from a curated station
-   * instead of creating a new one.
+   * Creates a StationSeed from a Station created by a Curated Station. Use this with care, as this
+   * will only work on stations that meet the initial description. Deprecated since you should use
+   * the {@link Station#getSeed()} method to retrieve the seed from a curated station instead of
+   * creating a new one.
    */
   @Deprecated
   public StationSeed(Station curatedStation) {

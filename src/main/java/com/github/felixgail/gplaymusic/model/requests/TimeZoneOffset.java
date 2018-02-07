@@ -2,12 +2,12 @@ package com.github.felixgail.gplaymusic.model.requests;
 
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneOffset;
 
 public class TimeZoneOffset implements Serializable {
+
   @Expose
   private RequestSignal requestSignals;
 
@@ -25,6 +25,7 @@ public class TimeZoneOffset implements Serializable {
   }
 
   private class RequestSignal implements Serializable {
+
     @Expose
     private String timeZoneOffsetSecs;
 

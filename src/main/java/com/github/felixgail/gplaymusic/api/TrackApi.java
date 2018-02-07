@@ -4,11 +4,11 @@ import com.github.felixgail.gplaymusic.cache.LibraryTrackCache;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
-
 import java.io.IOException;
 import java.util.List;
 
 public class TrackApi implements SubApi {
+
   private GPlayMusic mainApi;
   private LibraryTrackCache libraryTrackCache;
 
@@ -18,8 +18,8 @@ public class TrackApi implements SubApi {
   }
 
   /**
-   * Provides convenience by wrapping the {@link GPlayMusic#search(String, int, SearchTypes)} method and limiting
-   * the content types to Tracks only.
+   * Provides convenience by wrapping the {@link GPlayMusic#search(String, int, SearchTypes)} method
+   * and limiting the content types to Tracks only.
    *
    * @return Returns a list of tracks returned by the google play service.
    */
@@ -44,10 +44,9 @@ public class TrackApi implements SubApi {
 
   /**
    * Library tracks can only be fetched as whole. To shorten wait times, collected songs are cached.
-   * Please consider updating the cache (asynchronously) when using the library over a long period of time, or when
-   * new songs could be added to the library during runtime.
-   * <br>
-   * If outside access to the library is expected during runtime, disabling caching via {@link #useCache(boolean)}
+   * Please consider updating the cache (asynchronously) when using the library over a long period
+   * of time, or when new songs could be added to the library during runtime. <br> If outside access
+   * to the library is expected during runtime, disabling caching via {@link #useCache(boolean)}
    * should also be considered.
    */
   public void updateCache() throws IOException {

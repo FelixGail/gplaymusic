@@ -1,5 +1,7 @@
 package com.github.felixgail.gplaymusic.api;
 
+import static com.github.felixgail.gplaymusic.model.Playlist.BATCH_URL;
+
 import com.github.felixgail.gplaymusic.cache.Cache;
 import com.github.felixgail.gplaymusic.model.MutationResponse;
 import com.github.felixgail.gplaymusic.model.PagingHandler;
@@ -12,18 +14,16 @@ import com.github.felixgail.gplaymusic.model.requests.mutations.Mutation;
 import com.github.felixgail.gplaymusic.model.requests.mutations.MutationFactory;
 import com.github.felixgail.gplaymusic.model.requests.mutations.Mutator;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
-
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.github.felixgail.gplaymusic.model.Playlist.BATCH_URL;
+import javax.validation.constraints.NotNull;
 
 public class PlaylistApi implements SubApi {
+
   private GPlayMusic mainApi;
   private PlaylistEntryApi entryApi;
 
@@ -36,16 +36,17 @@ public class PlaylistApi implements SubApi {
   /**
    * Creates a new playlist.
    *
-   * @param name        Name of the playlist. <b>Doesn't</b> have to be unique
+   * @param name Name of the playlist. <b>Doesn't</b> have to be unique
    * @param description Optional. A description for the playlist.
-   * @param shareState  share state of the playlist. defaults to {@link Playlist.PlaylistShareState#PRIVATE} on null.
-   * @return The newly created Playlist. Warning: Playlist is not filled yet and timestamps are not valid
-   * (Systemtime@Request != Servertime@Creation)
-   * @throws IOException
+   * @param shareState share state of the playlist. defaults to {@link
+   * Playlist.PlaylistShareState#PRIVATE} on null.
+   * @return The newly created Playlist. Warning: Playlist is not filled yet and timestamps are not
+   * valid (Systemtime@Request != Servertime@Creation)
    */
   public Playlist create(String name, String description, Playlist.PlaylistShareState shareState)
       throws IOException {
-    Mutator mutator = new Mutator(MutationFactory.getAddPlaylistMutation(name, description, shareState));
+    Mutator mutator = new Mutator(
+        MutationFactory.getAddPlaylistMutation(name, description, shareState));
     MutationResponse response = mainApi.getService().makeBatchCall(BATCH_URL, mutator);
     String id = response.getItems().get(0).getId();
     return getPlaylist(id);
@@ -77,21 +78,22 @@ public class PlaylistApi implements SubApi {
    *
    * @param playlist playlist to add tracks too
    * @param tracks A Collection of {@link Track}s that will be added.
-   * @throws IOException
    */
-  public void addTracksToPlaylist(@NotNull Playlist playlist, @NotNull Collection<Track> tracks) throws IOException {
-    addTracksToPlaylistById(playlist, tracks.stream().map(Track::getID).collect(Collectors.toList()));
+  public void addTracksToPlaylist(@NotNull Playlist playlist, @NotNull Collection<Track> tracks)
+      throws IOException {
+    addTracksToPlaylistById(playlist,
+        tracks.stream().map(Track::getID).collect(Collectors.toList()));
   }
 
   /**
    * Adds tracks to an existing playlist
    *
    * @param playlist playlist to add tracks too
-   * @param trackIds A Collection of {@link Track}-IDs (derived from {@link Track#getID()}) that will be added.<br>
-   *                 <b>Track Ids will not be checked. Make sure all ids are valid!</b>
-   * @throws IOException
+   * @param trackIds A Collection of {@link Track}-IDs (derived from {@link Track#getID()}) that
+   * will be added.<br> <b>Track Ids will not be checked. Make sure all ids are valid!</b>
    */
-  public void addTracksToPlaylistById(@NotNull Playlist playlist, @NotNull Collection<String> trackIds)
+  public void addTracksToPlaylistById(@NotNull Playlist playlist,
+      @NotNull Collection<String> trackIds)
       throws IOException {
     Mutator mutator = new Mutator();
     UUID last = null;
@@ -112,10 +114,9 @@ public class PlaylistApi implements SubApi {
   /**
    * Returns the contents (as a list of PlaylistEntries) for this playlist.
    *
-   * @param maxResults only applicable for shared playlist, otherwise ignored.
-   *                   Sets the amount of entries that should be returned.
-   *                   Valid range between 0 and 1000. Invalid values will default to 1000.
-   * @throws IOException
+   * @param maxResults only applicable for shared playlist, otherwise ignored. Sets the amount of
+   * entries that should be returned. Valid range between 0 and 1000. Invalid values will default to
+   * 1000.
    */
   public List<PlaylistEntry> getContents(@NotNull Playlist playlist, int maxResults)
       throws IOException {
@@ -150,7 +151,8 @@ public class PlaylistApi implements SubApi {
     return new PagingHandler<Playlist>() {
       @Override
       public ListResult<Playlist> getChunk(String nextPageToken) throws IOException {
-        return mainApi.getService().listPlaylists(new PagingRequest(nextPageToken, -1)).execute().body();
+        return mainApi.getService().listPlaylists(new PagingRequest(nextPageToken, -1)).execute()
+            .body();
       }
     }.getAll();
   }

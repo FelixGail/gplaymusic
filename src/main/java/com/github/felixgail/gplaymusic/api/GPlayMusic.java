@@ -30,6 +30,13 @@ import com.github.felixgail.gplaymusic.util.interceptor.RequestInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
 import io.gsonfire.GsonFireBuilder;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -38,19 +45,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import svarzee.gps.gpsoauth.AuthToken;
 
-import javax.validation.constraints.NotNull;
-import java.awt.Color;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-
 /**
- * The main API, wrapping calls to the service.
- * Use the {@link GPlayMusic.Builder} to create a new instance.
+ * The main API, wrapping calls to the service. Use the {@link GPlayMusic.Builder} to create a new
+ * instance.
  */
 public final class GPlayMusic {
+
   private GPlayService service;
   private Config config;
   private RequestInterceptor interceptor;
@@ -85,13 +85,14 @@ public final class GPlayMusic {
   /**
    * Fetches for an artist by {@code artistID}.
    *
-   * @param artistID      {@link Artist#getArtistId()} of the artist searched for.
+   * @param artistID {@link Artist#getArtistId()} of the artist searched for.
    * @param includeAlbums whether albums of the artist shall be included in the response.
-   * @param numTopTracks  response includes up to provided number of most heard songs in response
-   * @param numRelArtist  response includes up to provided number of similar artist in response
+   * @param numTopTracks response includes up to provided number of most heard songs in response
+   * @param numRelArtist response includes up to provided number of similar artist in response
    * @return An executable call which returns an artist on execution.
    */
-  public Artist getArtist(String artistID, boolean includeAlbums, int numTopTracks, int numRelArtist)
+  public Artist getArtist(String artistID, boolean includeAlbums, int numTopTracks,
+      int numRelArtist)
       throws IOException {
     return getService().getArtist(artistID, includeAlbums, numTopTracks, numRelArtist)
         .execute().body();
@@ -108,15 +109,15 @@ public final class GPlayMusic {
   }
 
   /**
-   * Queries Google Play Music for content.
-   * Content can be every combination of {@link SearchTypes} enum.
+   * Queries Google Play Music for content. Content can be every combination of {@link SearchTypes}
+   * enum.
    *
-   * @param query      Query String
+   * @param query Query String
    * @param maxResults Limits the results. Keep in mind that higher numbers increase loading time.
-   * @param types      Content types that should be queried for
+   * @param types Content types that should be queried for
    * @return A SearchResponse instance holding all content returned
-   * @throws IOException Throws an IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException Throws an IOException on severe failures (no internet connection...) or a
+   * {@link NetworkException} on request failures.
    */
   public SearchResponse search(String query, int maxResults, SearchTypes types)
       throws IOException {
@@ -124,8 +125,8 @@ public final class GPlayMusic {
   }
 
   /**
-   * Provides convenience by wrapping the {@link #search(String, int, SearchTypes)} method and setting the maxResults
-   * parameter to 50.
+   * Provides convenience by wrapping the {@link #search(String, int, SearchTypes)} method and
+   * setting the maxResults parameter to 50.
    */
   public SearchResponse search(String query, SearchTypes types)
       throws IOException {
@@ -135,9 +136,10 @@ public final class GPlayMusic {
   /**
    * Fetches a list of all devices connected with the current google play account.
    *
-   * @return A DeviceList instance containing all devices connected to the current Google Play account.
-   * @throws IOException Throws an IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @return A DeviceList instance containing all devices connected to the current Google Play
+   * account.
+   * @throws IOException Throws an IOException on severe failures (no internet connection...) or a
+   * {@link NetworkException} on request failures.
    */
   public ListResult<DeviceInfo> getRegisteredDevices()
       throws IOException {
@@ -145,11 +147,11 @@ public final class GPlayMusic {
   }
 
   /**
-   * Returns a list of promoted {@link Track}s.
-   * Which tracks are in the returned list is determined by google
+   * Returns a list of promoted {@link Track}s. Which tracks are in the returned list is determined
+   * by google
    *
-   * @throws IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException on severe failures (no internet connection...) or a {@link
+   * NetworkException} on request failures.
    */
   public List<Track> getPromotedTracks()
       throws IOException {
@@ -163,8 +165,8 @@ public final class GPlayMusic {
   }
 
   /**
-   * Returns a selection of {@link ListenNowItem}s consisting of {@link ListenNowStation}
-   * and {@link com.github.felixgail.gplaymusic.model.listennow.ListenNowAlbum}.
+   * Returns a selection of {@link ListenNowItem}s consisting of {@link ListenNowStation} and {@link
+   * com.github.felixgail.gplaymusic.model.listennow.ListenNowAlbum}.
    */
   public List<ListenNowItem> listListenNowItems() throws IOException {
     return service.listListenNowItems().execute().body().getListenNowItems();
@@ -183,7 +185,8 @@ public final class GPlayMusic {
    * @param offsetInSeconds the offset in seconds to UTC.
    */
   public ListenNowSituation getListenNowSituation(int offsetInSeconds) throws IOException {
-    return service.getListenNowSituation(new TimeZoneOffset(String.valueOf(offsetInSeconds))).execute().body();
+    return service.getListenNowSituation(new TimeZoneOffset(String.valueOf(offsetInSeconds)))
+        .execute().body();
   }
 
   public GenreApi getGenreApi() {
@@ -230,8 +233,8 @@ public final class GPlayMusic {
 
     /**
      * Used while building the {@link GPlayMusic} instance. If no {@link OkHttpClient.Builder} is
-     * provided via {@link #setHttpClientBuilder(OkHttpClient.Builder)} the instance returned by this method will
-     * be used for building.
+     * provided via {@link #setHttpClientBuilder(OkHttpClient.Builder)} the instance returned by
+     * this method will be used for building.
      *
      * @return Returns the default {@link OkHttpClient.Builder} instance
      */
@@ -252,9 +255,8 @@ public final class GPlayMusic {
     }
 
     /**
-     * If set to <em>true</em>, will log every request and response made by the Client.<br>
-     * <b>
-     * Be careful as this can easily leak personal information. Be sure to always check the output.
+     * If set to <em>true</em>, will log every request and response made by the Client.<br> <b> Be
+     * careful as this can easily leak personal information. Be sure to always check the output.
      * </b>
      */
     public GPlayMusic.Builder setDebug(boolean debug) {
@@ -263,9 +265,9 @@ public final class GPlayMusic {
     }
 
     /**
-     * Set a custom {@link OkHttpClient.Builder} to build the {@link GPlayMusic} instance with.
-     * If left untouched the Builder will use the default instance accessible
-     * through {@link #getDefaultHttpBuilder()}.
+     * Set a custom {@link OkHttpClient.Builder} to build the {@link GPlayMusic} instance with. If
+     * left untouched the Builder will use the default instance accessible through {@link
+     * #getDefaultHttpBuilder()}.
      *
      * @return This {@link Builder} instance.
      */
@@ -275,11 +277,11 @@ public final class GPlayMusic {
     }
 
     /**
-     * Set an {@link AuthToken} to access the Google Play Service.
-     * This method has to be called before building the {@link GPlayMusic} instance.
+     * Set an {@link AuthToken} to access the Google Play Service. This method has to be called
+     * before building the {@link GPlayMusic} instance.
      *
-     * @param token An {@link AuthToken} either saved from a prior session or created
-     *              through the {@link TokenProvider#provideToken(String, String, String)} method.
+     * @param token An {@link AuthToken} either saved from a prior session or created through the
+     * {@link TokenProvider#provideToken(String, String, String)} method.
      * @return This {@link Builder} instance.
      */
     public Builder setAuthToken(AuthToken token) {
@@ -288,8 +290,7 @@ public final class GPlayMusic {
     }
 
     /**
-     * Set a local to use during calls to the Google Play Service.
-     * Defaults to {@link Locale#US}.
+     * Set a local to use during calls to the Google Play Service. Defaults to {@link Locale#US}.
      *
      * @return This {@link Builder} instance.
      */
@@ -299,22 +300,23 @@ public final class GPlayMusic {
     }
 
     /**
-     * Set a Behaviour for the {@link ErrorInterceptor} appended to the {@link OkHttpClient.Builder}.
-     * Throws Exceptions on default. May cause instability when set to {@link com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor.InterceptorBehaviour#LOG}.
+     * Set a Behaviour for the {@link ErrorInterceptor} appended to the {@link
+     * OkHttpClient.Builder}. Throws Exceptions on default. May cause instability when set to {@link
+     * com.github.felixgail.gplaymusic.util.interceptor.ErrorInterceptor.InterceptorBehaviour#LOG}.
      *
      * @return This {@link Builder} instance.
      */
-    public Builder setInterceptorBehaviour(ErrorInterceptor.InterceptorBehaviour interceptorBehaviour) {
+    public Builder setInterceptorBehaviour(
+        ErrorInterceptor.InterceptorBehaviour interceptorBehaviour) {
       this.interceptorBehaviour = interceptorBehaviour;
       return this;
     }
 
     /**
-     * Set an AndroidID used for stream calls to the Google Play Service.
-     * In general the IMEI used for logging in should be sufficient.
-     * If logged in with a MAC use {@link GPlayMusic#getRegisteredDevices()} for a list of
-     * connected devices or leave empty.
-     * On empty the {@link #build()}-method will use search online for a suitable device.
+     * Set an AndroidID used for stream calls to the Google Play Service. In general the IMEI used
+     * for logging in should be sufficient. If logged in with a MAC use {@link
+     * GPlayMusic#getRegisteredDevices()} for a list of connected devices or leave empty. On empty
+     * the {@link #build()}-method will use search online for a suitable device.
      *
      * @return This {@link Builder} instance.
      */
@@ -324,8 +326,8 @@ public final class GPlayMusic {
     }
 
     /**
-     * Builds a new {@link GPlayMusic} instance with the customizations set to this builder.
-     * Make sure to call {@link #setAuthToken(AuthToken)} before building with this method.
+     * Builds a new {@link GPlayMusic} instance with the customizations set to this builder. Make
+     * sure to call {@link #setAuthToken(AuthToken)} before building with this method.
      *
      * @return Returns a new {@link GPlayMusic} instance
      */
@@ -366,12 +368,14 @@ public final class GPlayMusic {
             .client(httpClient)
             .build();
 
-        GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class), parameterInterceptor);
+        GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class),
+            parameterInterceptor);
         postProcessor.setApi(gPlay);
         retrofit2.Response<Config> configResponse;
         configResponse = gPlay.getService().config(this.locale).execute();
         if (!configResponse.isSuccessful()) {
-          throw new InitializationException(Language.get("network.GenericError"), NetworkException.parse(configResponse.raw()));
+          throw new InitializationException(Language.get("network.GenericError"),
+              NetworkException.parse(configResponse.raw()));
         }
         Config config = configResponse.body();
         if (config == null) {

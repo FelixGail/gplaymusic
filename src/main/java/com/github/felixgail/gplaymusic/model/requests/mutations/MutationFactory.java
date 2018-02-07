@@ -8,7 +8,6 @@ import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.serializer.MutationSerializer;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -18,9 +17,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MutationFactory {
+
   /**
-   * Creates the Mutation needed to remove a PlaylistEntry from a playlist.
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
+   * Creates the Mutation needed to remove a PlaylistEntry from a playlist. Mutation has to be
+   * wrapped inside a Mutator before sending it to the endpoint.
    *
    * @param entry PlaylistEntry to delete
    */
@@ -29,10 +29,8 @@ public class MutationFactory {
   }
 
   /**
-   * Creates the Mutation needed to remove a playlist.
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
-   * <br>
-   * <b>WARNING: THIS CAN NOT BE UNDONE!</b>
+   * Creates the Mutation needed to remove a playlist. Mutation has to be wrapped inside a Mutator
+   * before sending it to the endpoint. <br> <b>WARNING: THIS CAN NOT BE UNDONE!</b>
    *
    * @param playlist - playlist to remove
    */
@@ -41,20 +39,21 @@ public class MutationFactory {
   }
 
   /**
-   * Creates the Mutation needed to add a PlaylistEntry to a playlist.
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
-   * IDs will be the ClientIDs of the entries.
+   * Creates the Mutation needed to add a PlaylistEntry to a playlist. Mutation has to be wrapped
+   * inside a Mutator before sending it to the endpoint. IDs will be the ClientIDs of the entries.
    *
-   * @param playlist     A playlist the track will be added to.
-   * @param trackId      ID of the track to add.
-   * @param preceedingID clientID of the preceeding {@link PlaylistEntry} or null if this is the first to add.
-   * @param currentID    clientID of the track to add. Can be crated arbitrary, but should be saved if multiple Mutations
-   *                     will be added.
-   * @param followingID  clientID of the following {@link PlaylistEntry} or null if this is the last entry to add.
+   * @param playlist A playlist the track will be added to.
+   * @param trackId ID of the track to add.
+   * @param preceedingID clientID of the preceeding {@link PlaylistEntry} or null if this is the
+   * first to add.
+   * @param currentID clientID of the track to add. Can be crated arbitrary, but should be saved if
+   * multiple Mutations will be added.
+   * @param followingID clientID of the following {@link PlaylistEntry} or null if this is the last
+   * entry to add.
    */
   public static Mutation<Map<String, Object>> getAddPlaylistEntryMutation(Playlist playlist,
-                                                                          String trackId, UUID preceedingID,
-                                                                          UUID currentID, UUID followingID) {
+      String trackId, UUID preceedingID,
+      UUID currentID, UUID followingID) {
     if (currentID == null) {
       throw new NullPointerException("currentID is not allowed to be null.");
     }
@@ -82,17 +81,17 @@ public class MutationFactory {
   }
 
   /**
-   * Creates the Mutation needed to create a new playlist.
-   * Playlist names <b>don't</b> have to be unique.
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
+   * Creates the Mutation needed to create a new playlist. Playlist names <b>don't</b> have to be
+   * unique. Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
    *
-   * @param name        a playlist name (not unique)
+   * @param name a playlist name (not unique)
    * @param description description of the playlist (e.g. "Full of my dearest tunes") or null
-   * @param shareState  share state of the playlist. defaults to
-   *                    {@link Playlist.PlaylistShareState#PRIVATE} if left null
+   * @param shareState share state of the playlist. defaults to {@link
+   * Playlist.PlaylistShareState#PRIVATE} if left null
    */
-  public static Mutation<Map<String, Object>> getAddPlaylistMutation(String name, String description,
-                                                                     Playlist.PlaylistShareState shareState) {
+  public static Mutation<Map<String, Object>> getAddPlaylistMutation(String name,
+      String description,
+      Playlist.PlaylistShareState shareState) {
     shareState = (shareState != null) ? shareState : Playlist.PlaylistShareState.PRIVATE;
 
     Map<String, Object> create = new HashMap<>();
@@ -107,15 +106,16 @@ public class MutationFactory {
   }
 
   /**
-   * Creates the Mutation needed to reorder Tracks inside a playlist.
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
-   * <br>
-   * <b>WARNING: Call will result in an error if {@code precedingEntryId} or {@code followingEntry} are not
-   * directly behind each other.</b>
+   * Creates the Mutation needed to reorder Tracks inside a playlist. Mutation has to be wrapped
+   * inside a Mutator before sending it to the endpoint. <br> <b>WARNING: Call will result in an
+   * error if {@code precedingEntryId} or {@code followingEntry} are not directly behind each
+   * other.</b>
    *
-   * @param plentry         PlaylistEntry to reorder
-   * @param preceedingEntry Entry that will be before the provided entry, or null provided will be the first
-   * @param followingEntry  Entry that will be after the providen entry, or null if provided will be the last
+   * @param plentry PlaylistEntry to reorder
+   * @param preceedingEntry Entry that will be before the provided entry, or null provided will be
+   * the first
+   * @param followingEntry Entry that will be after the providen entry, or null if provided will be
+   * the last
    */
   public static Mutation<Map<String, Object>> getReorderPlaylistEntryMutation(
       PlaylistEntry plentry, PlaylistEntry preceedingEntry,
@@ -142,17 +142,16 @@ public class MutationFactory {
       if (entry.getClientId() != null) {
         return entry.getClientId();
       }
-      throw new NullPointerException("ClientID is not allowed to be empty for entry in reorder mutation");
+      throw new NullPointerException(
+          "ClientID is not allowed to be empty for entry in reorder mutation");
     }
     return null;
   }
 
   /**
-   * Creates the Mutation needed to modify a playlist.
-   * Playlist names <b>don't</b> have to be unique.
-   * At least one parameter has to be set.
-   * <br>
-   * Mutation has to be wrapped inside a Mutator before sending it to the endpoint.
+   * Creates the Mutation needed to modify a playlist. Playlist names <b>don't</b> have to be
+   * unique. At least one parameter has to be set. <br> Mutation has to be wrapped inside a Mutator
+   * before sending it to the endpoint.
    */
   public static Mutation<Map<String, Object>> getUpdatePlaylistMutation(
       String newID, String newName, String newDescription,
@@ -171,8 +170,8 @@ public class MutationFactory {
   }
 
   public static Mutation<Map<String, Object>> getPodcastMutation(String seriesID,
-                                                                 boolean subscribe,
-                                                                 boolean notifyOnNewEpisode) {
+      boolean subscribe,
+      boolean notifyOnNewEpisode) {
     MapMutation mutation = new MapMutation("update");
     mutation.addMutation("seriesID", seriesID);
     mutation.addMutation("subscribed", subscribe);
@@ -197,14 +196,15 @@ public class MutationFactory {
   }
 
   /**
-   * Creates the Mutation needed to create a {@link Station}
-   * At least one parameter has to be set.
+   * Creates the Mutation needed to create a {@link Station} At least one parameter has to be set.
    *
-   * @param name          name of the station
-   * @param seed          seed of the station
-   * @param includeTracks whether or not the response should include a list of 25 tracks for the new station
+   * @param name name of the station
+   * @param seed seed of the station
+   * @param includeTracks whether or not the response should include a list of 25 tracks for the new
+   * station
    */
-  public static Mutation getAddStationMutation(String name, StationSeed seed, boolean includeTracks) {
+  public static Mutation getAddStationMutation(String name, StationSeed seed,
+      boolean includeTracks) {
     return new CreateStationMutation(name, seed, includeTracks, 25);
   }
 
@@ -251,6 +251,7 @@ public class MutationFactory {
 
   @JsonAdapter(MutationSerializer.class)
   private static class StringMutation implements Mutation<String>, Serializable {
+
     @Expose
     private String data;
 
@@ -283,6 +284,7 @@ public class MutationFactory {
 
   //Thanks for the consistency google
   private static class CreateStationMutation implements Mutation, Serializable {
+
     @Expose
     private CreateOrGet createOrGet;
     @Expose
@@ -312,11 +314,13 @@ public class MutationFactory {
     }
 
     private static class Params implements Serializable {
+
       @Expose
       private int contentFilter = 1;
     }
 
     private static class CreateOrGet implements Serializable {
+
       @Expose
       private String clientID = UUID.randomUUID().toString();
       @Expose

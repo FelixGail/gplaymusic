@@ -1,21 +1,21 @@
 package com.github.felixgail.gplaymusic.util;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
+
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.Track;
-import org.junit.Assume;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Assume;
 
 public class TestUtil {
+
   public static final String USERNAME_KEY = "auth.username";
   public static final String PASSWORD_KEY = "auth.password";
   public static final String ANDROID_ID_KEY = "auth.android_id";
@@ -65,7 +65,8 @@ public class TestUtil {
   public static void assume(Property... properties) {
     for (Property property : properties) {
       Assume.assumeTrue(
-          String.format("Test has been skipped. Required value \"%s\" is missing.", property.getKey()),
+          String.format("Test has been skipped. Required value \"%s\" is missing.",
+              property.getKey()),
           property.isValid());
     }
   }

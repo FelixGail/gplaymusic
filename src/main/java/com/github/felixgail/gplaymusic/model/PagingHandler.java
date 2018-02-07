@@ -1,12 +1,12 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class PagingHandler<T> {
+
   private ListResult<T> current;
   private boolean hasNext = true;
 

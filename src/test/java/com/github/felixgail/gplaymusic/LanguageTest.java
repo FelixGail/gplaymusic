@@ -1,11 +1,10 @@
 package com.github.felixgail.gplaymusic;
 
 import com.github.felixgail.gplaymusic.util.language.Language;
+import java.util.Locale;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Locale;
 
 public class LanguageTest {
 

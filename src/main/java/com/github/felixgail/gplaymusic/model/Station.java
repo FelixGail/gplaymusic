@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class Station implements Result, Serializable, Model {
+
   public final static ResultType RESULT_TYPE = ResultType.STATION;
   public final static String BATCH_URL = "radio/editstation";
   private final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -110,21 +110,21 @@ public class Station implements Result, Serializable, Model {
   }
 
   /**
-   * Get Tracks for this Station.<br>
-   * <b>
-   * Keep in mind that this can return an empty list, if this station is created on an empty playlist.
-   * </b>
+   * Get Tracks for this Station.<br> <b> Keep in mind that this can return an empty list, if this
+   * station is created on an empty playlist. </b>
    *
-   * @param recentlyPlayed     a list of tracks that have recently been played. tracks from this list will,
-   *                           <b>most of the time</b>,
-   *                           be excluded from the response. For some reason this is sometimes ignored by the server.
-   *                           Use {@code forceRemoveDoubles} to remove doubles returned by the server.
-   * @param newCall            true if a new call shall be dispatched. false if the list from a previous call is to be returned.
-   *                           Careful: Will return an empty list if no call has been made.
-   * @param forceRemoveDoubles see {@code recentlyPlayed}. Force remove doubles returned by the server.
+   * @param recentlyPlayed a list of tracks that have recently been played. tracks from this list
+   * will, <b>most of the time</b>, be excluded from the response. For some reason this is sometimes
+   * ignored by the server. Use {@code forceRemoveDoubles} to remove doubles returned by the
+   * server.
+   * @param newCall true if a new call shall be dispatched. false if the list from a previous call
+   * is to be returned. Careful: Will return an empty list if no call has been made.
+   * @param forceRemoveDoubles see {@code recentlyPlayed}. Force remove doubles returned by the
+   * server.
    * @return A list of 25 tracks for this station.
    */
-  public List<Track> getTracks(List<Track> recentlyPlayed, boolean newCall, boolean forceRemoveDoubles)
+  public List<Track> getTracks(List<Track> recentlyPlayed, boolean newCall,
+      boolean forceRemoveDoubles)
       throws IOException {
     if (!newCall) {
       return Optional.of(tracks).orElse(Collections.emptyList());

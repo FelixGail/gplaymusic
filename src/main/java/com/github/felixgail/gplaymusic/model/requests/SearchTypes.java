@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.model.requests;
 
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

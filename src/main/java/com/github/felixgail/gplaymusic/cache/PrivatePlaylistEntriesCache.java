@@ -5,11 +5,11 @@ import com.github.felixgail.gplaymusic.model.PagingHandler;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.requests.PagingRequest;
 import com.github.felixgail.gplaymusic.model.responses.ListResult;
-
 import java.io.IOException;
 import java.util.List;
 
 public class PrivatePlaylistEntriesCache extends Cache<PlaylistEntry> {
+
   private GPlayMusic mainAPI;
 
   public PrivatePlaylistEntriesCache(GPlayMusic api) {

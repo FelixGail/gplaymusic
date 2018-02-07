@@ -9,7 +9,6 @@ import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.listennow.Situation;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.lang.reflect.Type;
 

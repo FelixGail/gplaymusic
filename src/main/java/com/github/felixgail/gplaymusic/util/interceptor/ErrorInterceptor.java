@@ -2,14 +2,14 @@ package com.github.felixgail.gplaymusic.util.interceptor;
 
 import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.util.logging.Logger;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
 public class ErrorInterceptor implements Interceptor {
+
   private static final Logger logger = Logger.getLogger(ErrorInterceptor.class.getName());
   private Gson gson;
   private InterceptorBehaviour behaviour;

@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -29,6 +28,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 public class Track extends Signable implements Result, Serializable, Model {
+
   public final static ResultType RESULT_TYPE = ResultType.TRACK;
   private static Gson gsonPrettyPrinter = new GsonBuilder().setPrettyPrinting().create();
 
@@ -177,8 +177,8 @@ public class Track extends Signable implements Result, Serializable, Model {
   }
 
   /**
-   * Returns how often the song has been played. Not valid, when song has been fetched via
-   * {@link TrackApi#getTrack(String)} as the server response does not contain this key.
+   * Returns how often the song has been played. Not valid, when song has been fetched via {@link
+   * TrackApi#getTrack(String)} as the server response does not contain this key.
    */
   public OptionalInt getPlayCount() {
     return OptionalInt.of(playCount);
@@ -292,17 +292,14 @@ public class Track extends Signable implements Result, Serializable, Model {
   }
 
   /**
-   * Returns a URL to download the song in set quality.
-   * URL will only be valid for 1 minute.
-   * You will likely need to handle redirects.
-   * <br>
-   * <b>Please note that this function is available for Subscribers only.
-   * On free accounts use {@link #getStationTrackURL(StreamQuality)}.</b>
+   * Returns a URL to download the song in set quality. URL will only be valid for 1 minute. You
+   * will likely need to handle redirects. <br> <b>Please note that this function is available for
+   * Subscribers only. On free accounts use {@link #getStationTrackURL(StreamQuality)}.</b>
    *
    * @param quality quality of the stream
    * @return temporary url to the title
-   * @throws IOException Throws an IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException Throws an IOException on severe failures (no internet connection...) or a
+   * {@link NetworkException} on request failures.
    */
   @Override
   public URL getStreamURL(StreamQuality quality)
@@ -314,15 +311,14 @@ public class Track extends Signable implements Result, Serializable, Model {
   }
 
   /**
-   * Fetch the URL for a track from a free Station.
-   * Make sure this Track was returned by a {@link Station}. Otherwise an {@link IOException} will be thrown.
-   * <br>
-   * <b>Subscribers will be redirected to {@link #getStreamURL(StreamQuality)}</b>
+   * Fetch the URL for a track from a free Station. Make sure this Track was returned by a {@link
+   * Station}. Otherwise an {@link IOException} will be thrown. <br> <b>Subscribers will be
+   * redirected to {@link #getStreamURL(StreamQuality)}</b>
    *
    * @param quality - quality of the stream
    * @return a url to download songs from.
-   * @throws IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException on severe failures (no internet connection...) or a {@link
+   * NetworkException} on request failures.
    */
   public URL getStationTrackURL(StreamQuality quality)
       throws IOException {

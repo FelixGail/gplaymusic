@@ -5,16 +5,17 @@ import com.github.felixgail.gplaymusic.util.deserializer.ListenNowItemDeserializ
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * A ListenNowItem is a listen suggestion by the Server. It considers songs rated by you and recent activity.
+ * A ListenNowItem is a listen suggestion by the Server. It considers songs rated by you and recent
+ * activity.
  */
 @JsonAdapter(ListenNowItemDeserializer.class)
 public abstract class ListenNowItem implements Serializable {
+
   @Expose
   private List<ArtRef> compositeArtRefs;
   @Expose

@@ -7,13 +7,13 @@ import com.github.felixgail.gplaymusic.model.snippets.ProfileImage;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 public class ListenNowStation extends ListenNowItem implements Model {
+
   @Expose
   @SerializedName("highlight_color")
   private String highlightColor;
