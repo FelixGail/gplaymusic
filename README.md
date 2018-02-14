@@ -1,5 +1,7 @@
 # Unofficial GPlayMusic API in JAVA
-[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg?label=master)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/develop.svg?label=develop)](https://circleci.com/gh/FelixGail/gplaymusic/tree/develop)
+<br>
 [![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
