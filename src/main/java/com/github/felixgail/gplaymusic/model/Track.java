@@ -304,7 +304,7 @@ public class Track extends Signable implements Result, Serializable, Model {
   @Override
   public URL getStreamURL(StreamQuality quality)
       throws IOException {
-    if (mainApi.getConfig().getSubscription() == SubscriptionType.FREE) {
+    if (mainApi.getConfig().getSubscription() == SubscriptionType.FREE && !getID().startsWith("T")) {
       throw new IOException(Language.get("users.free.NotAllowed"));
     }
     return urlFetcher(mainApi, quality, Provider.STREAM, EMPTY_MAP);
