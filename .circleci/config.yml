@@ -26,6 +26,7 @@ jobs:
               printf "auth.free.username=${auth_free_username}\n" >> gplaymusic.properties
               printf "auth.free.password=${auth_free_password}\n" >> gplaymusic.properties
               printf "auth.free.android_id=${auth_free_android_id}\n" >> gplaymusic.properties
+              printf "auth.free.token=${auth_free_token}\n" >> gplaymusic.properties
               printf "auth.token=${auth_token}\n" >> gplaymusic.properties
               printf "test.track.playlist=${test_track_playlist}\n" >> gplaymusic.properties
           fi
