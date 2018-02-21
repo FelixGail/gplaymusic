@@ -66,7 +66,7 @@ public class TrackTest extends TestWithLogin {
   public void testDownloadSearch() throws IOException {
     Track track = getApi().getTrackApi().search("Sound", 10).get(0);
     assume(track);
-    testDownload("searchedTrack.mp3", track);
+    TestUtil.testDownload("searchedTrack.mp3", track);
   }
 
   @Test
@@ -79,7 +79,7 @@ public class TrackTest extends TestWithLogin {
     for (PlaylistEntry entry : playlist.getContents(-1)) {
       track = entry.getTrack();
       System.out.printf("Preparing to download '%s'\n", track.getTitle());
-      testDownload(track.getTitle(), track);
+      TestUtil.testDownload(track.getTitle(), track);
       System.out.println("\t - Completed");
     }
   }
@@ -87,13 +87,5 @@ public class TrackTest extends TestWithLogin {
   private void printAllPlaylists() throws IOException {
     getApi().getPlaylistApi().listPlaylists()
         .forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
-  }
-
-  private void testDownload(String fileName, Track track) throws IOException {
-    Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), fileName);
-    track.download(StreamQuality.LOW, path);
-    File file = path.toFile();
-    Assert.assertTrue("File does not exist", file.exists());
-    Assert.assertEquals("Is not an audio file", new Tika().detect(file), "audio/mpeg");
   }
 }

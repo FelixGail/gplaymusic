@@ -304,8 +304,8 @@ public class Track extends Signable implements Result, Serializable, Model {
   @Override
   public URL getStreamURL(StreamQuality quality)
       throws IOException {
-    if (mainApi.getConfig().getSubscription() == SubscriptionType.FREE && !getID().startsWith("T")) {
-      throw new IOException(Language.get("users.free.NotAllowed"));
+    if (!easyDownloadPossible()) {
+      getStationTrackURL(quality);
     }
     return urlFetcher(mainApi, quality, Provider.STREAM, EMPTY_MAP);
   }
@@ -362,7 +362,20 @@ public class Track extends Signable implements Result, Serializable, Model {
    * Downloads the song to the provided path. Existing files will be replaced.
    */
   public void download(StreamQuality quality, Path path) throws IOException {
-    Files.copy(getStationTrackURL(quality).openStream(), path, StandardCopyOption.REPLACE_EXISTING);
+    URL trackUrl;
+    if (easyDownloadPossible()){
+      trackUrl = getStreamURL(quality);
+    }else{
+      trackUrl = getStationTrackURL(quality);
+    }
+    Files.copy(trackUrl.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
+  }
+
+  private boolean easyDownloadPossible() {
+    if (mainApi.getConfig().getSubscription() == SubscriptionType.ALL_ACCESS || !getID().startsWith("T")) {
+      return true;
+    }
+    return false;
   }
 
   private Optional<String> getSessionToken() {
