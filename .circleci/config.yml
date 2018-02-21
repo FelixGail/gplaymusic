@@ -23,6 +23,9 @@ jobs:
               printf "auth.username=${auth_username}\n" >> gplaymusic.properties
               printf "auth.password=${auth_password}\n" >> gplaymusic.properties
               printf "auth.android_id=${auth_android_id}\n" >> gplaymusic.properties
+              printf "auth.free.username=${auth_free_username}\n" >> gplaymusic.properties
+              printf "auth.free.password=${auth_free_password}\n" >> gplaymusic.properties
+              printf "auth.free.android_id=${auth_free_android_id}\n" >> gplaymusic.properties
               printf "auth.token=${auth_token}\n" >> gplaymusic.properties
               printf "test.track.playlist=${test_track_playlist}\n" >> gplaymusic.properties
           fi
