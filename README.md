@@ -61,3 +61,7 @@ For now use the Javadoc to help yourself. It can be found
 
 Feel free to create an [issue](https://github.com/FelixGail/gplaymusic/issues) if you have
 questions or problems.
+
+Attribution
+-----------
+Special thanks to [gmusicapi project by Simon Webers](https://github.com/simon-weber/gmusicapi). I started this project as a port for this great library.
