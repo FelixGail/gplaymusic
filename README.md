@@ -2,6 +2,10 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
 [![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
+## Important
+### **Google is planning to replace Google PlayMusic with Youtube Remix in late 2018. I therefore advice against using this API in new projects. [Source](https://tnw.to/DprrN)**
+<br>
+
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
 It can search for songs/artists/albums, modify and create playlists and stations and even
 download tracks. For most activities an active subscription to _GooglePlay All Access_ is needed.
