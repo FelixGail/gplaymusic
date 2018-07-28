@@ -42,6 +42,10 @@ public class TrackApi implements SubApi {
     return track;
   }
 
+  public List<Track> getLibraryTracks() throws IOException {
+    return libraryTrackCache.getAll();
+  }
+
   /**
    * Library tracks can only be fetched as whole. To shorten wait times, collected songs are cached.
    * Please consider updating the cache (asynchronously) when using the library over a long period
