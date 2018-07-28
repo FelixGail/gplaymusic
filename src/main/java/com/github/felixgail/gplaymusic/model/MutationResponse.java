@@ -2,7 +2,6 @@ package com.github.felixgail.gplaymusic.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class MutationResponse implements Serializable {
 
 
   public class Item implements Serializable {
+
     @Expose
     private String id;
     @Expose
@@ -67,8 +67,8 @@ public class MutationResponse implements Serializable {
     }
 
     /**
-     * Returns a Station if one was present in the response, or null.
-     * Check if it was present in the response with {@link #hasStationKey()};
+     * Returns a Station if one was present in the response, or null. Check if it was present in the
+     * response with {@link #hasStationKey()};
      */
     public Station getStation() {
       return station;

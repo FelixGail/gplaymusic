@@ -4,18 +4,18 @@ import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.github.felixgail.gplaymusic.exceptions.InitializationException;
 import com.github.felixgail.gplaymusic.util.TestUtil;
 import com.github.felixgail.gplaymusic.util.TokenProvider;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import svarzee.gps.gpsoauth.AuthToken;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 public class TestWithLogin {
+
   private static GPlayMusic api;
 
   static void loginToService(TestUtil.Property username, TestUtil.Property password,
-                             TestUtil.Property androidID, TestUtil.Property token)
+      TestUtil.Property androidID, TestUtil.Property token)
       throws IOException, Gpsoauth.TokenRequestFailed {
     AuthToken authToken;
     boolean usingExistingToken = false;

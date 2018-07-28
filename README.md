@@ -1,5 +1,7 @@
 # Unofficial GPlayMusic API in JAVA
-[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg?label=master)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
+[![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/develop.svg?label=develop)](https://circleci.com/gh/FelixGail/gplaymusic/tree/develop)
+<br>
 [![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
@@ -22,7 +24,7 @@ To use this library, simply add the following lines to your pom.xml:<br><br>
 <dependency>
     <groupId>com.github.felixgail</groupId>
     <artifactId>gplaymusic</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.5</version>
 </dependency>
 ```
 
@@ -59,3 +61,7 @@ For now use the Javadoc to help yourself. It can be found
 
 Feel free to create an [issue](https://github.com/FelixGail/gplaymusic/issues) if you have
 questions or problems.
+
+Attribution
+-----------
+Special thanks to [gmusicapi project by Simon Webers](https://github.com/simon-weber/gmusicapi). I started this project as a port for this great library.

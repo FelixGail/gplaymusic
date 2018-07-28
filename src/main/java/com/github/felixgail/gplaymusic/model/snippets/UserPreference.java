@@ -1,7 +1,6 @@
 package com.github.felixgail.gplaymusic.model.snippets;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 
 public class UserPreference implements Serializable {

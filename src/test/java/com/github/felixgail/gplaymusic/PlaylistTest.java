@@ -1,23 +1,25 @@
 package com.github.felixgail.gplaymusic;
 
+import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
+import static com.github.felixgail.gplaymusic.util.TestUtil.testPlaylistEntries;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.util.TestUtil;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import svarzee.gps.gpsoauth.Gpsoauth;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-
-import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
-import static com.github.felixgail.gplaymusic.util.TestUtil.testPlaylistEntries;
-import static org.junit.Assert.*;
+import org.junit.Assume;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import svarzee.gps.gpsoauth.Gpsoauth;
 
 public class PlaylistTest extends TestWithLogin {
 
@@ -61,7 +63,8 @@ public class PlaylistTest extends TestWithLogin {
     List<Playlist> playlists = getApi().getPlaylistApi().listPlaylists();
     assume(playlists);
     Optional<Playlist> sharedPlaylistOptional =
-        playlists.stream().filter(p -> p.getType().equals(Playlist.PlaylistType.SHARED)).findFirst();
+        playlists.stream().filter(p -> p.getType().equals(Playlist.PlaylistType.SHARED))
+            .findFirst();
     Assume.assumeTrue("Test could not be run. No shared playlist found.",
         sharedPlaylistOptional.isPresent());
     Playlist sharedPlaylist = sharedPlaylistOptional.get();
@@ -85,25 +88,30 @@ public class PlaylistTest extends TestWithLogin {
       assertEquals("Playlist should now have 4 entries but has " + playlistContent.size(),
           4, playlistContent.size());
       TestUtil.testPlaylistEntries(playlistContent);
-      System.out.printf("[%ds] playlist length verified.\n", timeDifferenceinSeconds(testStartTime));
+      System.out
+          .printf("[%ds] playlist length verified.\n", timeDifferenceinSeconds(testStartTime));
       PlaylistEntry entry2 = playlistContent.remove(2);
       PlaylistEntry entry0 = playlistContent.remove(0);
       newPlaylist.removeEntries(entry0, entry2);
       playlistContent = newPlaylist.getContents(-1);
       containsEntry(playlistContent, entry2, entry0);
-      System.out.printf("[%ds] 2 entries removal verified from cache.\n", timeDifferenceinSeconds(testStartTime));
+      System.out.printf("[%ds] 2 entries removal verified from cache.\n",
+          timeDifferenceinSeconds(testStartTime));
       getApi().getPlaylistEntryApi().updateCache();
       containsEntry(newPlaylist.getContents(-1), entry0, entry2);
-      System.out.printf("[%ds] 2 entries removal verified after refresh.\n", timeDifferenceinSeconds(testStartTime));
+      System.out.printf("[%ds] 2 entries removal verified after refresh.\n",
+          timeDifferenceinSeconds(testStartTime));
     } finally {
       if (newPlaylist != null) {
         newPlaylist.delete();
         System.out.printf("[%ds] playlist deleted.\n", timeDifferenceinSeconds(testStartTime));
         List<Playlist> allPlaylists = getApi().getPlaylistApi().listPlaylists();
         Playlist finalNewPlaylist = newPlaylist;
-        allPlaylists.forEach(p -> assertFalse("PlaylistFeed should not contain created playlist anymore.",
-            p.getId().equals(finalNewPlaylist.getId())));
-        System.out.printf("[%ds] playlist deletion tested\n", timeDifferenceinSeconds(testStartTime));
+        allPlaylists
+            .forEach(p -> assertFalse("PlaylistFeed should not contain created playlist anymore.",
+                p.getId().equals(finalNewPlaylist.getId())));
+        System.out
+            .printf("[%ds] playlist deletion tested\n", timeDifferenceinSeconds(testStartTime));
       }
     }
   }
@@ -116,8 +124,9 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   private Playlist createPlaylist() throws IOException {
-    Playlist newPlaylist = getApi().getPlaylistApi().create("TestPlaylist_" + System.currentTimeMillis(),
-        "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
+    Playlist newPlaylist = getApi().getPlaylistApi()
+        .create("TestPlaylist_" + System.currentTimeMillis(),
+            "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
     assertNotNull(newPlaylist);
     assertTrue("Newly created Playlist should be empty.",
         newPlaylist.getContents(100).size() == 0);

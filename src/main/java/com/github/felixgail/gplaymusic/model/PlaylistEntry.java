@@ -4,11 +4,11 @@ import com.github.felixgail.gplaymusic.api.GPlayMusic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-
 import java.io.IOException;
 import java.io.Serializable;
 
 public class PlaylistEntry implements Serializable, Model {
+
   public final static String BATCH_URL = "plentriesbatch";
   private final static Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
   private GPlayMusic mainApi;
@@ -34,8 +34,9 @@ public class PlaylistEntry implements Serializable, Model {
   @Expose
   private Track track;
 
-  PlaylistEntry(String id, String clientId, String playlistId, Track track, String creationTimestamp,
-                String lastModifiedTimestamp, String source, boolean deleted) {
+  PlaylistEntry(String id, String clientId, String playlistId, Track track,
+      String creationTimestamp,
+      String lastModifiedTimestamp, String source, boolean deleted) {
     this.id = id;
     this.clientId = clientId;
     this.playlistId = playlistId;
@@ -100,14 +101,15 @@ public class PlaylistEntry implements Serializable, Model {
   }
 
   /**
-   * Moves the position of this entry in the playlist.
-   * Leaving preceding/following empty, implies that the element will be this first/last entry.
-   * Leaving a parameter empty, while not aiming for the first/last element of the playlist is undefined - as well as
-   * using entries not present in the playlist.
+   * Moves the position of this entry in the playlist. Leaving preceding/following empty, implies
+   * that the element will be this first/last entry. Leaving a parameter empty, while not aiming for
+   * the first/last element of the playlist is undefined - as well as using entries not present in
+   * the playlist.
    *
-   * @param preceding the entry that will be before the moved entry, or null if moved entry will be first
-   * @param following the entry that will be after the moved entry, or null if moved entry will be the last
-   * @throws IOException
+   * @param preceding the entry that will be before the moved entry, or null if moved entry will be
+   * first
+   * @param following the entry that will be after the moved entry, or null if moved entry will be
+   * the last
    */
   public void move(PlaylistEntry preceding, PlaylistEntry following)
       throws IOException {

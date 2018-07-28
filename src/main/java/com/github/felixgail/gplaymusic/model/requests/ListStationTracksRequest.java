@@ -3,7 +3,6 @@ package com.github.felixgail.gplaymusic.model.requests;
 import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.google.gson.annotations.Expose;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
@@ -11,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListStationTracksRequest extends PagingRequest implements Serializable {
+
   @Expose
   private int contentFilter = 1;
   @Expose
@@ -19,10 +19,10 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
   /**
    * Create a request to return a list of Tracks for a Station.
    *
-   * @param station              A Station the {@link Track}s will be received for.
-   * @param numEntries           number of {@link Track}s that will be requested. Max. 1000.
-   * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this list will not be
-   *                             in the result.
+   * @param station A Station the {@link Track}s will be received for.
+   * @param numEntries number of {@link Track}s that will be requested. Max. 1000.
+   * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this
+   * list will not be in the result.
    */
   public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks)
       throws IOException {
@@ -32,15 +32,16 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
   /**
    * Create a request to return a list of Tracks for a Station.
    *
-   * @param station              A Station the {@link Track}s will be received for.
-   * @param numEntries           number of {@link Track}s that will be requested. Max. 1000.
-   * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this list will not be
-   *                             in the result.
+   * @param station A Station the {@link Track}s will be received for.
+   * @param numEntries number of {@link Track}s that will be requested. Max. 1000.
+   * @param recentlyPlayedTracks A List of Tracks that have recently been played. Tracks from this
+   * list will not be in the result.
    */
   public ListStationTracksRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks,
-                                  String nextPageToken, int maxResults) throws IOException {
+      String nextPageToken, int maxResults) throws IOException {
     super(nextPageToken, maxResults);
-    stations = Collections.singletonList(new StationRequest(station, numEntries, recentlyPlayedTracks));
+    stations = Collections
+        .singletonList(new StationRequest(station, numEntries, recentlyPlayedTracks));
   }
 
   public int getContentFilter() {
@@ -52,6 +53,7 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
   }
 
   private class StationRequest implements Serializable {
+
     @Expose
     private int numEntries;
     @Expose
@@ -59,7 +61,8 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
     @Expose
     private List<RecentlyPlayedTrack> recentlyPlayed;
 
-    StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks) throws IOException {
+    StationRequest(Station station, int numEntries, List<Track> recentlyPlayedTracks)
+        throws IOException {
       this.radioId = station.getId();
       if (numEntries > -1 && numEntries < 79) {
         this.numEntries = numEntries;
@@ -76,6 +79,7 @@ public class ListStationTracksRequest extends PagingRequest implements Serializa
   }
 
   private class RecentlyPlayedTrack implements Serializable {
+
     @Expose
     private String id;
     @Expose

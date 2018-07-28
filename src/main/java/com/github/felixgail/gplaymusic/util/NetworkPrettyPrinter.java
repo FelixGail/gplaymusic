@@ -1,14 +1,13 @@
 package com.github.felixgail.gplaymusic.util;
 
 import com.github.felixgail.gplaymusic.util.language.Language;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import okhttp3.Request;
 import okhttp3.Response;
 import okio.Buffer;
 import okio.BufferedSource;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class NetworkPrettyPrinter {
 

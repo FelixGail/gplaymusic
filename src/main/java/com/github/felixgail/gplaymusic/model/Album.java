@@ -5,14 +5,14 @@ import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.snippets.Attribution;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
+import javax.validation.constraints.NotNull;
 
 public class Album implements Result, Serializable {
+
   public final static ResultType RESULT_TYPE = ResultType.ALBUM;
 
   @Expose
@@ -42,8 +42,9 @@ public class Album implements Result, Serializable {
   @Expose
   private List<Track> tracks;
 
-  public Album(@NotNull String name, @NotNull String albumArtist, @NotNull String albumId, @NotNull String artist,
-               @NotNull List<String> artistId) {
+  public Album(@NotNull String name, @NotNull String albumArtist, @NotNull String albumId,
+      @NotNull String artist,
+      @NotNull List<String> artistId) {
     this.name = name;
     this.albumArtist = albumArtist;
     this.albumId = albumId;

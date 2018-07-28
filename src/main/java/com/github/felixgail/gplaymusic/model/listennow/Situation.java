@@ -4,15 +4,16 @@ import com.github.felixgail.gplaymusic.model.Station;
 import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Contains a list of Stations ({@link #getStations()}) or wraps more Situations ({@link #getSituations()}).
+ * Contains a list of Stations ({@link #getStations()}) or wraps more Situations ({@link
+ * #getSituations()}).
  */
 public class Situation implements Result, Serializable {
+
   public final static ResultType RESULT_TYPE = ResultType.SITUATION;
 
   @Expose

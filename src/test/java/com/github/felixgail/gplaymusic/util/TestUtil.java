@@ -1,29 +1,35 @@
 package com.github.felixgail.gplaymusic.util;
 
-import com.github.felixgail.gplaymusic.model.PlaylistEntry;
-import com.github.felixgail.gplaymusic.model.Station;
-import com.github.felixgail.gplaymusic.model.Track;
-import org.junit.Assume;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
+import com.github.felixgail.gplaymusic.model.PlaylistEntry;
+import com.github.felixgail.gplaymusic.model.Station;
+import com.github.felixgail.gplaymusic.model.Track;
+import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import org.apache.tika.Tika;
+import org.junit.Assert;
+import org.junit.Assume;
+
 public class TestUtil {
-  public static final String USERNAME_KEY = "auth.username";
-  public static final String PASSWORD_KEY = "auth.password";
-  public static final String ANDROID_ID_KEY = "auth.android_id";
-  public static final String TOKEN_KEY = "auth.token";
+
   public static final Property USERNAME;
   public static final Property PASSWORD;
   public static final Property ANDROID_ID;
   public static final Property TOKEN;
+  public static final Property FREE_USERNAME;
+  public static final Property FREE_PASSWORD;
+  public static final Property FREE_ANDROID_ID;
+  public static final Property FREE_TOKEN;
   private static final Properties PROPS;
   private static final String RESOURCE = "gplaymusic.properties";
 
@@ -39,10 +45,15 @@ public class TestUtil {
     } catch (IOException | NullPointerException e) {
       System.out.println("gplaymusic.properties file not found. Most test will not be executed.");
     }
-    USERNAME = new Property(USERNAME_KEY);
-    PASSWORD = new Property(PASSWORD_KEY);
-    ANDROID_ID = new Property(ANDROID_ID_KEY);
-    TOKEN = new Property(TOKEN_KEY);
+    USERNAME = new Property("auth.username");
+    PASSWORD = new Property("auth.password");
+    ANDROID_ID = new Property("auth.android_id");
+    TOKEN = new Property("auth.token");
+
+    FREE_USERNAME = new Property("auth.free.username");
+    FREE_PASSWORD = new Property("auth.free.password");
+    FREE_ANDROID_ID = new Property("auth.free.android_id");
+    FREE_TOKEN = new Property("auth.free.token");
   }
 
   public static Property get(String s) {
@@ -65,7 +76,8 @@ public class TestUtil {
   public static void assume(Property... properties) {
     for (Property property : properties) {
       Assume.assumeTrue(
-          String.format("Test has been skipped. Required value \"%s\" is missing.", property.getKey()),
+          String.format("Test has been skipped. Required value \"%s\" is missing.",
+              property.getKey()),
           property.isValid());
     }
   }
@@ -133,6 +145,14 @@ public class TestUtil {
       }
     }
     return doubledTracks;
+  }
+
+  public static void testDownload(String fileName, Track track) throws IOException {
+    Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), fileName);
+    track.download(StreamQuality.LOW, path);
+    File file = path.toFile();
+    Assert.assertTrue("File does not exist", file.exists());
+    Assert.assertEquals("Is not an audio file", new Tika().detect(file), "audio/mpeg");
   }
 
   public static class Property {

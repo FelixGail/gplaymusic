@@ -1,10 +1,10 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 
 public class DeviceInfo implements Serializable {
+
   @Expose
   private String id;
   @Expose

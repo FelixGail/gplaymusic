@@ -6,14 +6,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import okhttp3.Response;
-
 import java.io.IOException;
 import java.io.Serializable;
+import okhttp3.Response;
 
 /**
- * Will be thrown when the network responds with an error.
- * It will contain the error code and (if available) a message.
+ * Will be thrown when the network responds with an error. It will contain the error code and (if
+ * available) a message.
  */
 public class NetworkException extends IOException implements Serializable {
 
@@ -73,6 +72,7 @@ public class NetworkException extends IOException implements Serializable {
   }
 
   private class ErrorHelper implements Serializable {
+
     @Expose
     private int code;
     @Expose

@@ -4,13 +4,12 @@ import com.github.felixgail.gplaymusic.model.listennow.ListenNowAlbum;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowItem;
 import com.github.felixgail.gplaymusic.model.listennow.ListenNowStation;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import java.io.IOException;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
-
-import java.io.IOException;
-import java.util.List;
 
 public class TestListenNowItem extends TestWithLogin {
 

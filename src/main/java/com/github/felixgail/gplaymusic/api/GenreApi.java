@@ -1,12 +1,12 @@
 package com.github.felixgail.gplaymusic.api;
 
 import com.github.felixgail.gplaymusic.model.Genre;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 public class GenreApi implements SubApi {
+
   private GPlayMusic mainAPI;
 
   GenreApi(GPlayMusic api) {

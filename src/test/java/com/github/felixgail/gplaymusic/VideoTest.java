@@ -3,14 +3,13 @@ package com.github.felixgail.gplaymusic;
 import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import java.io.IOException;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
-
-import java.io.IOException;
-import java.util.List;
 
 public class VideoTest extends TestWithLogin {
 

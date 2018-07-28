@@ -3,7 +3,6 @@ package com.github.felixgail.gplaymusic.model.snippets;
 import com.github.felixgail.gplaymusic.model.Artist;
 import com.github.felixgail.gplaymusic.model.Genre;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.Optional;
 

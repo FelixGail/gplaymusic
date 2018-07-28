@@ -6,7 +6,6 @@ import com.github.felixgail.gplaymusic.model.enums.Provider;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.model.snippets.ArtRef;
 import com.google.gson.annotations.Expose;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -103,16 +102,14 @@ public class PodcastEpisode extends Signable implements Serializable, Model {
   }
 
   /**
-   * Returns a URL to download a podcast episode in set quality.
-   * URL will only be valid for 1 minute.
-   * You will likely need to handle redirects.
-   * <br>
-   * <b>TODO: Find out if free users have access to podcast episodes</b>
+   * Returns a URL to download a podcast episode in set quality. URL will only be valid for 1
+   * minute. You will likely need to handle redirects. <br> <b>TODO: Find out if free users have
+   * access to podcast episodes</b>
    *
    * @param quality quality of the stream
    * @return temporary url to the title
-   * @throws IOException Throws an IOException on severe failures (no internet connection...)
-   *                     or a {@link NetworkException} on request failures.
+   * @throws IOException Throws an IOException on severe failures (no internet connection...) or a
+   * {@link NetworkException} on request failures.
    */
   @Override
   public URL getStreamURL(StreamQuality quality)

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Cache<T> {
+
   private List<T> cache = Collections.synchronizedList(new LinkedList<>());
   private boolean ready = false;
   private boolean useCache = true;

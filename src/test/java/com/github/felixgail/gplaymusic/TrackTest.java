@@ -1,28 +1,27 @@
 package com.github.felixgail.gplaymusic;
 
+import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
+import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
+import static org.junit.Assert.assertNotNull;
+
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.util.TestUtil;
-import org.apache.tika.Tika;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import svarzee.gps.gpsoauth.Gpsoauth;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
-
-import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
-import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
-import static org.junit.Assert.assertNotNull;
+import org.apache.tika.Tika;
+import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import svarzee.gps.gpsoauth.Gpsoauth;
 
 public class TrackTest extends TestWithLogin {
 
@@ -67,32 +66,26 @@ public class TrackTest extends TestWithLogin {
   public void testDownloadSearch() throws IOException {
     Track track = getApi().getTrackApi().search("Sound", 10).get(0);
     assume(track);
-    testDownload("searchedTrack.mp3", track);
+    TestUtil.testDownload("searchedTrack.mp3", track);
   }
 
   @Test
   public void testPlaylistDownload() throws IOException {
     //PlaylistID with key test.track.playlist should be a playlist conatining both store and library tracks.
     //To find it use printAllPlaylists();
-    Playlist playlist = getApi().getPlaylistApi().getPlaylist(TestUtil.get("test.track.playlist").get());
+    Playlist playlist = getApi().getPlaylistApi()
+        .getPlaylist(TestUtil.get("test.track.playlist").get());
     Track track;
     for (PlaylistEntry entry : playlist.getContents(-1)) {
       track = entry.getTrack();
       System.out.printf("Preparing to download '%s'\n", track.getTitle());
-      testDownload(track.getTitle(), track);
+      TestUtil.testDownload(track.getTitle(), track);
       System.out.println("\t - Completed");
     }
   }
 
   private void printAllPlaylists() throws IOException {
-    getApi().getPlaylistApi().listPlaylists().forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
-  }
-
-  private void testDownload(String fileName, Track track) throws IOException {
-    Path path = FileSystems.getDefault().getPath(System.getProperty("java.io.tmpdir"), fileName);
-    track.download(StreamQuality.LOW, path);
-    File file = path.toFile();
-    Assert.assertTrue("File does not exist", file.exists());
-    Assert.assertEquals("Is not an audio file", new Tika().detect(file), "audio/mpeg");
+    getApi().getPlaylistApi().listPlaylists()
+        .forEach(p -> System.out.printf("%s: %s\n", p.getName(), p.getId()));
   }
 }

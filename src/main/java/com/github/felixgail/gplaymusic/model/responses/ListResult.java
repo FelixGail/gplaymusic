@@ -2,7 +2,6 @@ package com.github.felixgail.gplaymusic.model.responses;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class ListResult<T> implements Serializable {
   }
 
   class InnerData<U> implements Serializable {
+
     @Expose
     @SerializedName(value = "items",
         alternate = {"stations", "playlistEntry"})
