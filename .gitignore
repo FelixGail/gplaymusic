@@ -11,3 +11,4 @@ buildNumber.properties
 gplaymusic.iml
 src/test/resources/gplaymusic.properties
 local_scripts/
+gplaymusic.properties

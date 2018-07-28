@@ -19,7 +19,6 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
 import com.github.felixgail.gplaymusic.util.TokenProvider;
-import com.github.felixgail.gplaymusic.util.deserializer.ColorDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ModelPostProcessor;
@@ -30,7 +29,6 @@ import com.github.felixgail.gplaymusic.util.interceptor.RequestInterceptor;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import com.google.gson.GsonBuilder;
 import io.gsonfire.GsonFireBuilder;
-import java.awt.Color;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -359,8 +357,7 @@ public final class GPlayMusic {
             .createGsonBuilder()
             .registerTypeAdapter(Result.class, new ResultDeserializer())
             .registerTypeAdapter(Config.class, new ConfigDeserializer())
-            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer())
-            .registerTypeAdapter(Color.class, new ColorDeserializer());
+            .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
 
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://mclients.googleapis.com/")
