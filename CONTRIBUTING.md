@@ -5,7 +5,7 @@ project, you can discuss idea by creating an
 [issue](https://github.com/FelixGail/gplaymusic/issues/new).
 
 Please note that we have a 
-[code of conduct](https://github.com/FelixGail/gplaymusic/master/blob/CODE_OF_CONDUCT.md), please 
+[code of conduct](https://github.com/FelixGail/gplaymusic/blob/master/CODE_OF_CONDUCT.md), please 
 follow it in all your interactions with the project.
 
 ## Contributing Code
