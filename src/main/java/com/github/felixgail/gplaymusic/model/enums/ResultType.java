@@ -26,7 +26,7 @@ public enum ResultType implements Serializable {
   @SerializedName("7")
   SITUATION(7, "situation", Situation.class),
   @SerializedName("8")
-  VIDEO(8, "video", Video.class),
+  VIDEO(8, "youtube_video", Video.class),
   @SerializedName("9")
   PODCAST_SERIES(9, "podcast", PodcastSeries.class); //Not tested, needs US vpn
 

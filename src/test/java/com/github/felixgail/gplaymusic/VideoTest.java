@@ -25,6 +25,7 @@ public class VideoTest extends TestWithLogin {
         .search("", new SearchTypes(Video.RESULT_TYPE)).getVideos();
     TestUtil.assume(videos);
     Assume.assumeTrue("List of videos is empty.", videos.size() > 0);
+    System.out.printf("Empty search for videos yielded %d results\n", videos.size());
     videos.forEach(v -> {
       Assert.assertNotNull("Video is null", v);
       Assert.assertNotNull("ID is null", v.getId());
