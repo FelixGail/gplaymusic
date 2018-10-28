@@ -12,6 +12,7 @@ import com.github.felixgail.gplaymusic.model.Track;
 import com.github.felixgail.gplaymusic.model.Video;
 import com.github.felixgail.gplaymusic.model.enums.StreamQuality;
 import com.github.felixgail.gplaymusic.util.TestUtil;
+import com.github.felixgail.gplaymusic.util.TestUtil.Property;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -82,8 +83,10 @@ public class TrackTest extends TestWithLogin {
   public void testPlaylistDownload() throws IOException {
     //PlaylistID with key test.track.playlist should be a playlist conatining both store and library tracks.
     //To find it use printAllPlaylists();
+    Property testPlaylist = TestUtil.get("test.track.playlist");
+    TestUtil.assume(testPlaylist);
     Playlist playlist = getApi().getPlaylistApi()
-        .getPlaylist(TestUtil.get("test.track.playlist").get());
+        .getPlaylist(testPlaylist.get());
     Track track;
     for (PlaylistEntry entry : playlist.getContents(-1)) {
       track = entry.getTrack();
