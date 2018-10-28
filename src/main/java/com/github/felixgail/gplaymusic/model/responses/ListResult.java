@@ -23,7 +23,7 @@ public class ListResult<T> implements Serializable {
     return nextPageToken;
   }
 
-  class InnerData<U> implements Serializable {
+  static class InnerData<U> implements Serializable {
 
     @Expose
     @SerializedName(value = "items",

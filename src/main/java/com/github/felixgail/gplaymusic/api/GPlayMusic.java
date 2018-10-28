@@ -356,7 +356,6 @@ public final class GPlayMusic {
             .registerPostProcessor(Model.class, postProcessor)
             .createGsonBuilder()
             .registerTypeAdapter(Result.class, new ResultDeserializer())
-            .registerTypeAdapter(Config.class, new ConfigDeserializer())
             .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
 
         Retrofit retrofit = new Retrofit.Builder()

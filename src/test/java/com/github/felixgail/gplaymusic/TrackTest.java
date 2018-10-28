@@ -2,8 +2,10 @@ package com.github.felixgail.gplaymusic;
 
 import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
 import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertNotNull;
 
+import com.github.felixgail.gplaymusic.exceptions.NetworkException;
 import com.github.felixgail.gplaymusic.model.Playlist;
 import com.github.felixgail.gplaymusic.model.PlaylistEntry;
 import com.github.felixgail.gplaymusic.model.Track;
@@ -32,21 +34,30 @@ public class TrackTest extends TestWithLogin {
 
   @Test
   public void getTrackUrl() throws IOException {
-    List<Track> tracks = getApi().getTrackApi().search("Sound", 10);
+    List<Track> tracks = getApi().getTrackApi().search("", 10);
     assertTracks(tracks);
     for (Track track : tracks) {
-      URL url = track.getStreamURL(StreamQuality.HIGH);
+      URL url = null;
+      try {
+        url = track.getStreamURL(StreamQuality.HIGH);
+      } catch (NetworkException e) {
+        System.out.printf("Network Exception received for %s by %s (%s).\n",
+            track.getTitle(), track.getArtist(), track.getID());
+        e.printStackTrace();
+      }
       assertNotNull(url);
       if (track.getVideo().isPresent()) {
         Video video = track.getVideo().get();
         assertNotNull(video.getId());
         assertNotNull(video.getURL());
       }
+      System.out.printf("Valid URL received for %s by %s (%s).\n",
+          track.getTitle(), track.getArtist(), track.getID());
     }
   }
 
   @Test
-  public void incrementPlaycount() throws IOException {
+  public void incrementPlaycount() throws IOException, InterruptedException {
     Track track = getApi().getTrackApi().search("Sound", 10).get(0);
     assume(track);
     assume(track.getPlayCount().isPresent());
@@ -55,6 +66,8 @@ public class TrackTest extends TestWithLogin {
     track.incrementPlaycount(inc);
     Assert.assertEquals("Playcount was not increased locally.",
         playcount + inc, track.getPlayCount().getAsInt());
+    //Wait for remote to update playcount.
+    sleep(1000);
     Track trackNew = getApi().getTrackApi().search("Sound", 10).get(0);
     Assume.assumeTrue("Newly fetched track should equal original track",
         track.getID().equals(trackNew.getID()));
