@@ -1,12 +1,15 @@
 package com.github.felixgail.gplaymusic.model;
 
 import com.github.felixgail.gplaymusic.model.enums.SubscriptionType;
+import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@JsonAdapter(ConfigDeserializer.class)
 public class Config implements Serializable {
 
   @Expose

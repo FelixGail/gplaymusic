@@ -20,6 +20,8 @@ public class Video implements Result, Serializable {
   private String title;
   @Expose
   private List<Thumbnail> thumbnails;
+  @Expose
+  private double score;
 
   /**
    * Returns the youtube id of a video. Can be used like this: https://www.youtube.com/watch?v={ID}
@@ -37,6 +39,13 @@ public class Video implements Result, Serializable {
     return Optional.ofNullable(thumbnails);
   }
 
+  /**
+   * Score can be >1 (Probably between 0-100). Might score the trust in the result.
+   */
+  public double getScore() {
+    return score;
+  }
+
   @Override
   public boolean equals(Object o) {
     return (o instanceof Video) && ((Video) o).getId().equals(this.id);
@@ -47,6 +56,10 @@ public class Video implements Result, Serializable {
     return RESULT_TYPE;
   }
 
+  /**
+   * Returns the URL to the video on the youtube website.<br>
+   * <b>Not embedded, nor a direct link!</b>
+   */
   public URL getURL() {
     try {
       return new URL("https://www.youtube.com/watch?v=" + getId());

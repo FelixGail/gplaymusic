@@ -19,7 +19,6 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
 import com.github.felixgail.gplaymusic.util.TokenProvider;
-import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ModelPostProcessor;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
@@ -356,7 +355,6 @@ public final class GPlayMusic {
             .registerPostProcessor(Model.class, postProcessor)
             .createGsonBuilder()
             .registerTypeAdapter(Result.class, new ResultDeserializer())
-            .registerTypeAdapter(Config.class, new ConfigDeserializer())
             .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
 
         Retrofit retrofit = new Retrofit.Builder()

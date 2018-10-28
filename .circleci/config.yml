@@ -9,8 +9,7 @@ jobs:
 
     - restore_cache:
         keys:
-        - v1-{{ checksum "pom.xml" }}
-        - v1-
+        - gplay-{{ .Environment.cache_version }}-{{ checksum "pom.xml" }}
         paths:
         - ~/.m2
 
@@ -59,6 +58,6 @@ jobs:
         path: target/site/
 
     - save_cache:
-        key: v1-{{ checksum "pom.xml" }}
+        key: gplay-{{ .Environment.cache_version }}-{{ checksum "pom.xml" }}
         paths:
         - ~/.m2
