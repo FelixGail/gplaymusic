@@ -24,7 +24,7 @@ To use this library, simply add the following lines to your pom.xml:<br><br>
 <dependency>
     <groupId>com.github.felixgail</groupId>
     <artifactId>gplaymusic</artifactId>
-    <version>0.3.5</version>
+    <version>0.3.6</version>
 </dependency>
 ```
 
