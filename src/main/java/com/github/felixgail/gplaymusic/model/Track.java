@@ -363,16 +363,17 @@ public class Track extends Signable implements Result, Serializable, Model {
    */
   public void download(StreamQuality quality, Path path) throws IOException {
     URL trackUrl;
-    if (easyDownloadPossible()){
+    if (easyDownloadPossible()) {
       trackUrl = getStreamURL(quality);
-    }else{
+    } else {
       trackUrl = getStationTrackURL(quality);
     }
     Files.copy(trackUrl.openStream(), path, StandardCopyOption.REPLACE_EXISTING);
   }
 
   private boolean easyDownloadPossible() {
-    if (mainApi.getConfig().getSubscription() == SubscriptionType.ALL_ACCESS || !getID().startsWith("T")) {
+    if (mainApi.getConfig().getSubscription() == SubscriptionType.ALL_ACCESS || !getID()
+        .startsWith("T")) {
       return true;
     }
     return false;

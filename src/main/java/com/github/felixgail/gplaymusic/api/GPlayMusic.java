@@ -19,7 +19,6 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.responses.Result;
 import com.github.felixgail.gplaymusic.model.responses.SearchResponse;
 import com.github.felixgail.gplaymusic.util.TokenProvider;
-import com.github.felixgail.gplaymusic.util.deserializer.ConfigDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ListenNowStationDeserializer;
 import com.github.felixgail.gplaymusic.util.deserializer.ModelPostProcessor;
 import com.github.felixgail.gplaymusic.util.deserializer.ResultDeserializer;
