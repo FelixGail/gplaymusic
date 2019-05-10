@@ -6,6 +6,7 @@ import com.github.felixgail.gplaymusic.model.enums.ResultType;
 import com.github.felixgail.gplaymusic.model.requests.SearchTypes;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TrackApi implements SubApi {
 
@@ -29,7 +30,7 @@ public class TrackApi implements SubApi {
   }
 
   public Track getTrack(String trackID) throws IOException {
-    Track track = null;
+    Track track;
     if (trackID.startsWith("T")) {
       track = mainApi.getService().fetchTrack(trackID).execute().body();
     } else {
@@ -44,6 +45,17 @@ public class TrackApi implements SubApi {
 
   public List<Track> getLibraryTracks() throws IOException {
     return libraryTrackCache.getAll();
+  }
+
+  /**
+   * Filters cache and returns tracks with 'Thumbs up' mark
+   * @return List of tracks liked by user
+   * @throws IOException if GMusic request fails
+   */
+  public List<Track> getThumbsUpTracks() throws IOException {
+    return libraryTrackCache.getAll().stream()
+            .filter(t -> t.getRating().isPresent() && Integer.valueOf(t.getRating().get()) > 1)
+            .collect(Collectors.toList());
   }
 
   /**

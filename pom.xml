@@ -6,7 +6,7 @@
 
   <groupId>com.github.felixgail</groupId>
   <artifactId>gplaymusic</artifactId>
-  <version>0.3.6</version>
+  <version>0.3.7</version>
   <packaging>jar</packaging>
   <name>${project.groupId}:${project.artifactId}</name>
   <url>https://github.com/felixgail/gplaymusic</url>
@@ -44,6 +44,10 @@
     <contributor>
       <name>vadimshilov</name>
       <url>https://github.com/vadimshilov</url>
+    </contributor>
+    <contributor>
+      <name>Eugene Terekhov</name>
+      <url>https://github.com/nergal-perm</url>
     </contributor>
   </contributors>
   <scm>

@@ -40,7 +40,7 @@ public class Video implements Result, Serializable {
   }
 
   /**
-   * Score can be >1 (Probably between 0-100). Might score the trust in the result.
+   * Score can be greater than 1 (Probably between 0-100). Might score the trust in the result.
    */
   public double getScore() {
     return score;
