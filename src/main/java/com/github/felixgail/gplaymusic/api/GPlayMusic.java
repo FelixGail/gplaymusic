@@ -36,6 +36,7 @@ import java.util.Optional;
 import javax.validation.constraints.NotNull;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
 import retrofit2.Retrofit;
@@ -358,7 +359,7 @@ public final class GPlayMusic {
             .registerTypeAdapter(ListenNowStation.class, new ListenNowStationDeserializer());
 
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://mclients.googleapis.com/")
+            .baseUrl(HttpUrl.parse("https://mclients.googleapis.com/"))
             .addConverterFactory(GsonConverterFactory.create(builder.create()))
             .client(httpClient)
             .build();
@@ -366,8 +367,8 @@ public final class GPlayMusic {
         GPlayMusic gPlay = new GPlayMusic(retrofit.create(GPlayService.class),
             parameterInterceptor);
         postProcessor.setApi(gPlay);
-        retrofit2.Response<Config> configResponse;
-        configResponse = gPlay.getService().config(this.locale).execute();
+        retrofit2.Response<Config> configResponse =
+                gPlay.getService().config(this.locale).execute();
         if (!configResponse.isSuccessful()) {
           throw new InitializationException(Language.get("network.GenericError"),
               NetworkException.parse(configResponse.raw()));

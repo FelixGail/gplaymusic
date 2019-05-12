@@ -21,13 +21,6 @@ public class LibraryTrackCache extends Cache<Track> {
         return mainApi.getService()
             .listTracks(new PagingRequest(nextPageToken, -1)).execute().body();
       }
-
-      @Override
-      public List<Track> next() throws IOException {
-        return super.next().stream()
-            .filter(t -> !t.getStoreId().isPresent() && t.getUuid().isPresent())
-            .collect(Collectors.toList());
-      }
     };
   }
 
