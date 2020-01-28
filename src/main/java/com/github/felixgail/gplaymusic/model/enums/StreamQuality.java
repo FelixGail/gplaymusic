@@ -5,9 +5,20 @@ import java.io.Serializable;
 
 public enum StreamQuality implements Serializable {
   @SerializedName("lo")
-  LOW,
+  LOW("lo"),
   @SerializedName("med")
-  MEDIUM,
+  MEDIUM("med"),
   @SerializedName("hi")
-  HIGH
+  HIGH("hi");
+
+  private String value;
+
+  StreamQuality(String value) {
+    this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    return value;
+  }
 }
