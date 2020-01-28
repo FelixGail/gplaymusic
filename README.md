@@ -4,6 +4,23 @@
 <br>
 [![GitHub release](https://img.shields.io/github/release/FelixGail/gplaymusic.svg)](https://github.com/FelixGail/gplaymusic/releases)
 
+_This project is a fork of [FelixGail/gplaymusic](https://github.com/FelixGail/gplaymusic) that fixes various outstanding
+issues, in particular token authentication failures are fixed, as is stream quality selection._
+
+This version is confirmed working with a Java 8 runtime environment, it will not presently work with Java 11 or Java 13
+due to some platform API incompatibilities.
+
+If you want to use this fork instead of the original, use the following dependency:
+```
+<dependency>
+    <groupId>uk.co.caprica</groupId>
+    <artifactId>gplaymusic</artifactId>
+    <version>0.3.9pre1</version>
+</dependency>
+```
+
+### Original README:
+
 This library poses as a client for the [GooglePlay](https://play.google.com/music/) app.
 It can search for songs/artists/albums, modify and create playlists and stations and even
 download tracks. For most activities an active subscription to _GooglePlay All Access_ is needed.
