@@ -8,7 +8,7 @@ buildNumber.properties
 !/.mvn/wrapper/maven-wrapper.jar
 
 .idea/
-gplaymusic.iml
+*.iml
 src/test/resources/gplaymusic.properties
 local_scripts/
 gplaymusic.properties
