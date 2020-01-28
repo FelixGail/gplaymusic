@@ -42,7 +42,7 @@ public class TokenProvider {
    * @return a new Token, recovered from the saved string.
    */
   public static AuthToken provideToken(final String token) {
-    return new AuthToken(token);
+    return new AuthToken(token, -1);
   }
 
   /**

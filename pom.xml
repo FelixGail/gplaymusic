@@ -6,7 +6,7 @@
 
   <groupId>com.github.felixgail</groupId>
   <artifactId>gplaymusic</artifactId>
-  <version>0.3.8</version>
+  <version>0.3.9-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>${project.groupId}:${project.artifactId}</name>
   <url>https://github.com/felixgail/gplaymusic</url>
@@ -74,9 +74,9 @@
       <version>${gson.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.github.bjoernpetersen</groupId>
-      <artifactId>gpsoauth</artifactId>
-      <version>0.3.2</version>
+      <groupId>io.github.svarzee</groupId>
+      <artifactId>gpsoauth-java</artifactId>
+      <version>0.9.1</version>
     </dependency>
     <dependency>
       <groupId>com.squareup.retrofit2</groupId>
@@ -87,11 +87,6 @@
       <groupId>com.squareup.retrofit2</groupId>
       <artifactId>converter-gson</artifactId>
       <version>2.5.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.okhttp3</groupId>
-      <artifactId>okhttp</artifactId>
-      <version>3.12.0</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
