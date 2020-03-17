@@ -12,6 +12,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -122,15 +123,21 @@ public class Station implements Result, Serializable, Model {
    * @param forceRemoveDoubles see {@code recentlyPlayed}. Force remove doubles returned by the
    * server.
    * @return A list of 25 tracks for this station.
+   *
+   * @throws RemoteException If the result returned from google has errors.
    */
   public List<Track> getTracks(List<Track> recentlyPlayed, boolean newCall,
       boolean forceRemoveDoubles)
-      throws IOException {
+      throws IOException, RemoteException {
     if (!newCall) {
       return Optional.of(tracks).orElse(Collections.emptyList());
     }
     ListStationTracksRequest request = new ListStationTracksRequest(this, 25, recentlyPlayed);
-    Station returnedStation = mainApi.getStationApi().getFilledStations(request).get(0);
+    List<Station> result = mainApi.getStationApi().getFilledStations(request);
+    if(result.isEmpty()) {
+      throw new RemoteException("Server returned an empty list of stations.");
+    }
+    Station returnedStation = result.get(0);
     Optional<List<Track>> trackOptional = Optional.ofNullable(returnedStation.tracks);
     sessionToken = returnedStation.sessionToken;
     List<Track> tracks = trackOptional.orElse(Collections.emptyList());

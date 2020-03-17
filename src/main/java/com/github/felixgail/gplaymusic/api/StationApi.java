@@ -14,6 +14,7 @@ import com.github.felixgail.gplaymusic.model.responses.ListResult;
 import com.github.felixgail.gplaymusic.model.snippets.StationSeed;
 import com.github.felixgail.gplaymusic.util.language.Language;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
@@ -58,8 +59,9 @@ public class StationApi implements SubApi {
 
   public List<Station> getFilledStations(@NotNull ListStationTracksRequest request)
       throws IOException {
-    return mainApi.getService()
-        .getFilledStations(request).execute().body().toList();
+    ListResult<Station> result = mainApi.getService()
+        .getFilledStations(request).execute().body();
+    return  result != null? result.toList() : Collections.emptyList();
   }
 
   public void deleteStations(Station... stations)
