@@ -16,10 +16,8 @@ import com.github.felixgail.gplaymusic.util.TestUtil.Property;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.*;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
 public class TrackTest extends TestWithLogin {
@@ -53,6 +51,7 @@ public class TrackTest extends TestWithLogin {
     }
   }
 
+  @Ignore
   @Test
   public void incrementPlaycount() throws IOException, InterruptedException {
     Track track = getApi().getTrackApi().search("Sound", 10).get(0);

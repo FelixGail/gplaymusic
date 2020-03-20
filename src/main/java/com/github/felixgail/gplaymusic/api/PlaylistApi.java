@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
@@ -44,11 +45,12 @@ public class PlaylistApi implements SubApi {
    * valid (Systemtime@Request != Servertime@Creation)
    */
   public Playlist create(String name, String description, Playlist.PlaylistShareState shareState)
-      throws IOException {
+          throws IOException, InterruptedException {
     Mutator mutator = new Mutator(
         MutationFactory.getAddPlaylistMutation(name, description, shareState));
     MutationResponse response = mainApi.getService().makeBatchCall(BATCH_URL, mutator);
     String id = response.getItems().get(0).getId();
+    TimeUnit.MILLISECONDS.sleep(500); //Sleep, as playlist is often not created instantly.
     return getPlaylist(id);
   }
 

@@ -4,7 +4,7 @@
 
   <groupId>com.github.felixgail</groupId>
   <artifactId>gplaymusic</artifactId>
-  <version>0.4.0R1-SNAPSHOT</version>
+  <version>0.4.0</version>
   <packaging>jar</packaging>
   <name>${project.groupId}:${project.artifactId}</name>
   <url>https://github.com/felixgail/gplaymusic</url>
@@ -63,7 +63,7 @@
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </snapshotRepository>
     <repository>
       <id>ossrh</id>

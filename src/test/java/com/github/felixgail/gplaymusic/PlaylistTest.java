@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
@@ -75,7 +76,7 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   @Test
-  public void testMutatePlaylist() throws IOException {
+  public void testMutatePlaylist() throws IOException, InterruptedException {
     long testStartTime = System.currentTimeMillis();
     Playlist newPlaylist = null;
     try {
@@ -123,13 +124,12 @@ public class PlaylistTest extends TestWithLogin {
     playlist.addTracks(tracksToAdd);
   }
 
-  private Playlist createPlaylist() throws IOException {
+  private Playlist createPlaylist() throws IOException, InterruptedException {
     Playlist newPlaylist = getApi().getPlaylistApi()
         .create("TestPlaylist_" + System.currentTimeMillis(),
             "Playlist created during testing", Playlist.PlaylistShareState.PRIVATE);
     assertNotNull(newPlaylist);
-    assertTrue("Newly created Playlist should be empty.",
-        newPlaylist.getContents(100).size() == 0);
+    assertEquals("Newly created Playlist should be empty.", 0, newPlaylist.getContents(100).size());
     List<Playlist> allPlaylists = getApi().getPlaylistApi().listPlaylists();
     boolean contains = false;
     for (Playlist fromList : allPlaylists) {
@@ -143,7 +143,7 @@ public class PlaylistTest extends TestWithLogin {
   }
 
   @Test
-  public void testMoveEntries() throws IOException {
+  public void testMoveEntries() throws IOException, InterruptedException {
     Playlist playlist = null;
     try {
       playlist = createPlaylist();

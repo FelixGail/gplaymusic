@@ -3,6 +3,7 @@ package com.github.felixgail.gplaymusic;
 import static com.github.felixgail.gplaymusic.util.TestUtil.assertTracks;
 import static com.github.felixgail.gplaymusic.util.TestUtil.assume;
 import static com.github.felixgail.gplaymusic.util.TestUtil.containsDoubledTracks;
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -44,14 +45,12 @@ public class StationTest extends TestWithLogin {
         .filter(s -> !s.isDeleted()).findFirst();
     Station station;
     station = stationOptional.orElseGet(() -> stations.get(0));
-    System.out.println(station.string());
     assertNotNull(station);
     assertNotNull(station.getName());
     assertNotNull(station.getId());
     List<Track> stationTracks = station.getTracks(null, true, false);
     assertNotNull(stationTracks);
-    assertTrue(String.format("Expected list length 25, got '%d'", stationTracks.size()),
-        stationTracks.size() == 25);
+    assertEquals(String.format("Expected list length 25, got '%d'", stationTracks.size()), 25, stationTracks.size());
     assertTracks(stationTracks);
     List<Track> newTracks = station.getTracks(stationTracks, true, true);
     assertNotNull(newTracks);
@@ -59,7 +58,7 @@ public class StationTest extends TestWithLogin {
         newTracks.size() <= 25);
     assertTracks(newTracks);
     int doubles = containsDoubledTracks(stationTracks, newTracks);
-    assertTrue(String.format("Second Call contained %d doubles.", doubles), doubles == 0);
+    assertEquals(String.format("Second Call contained %d doubles.", doubles), 0, doubles);
   }
 
   @Test

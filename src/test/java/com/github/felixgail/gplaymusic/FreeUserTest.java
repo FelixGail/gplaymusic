@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import svarzee.gps.gpsoauth.Gpsoauth;
 
@@ -17,6 +18,7 @@ public class FreeUserTest extends TestWithLogin {
         TestUtil.FREE_ANDROID_ID, TestUtil.FREE_TOKEN);
   }
 
+  @Ignore
   @Test
   public void testLibrarySongDownload() throws IOException {
     List<Track> tracks = getApi().getTrackApi().getLibraryTracks();
