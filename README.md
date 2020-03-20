@@ -18,8 +18,8 @@ Installation
 
 #### Maven:
 To use this library, simply add the following lines to your pom.xml:<br><br>
-[![Sonatype Nexus (Releases)](https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Latest%20Stable%20Version)](https://mvnrepository.com/artifact/com.github.felixgail/gplaymusic)<br>
-[![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/https/oss.sonatype.org/com.github.felixgail/gplaymusic.svg?label=Latest%20Snapshot%20Version)](https://oss.sonatype.org/content/repositories/snapshots/com/github/felixgail/gplaymusic/)
+[![Sonatype Nexus (Releases)](https://img.shields.io/maven-central/v/com.github.felixgail/gplaymusic?label=Latest%20Release%20Version)](https://mvnrepository.com/artifact/com.github.felixgail/gplaymusic)<br>
+[![Sonatype Nexus (Snapshots)](https://img.shields.io/maven-metadata/v?label=Latest%20Snapshot%20Version&metadataUrl=https%3A%2F%2Foss.sonatype.org%2Fcontent%2Frepositories%2Fsnapshots%2Fcom%2Fgithub%2Ffelixgail%2Fgplaymusic%2Fmaven-metadata.xml)](https://oss.sonatype.org/content/repositories/snapshots/com/github/felixgail/gplaymusic/)
 ```xml
 <dependency>
     <groupId>com.github.felixgail</groupId>
