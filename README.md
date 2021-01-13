@@ -1,3 +1,5 @@
+## Google has officially discontinued PlayMusic: https://blog.youtube/news-and-events/youtube-music-will-replace-google-play-music-end-2020/.
+
 # Unofficial GPlayMusic API in JAVA
 [![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/master.svg?label=master)](https://circleci.com/gh/FelixGail/gplaymusic/tree/master)
 [![CircleCI](https://img.shields.io/circleci/project/github/FelixGail/gplaymusic/develop.svg?label=develop)](https://circleci.com/gh/FelixGail/gplaymusic/tree/develop)
